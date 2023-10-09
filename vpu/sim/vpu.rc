@@ -1,0 +1,143 @@
+Magic 271485
+Revision Verdi_R-2020.12-SP1
+
+; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
+viewPort 0 25 1920 377 556 65
+
+; File list:
+; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
+openDirFile -d / "" "/tmpdata/project/riscv/huangxiaogang/vpu/sim/base_func/wave/instr_test_1.fsdb"
+
+; file time scale:
+; fileTimeScale ### s|ms|us|ns|ps
+
+; signal spacing:
+signalSpacing 5
+
+; windowTimeUnit is used for zoom, cursor & marker
+; waveform viewport range
+zoom 62870.495989 97001.862237
+cursor 79700.000000
+marker 0.000000
+
+; user define markers
+; userMarker time_pos marker_name color linestyle
+; visible top row signal index
+top 0
+; marker line index
+markerPos 89
+
+; event list
+; addEvent event_name event_expression
+; curEvent event_name
+
+
+
+COMPLEX_EVENT_BEGIN
+
+
+COMPLEX_EVENT_END
+
+
+
+; toolbar current search type
+; curSTATUS search_type
+curSTATUS ByChange
+
+
+addGroup "G1"
+activeDirFile "" "/tmpdata/project/riscv/huangxiaogang/vpu/sim/base_func/wave/instr_test_1.fsdb"
+addSignal -h 15 /tb_top/testHarness/ldut/tile_prci_domain/tile_reset_domain_tile/core/clock
+addSignal -h 15 -holdScope reset
+addGroup "G2"
+addSignal -h 15 /tb_top/testHarness/ldut/tile_prci_domain/tile_reset_domain_tile/core/io_verif_commit_valid
+addSignal -h 15 -holdScope io_verif_commit_prevPc[63:0]
+addSignal -h 15 -holdScope io_verif_commit_currPc[63:0]
+addSignal -h 15 -holdScope io_verif_commit_order[9:0]
+addSignal -h 15 -holdScope io_verif_commit_insn[31:0]
+addSignal -h 15 -holdScope io_verif_commit_fused
+addGroup "G3"
+addSignal -h 15 /tb_top/testHarness/ldut/tile_prci_domain/tile_reset_domain_tile/core/io_verif_sim_halt
+addSignal -h 15 -holdScope io_verif_trap_valid
+addSignal -h 15 -holdScope io_verif_trap_pc[63:0]
+addSignal -h 15 -holdScope io_verif_trap_firstInsn[63:0]
+addSignal -h 15 -holdScope io_verif_reg_gpr[1983:0]
+addSignal -h 15 -holdScope io_verif_reg_fpr[2047:0]
+addSignal -h 15 -holdScope io_verif_reg_vpr[4095:0]
+addSignal -h 15 -holdScope io_verif_dest_gprWr
+addSignal -h 15 -holdScope io_verif_dest_fprWr
+addSignal -h 15 -holdScope io_verif_dest_vprWr
+addSignal -h 15 -holdScope io_verif_dest_idx[7:0]
+addSignal -h 15 -holdScope io_verif_src_vmaskRd[127:0]
+addSignal -h 15 -holdScope io_verif_src1_gprRd
+addSignal -h 15 -holdScope io_verif_src1_fprRd
+addSignal -h 15 -holdScope io_verif_src1_vprRd
+addSignal -h 15 -holdScope io_verif_src1_idx[7:0]
+addSignal -h 15 -holdScope io_verif_src2_gprRd
+addSignal -h 15 -holdScope io_verif_src2_fprRd
+addSignal -h 15 -holdScope io_verif_src2_vprRd
+addSignal -h 15 -holdScope io_verif_src2_idx[7:0]
+addSignal -h 15 -holdScope io_verif_src3_gprRd
+addSignal -h 15 -holdScope io_verif_src3_fprRd
+addSignal -h 15 -holdScope io_verif_src3_vprRd
+addSignal -h 15 -holdScope io_verif_src3_idx[7:0]
+addGroup "G4"
+addSignal -h 15 /tb_top/testHarness/ldut/tile_prci_domain/tile_reset_domain_tile/core/io_verif_csr_mstatusWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mepcWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mtvalWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mtvecWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mcauseWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mipWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mieWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mscratchWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_midelegWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_medelegWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_minstretWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_sstatusWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_sepcWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_stvalWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_stvecWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_scauseWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_satpWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_sscratchWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_vtypeWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_vcsrWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_vlWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_vstartWr[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mstatusRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mepcRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mtvalRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mtvecRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mcauseRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mipRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mieRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_mscratchRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_midelegRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_medelegRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_minstretRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_sstatusRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_sepcRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_stvalRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_stvecRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_scauseRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_satpRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_sscratchRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_vtypeRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_vcsrRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_vlRd[63:0]
+addSignal -h 15 -holdScope io_verif_csr_vstartRd[63:0]
+addGroup "G5"
+addSignal -h 15 /tb_top/testHarness/ldut/tile_prci_domain/tile_reset_domain_tile/core/io_verif_mem_valid
+addSignal -h 15 -holdScope io_verif_mem_addr[63:0]
+addSignal -h 15 -holdScope io_verif_mem_isStore
+addSignal -h 15 -holdScope io_verif_mem_isLoad
+addSignal -h 15 -holdScope io_verif_mem_isVector
+addSignal -h 15 -holdScope io_verif_mem_maskWr[7:0]
+addSignal -h 15 -holdScope io_verif_mem_maskRd[7:0]
+addSignal -h 15 -holdScope io_verif_mem_dataWr[1023:0]
+addSignal -h 15 -holdScope io_verif_mem_datatRd[1023:0]
+addGroup "G6"
+
+; getSignalForm Scope Hierarchy Status
+; active file of getSignalForm
+
