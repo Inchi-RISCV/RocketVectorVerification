@@ -71,7 +71,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 			req_bits_dest = $urandom_range(31);
 			`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{seq.io_req_bits_source   ==0;
                                                seq.io_req_bits_paddr    =='h1000+'h40*i;
-                                               seq.io_req_bits_cmd      =='h0;
+                                               seq.io_req_bits_cmd      =='h1;
                                                seq.io_req_bits_size     =='h6;	
                                                seq.io_req_bits_signed   ==0;
                                                seq.io_req_bits_wdata    =='ha5a5a5a5_a5a5a5a5+i;	

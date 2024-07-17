@@ -70,28 +70,32 @@ task lsu_seq::body();
 
 	`uvm_create(req);
 
-  req.io_req_bits_source =io_req_bits_source;
-  req.io_req_bits_paddr  =io_req_bits_paddr;
-  req.io_req_bits_cmd    =io_req_bits_cmd;  
-	req.io_req_bits_size=io_req_bits_size;	
-  req.io_req_bits_signed=io_req_bits_signed;
-	req.io_req_bits_wdata=io_req_bits_wdata;	
-  req.io_req_bits_wmask=io_req_bits_wmask;	
-  req.io_req_bits_noAlloc=io_req_bits_noAlloc;
-  req.io_req_bits_dest=io_req_bits_dest;	
-  req.io_req_bits_isRefill=io_req_bits_isRefill;	
-  req.io_req_bits_refillWay=io_req_bits_refillWay;	
-  req.io_req_bits_refillCoh=io_req_bits_refillCoh;	
-  req.io_s0_kill=io_s0_kill;
-  req.io_s1_kill=io_s1_kill;	
-  req.io_resp_bits_source=io_resp_bits_source;	
-  req.io_resp_bits_dest=io_resp_bits_dest;	
-  req.io_resp_bits_status=io_resp_bits_status;	
-  req.io_resp_bits_hasData=io_resp_bits_hasData;	
-  req.io_resp_bits_data=io_resp_bits_data;	
-  req.io_nextCycleWb=io_nextCycleWb;
+  req.io_req_bits_source   =io_req_bits_source;
+  req.io_req_bits_paddr    =io_req_bits_paddr;
+  req.io_req_bits_cmd      =io_req_bits_cmd;  
+	req.io_req_bits_size     =io_req_bits_size;	
+  req.io_req_bits_signed   =io_req_bits_signed;
+	req.io_req_bits_wdata    =io_req_bits_wdata;	
+  req.io_req_bits_wmask    =io_req_bits_wmask;	
+  req.io_req_bits_noAlloc  =io_req_bits_noAlloc;
+  req.io_req_bits_dest     =io_req_bits_dest;	
+  req.io_req_bits_isRefill =0;	
+  req.io_req_bits_refillWay=0;	
+  req.io_req_bits_refillCoh=0;	
+  req.io_s0_kill            =io_s0_kill;
+  req.io_s1_kill            =io_s1_kill;	
+ //req.io_resp_bits_source=io_resp_bits_source;	
+ //req.io_resp_bits_dest=io_resp_bits_dest;	
+ //req.io_resp_bits_status=io_resp_bits_status;	
+ //req.io_resp_bits_hasData=io_resp_bits_hasData;	
+ //req.io_resp_bits_data=io_resp_bits_data;	
+ //req.io_nextCycleWb=io_nextCycleWb;
 
 	`uvm_send(req);
+
+	//get_response(rsp);
+
+	//`uvm_info(get_type_name(), {"get one response\n",rsp.sprint}, UVM_NONE)
 
   `uvm_info(get_type_name(), "Default sequence completed", UVM_HIGH)
 

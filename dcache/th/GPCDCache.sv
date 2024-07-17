@@ -2830,114 +2830,114 @@ module GPCDCache(	// @[<stdin>:8137:10]
   wire [2:0]        nodeOut_c_bits_opcode;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
   wire              nodeOut_c_valid;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
   wire              nodeOut_a_valid;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  wire [1:0]        _io_resp_bits_status_output;	// @[src/main/scala/grapecoveDcache/DCache.scala:479:24]
-  wire              _io_resp_valid_output;	// @[src/main/scala/grapecoveDcache/DCache.scala:478:40]
-  wire [4:0]        _lrscCount_6to2;	// @[src/main/scala/grapecoveDcache/DCache.scala:185:29]
-  wire              _wbArbiter_io_in_0_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire              _wbArbiter_io_in_1_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire              _wbArbiter_io_out_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire              _wbArbiter_io_out_bits_voluntary;	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire [32:0]       _wbArbiter_io_out_bits_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire [2:0]        _wbArbiter_io_out_bits_perm;	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire              _wbArbiter_io_out_bits_hasData;	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire [511:0]      _wbArbiter_io_out_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire [63:0]       _amoalu_io_out;	// @[src/main/scala/grapecoveDcache/DCache.scala:174:31]
-  wire              _mainReqArb_io_in_2_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire              _mainReqArb_io_out_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [1:0]        _mainReqArb_io_out_bits_source;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [38:0]       _mainReqArb_io_out_bits_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [4:0]        _mainReqArb_io_out_bits_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [2:0]        _mainReqArb_io_out_bits_size;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire              _mainReqArb_io_out_bits_signed;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [511:0]      _mainReqArb_io_out_bits_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [63:0]       _mainReqArb_io_out_bits_wmask;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [4:0]        _mainReqArb_io_out_bits_dest;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire              _mainReqArb_io_out_bits_isFromCore;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire              _mainReqArb_io_out_bits_isProbe;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire              _mainReqArb_io_out_bits_isRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [1:0]        _mainReqArb_io_out_bits_probePerm;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [1:0]        _mainReqArb_io_out_bits_refillWay;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire [1:0]        _mainReqArb_io_out_bits_refillCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire              _refillInter_io_toRefill_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
-  wire [2:0]        _refillInter_io_toRefill_bits_entryId;	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
-  wire [511:0]      _refillInter_io_toRefill_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
-  wire              _refillInter_io_toRefill_bits_hasData;	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
-  wire              _refillQueue_io_fromL2_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
-  wire              _refillQueue_io_toCore_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
-  wire [2:0]        _refillQueue_io_toCore_bits_entryId;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
-  wire [511:0]      _refillQueue_io_toCore_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
-  wire              _refillQueue_io_toCore_bits_probeMatch;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
-  wire              _probeQueue_io_mainPipeReq_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire [1:0]        _probeQueue_io_mainPipeReq_bits_source;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire [38:0]       _probeQueue_io_mainPipeReq_bits_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire [4:0]        _probeQueue_io_mainPipeReq_bits_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire [1:0]        _probeQueue_io_mainPipeReq_bits_probePerm;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire              _probeQueue_io_wbReq_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire [32:0]       _probeQueue_io_wbReq_bits_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire [2:0]        _probeQueue_io_wbReq_bits_perm;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire              _probeQueue_io_probeCheck_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire [1:0]        _probeQueue_io_probeCheck_probePermission;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire [32:0]       _probeQueue_io_probeCheck_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-  wire              _wbQueue_io_req_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
-  wire              _wbQueue_io_missCheck_blockMiss;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
-  wire              _mshrs_io_pipelineReq_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [1:0]        _mshrs_io_toL2Req_bits_perm;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [2:0]        _mshrs_io_toL2Req_bits_entryId;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [32:0]       _mshrs_io_toL2Req_bits_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire              _mshrs_io_fromRefill_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire              _mshrs_io_fromProbe_hitGo;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire              _mshrs_io_fromProbe_hit;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire              _mshrs_io_probeRefill_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [2:0]        _mshrs_io_probeRefill_bits_entryId;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire              _mshrs_io_toPipeline_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [1:0]        _mshrs_io_toPipeline_bits_sID;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [4:0]        _mshrs_io_toPipeline_bits_regIdx;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [511:0]      _mshrs_io_toPipeline_bits_regData;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire              _mshrs_io_toPipeline_bits_nextCycleWb;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire              _mshrs_io_toReplace_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [1:0]        _mshrs_io_toReplace_bits_state;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [32:0]       _mshrs_io_toReplace_bits_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [511:0]      _mshrs_io_toReplace_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire [63:0]       _dataArray_io_resp_0_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_0_1;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_0_2;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_0_3;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_0_4;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_0_5;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_0_6;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_0_7;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_1_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_1_1;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_1_2;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_1_3;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_1_4;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_1_5;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_1_6;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_1_7;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_2_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_2_1;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_2_2;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_2_3;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_2_4;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_2_5;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_2_6;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_2_7;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_3_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_3_1;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_3_2;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_3_3;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_3_4;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_3_5;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_3_6;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [63:0]       _dataArray_io_resp_3_7;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
-  wire [25:0]       _metaArray_io_resp_0_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27]
-  wire [1:0]        _metaArray_io_resp_0_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27]
-  wire [25:0]       _metaArray_io_resp_1_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27]
-  wire [1:0]        _metaArray_io_resp_1_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27]
-  wire [25:0]       _metaArray_io_resp_2_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27]
-  wire [1:0]        _metaArray_io_resp_2_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27]
-  wire [25:0]       _metaArray_io_resp_3_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27]
-  wire [1:0]        _metaArray_io_resp_3_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27]
+  wire [1:0]        _io_resp_bits_status_output;	// @[src/main/scala/grapecoveDcache/DCache.scala:480:24]
+  wire              _io_resp_valid_output;	// @[src/main/scala/grapecoveDcache/DCache.scala:479:40]
+  wire [4:0]        _lrscCount_6to2;	// @[src/main/scala/grapecoveDcache/DCache.scala:186:29]
+  wire              _wbArbiter_io_in_0_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire              _wbArbiter_io_in_1_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire              _wbArbiter_io_out_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire              _wbArbiter_io_out_bits_voluntary;	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire [32:0]       _wbArbiter_io_out_bits_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire [2:0]        _wbArbiter_io_out_bits_perm;	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire              _wbArbiter_io_out_bits_hasData;	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire [511:0]      _wbArbiter_io_out_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire [63:0]       _amoalu_io_out;	// @[src/main/scala/grapecoveDcache/DCache.scala:175:31]
+  wire              _mainReqArb_io_in_2_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire              _mainReqArb_io_out_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [1:0]        _mainReqArb_io_out_bits_source;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [38:0]       _mainReqArb_io_out_bits_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [4:0]        _mainReqArb_io_out_bits_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [2:0]        _mainReqArb_io_out_bits_size;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire              _mainReqArb_io_out_bits_signed;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [511:0]      _mainReqArb_io_out_bits_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [63:0]       _mainReqArb_io_out_bits_wmask;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [4:0]        _mainReqArb_io_out_bits_dest;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire              _mainReqArb_io_out_bits_isFromCore;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire              _mainReqArb_io_out_bits_isProbe;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire              _mainReqArb_io_out_bits_isRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [1:0]        _mainReqArb_io_out_bits_probePerm;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [1:0]        _mainReqArb_io_out_bits_refillWay;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire [1:0]        _mainReqArb_io_out_bits_refillCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire              _refillInter_io_toRefill_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:29:27]
+  wire [2:0]        _refillInter_io_toRefill_bits_entryId;	// @[src/main/scala/grapecoveDcache/DCache.scala:29:27]
+  wire [511:0]      _refillInter_io_toRefill_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:29:27]
+  wire              _refillInter_io_toRefill_bits_hasData;	// @[src/main/scala/grapecoveDcache/DCache.scala:29:27]
+  wire              _refillQueue_io_fromL2_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+  wire              _refillQueue_io_toCore_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+  wire [2:0]        _refillQueue_io_toCore_bits_entryId;	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+  wire [511:0]      _refillQueue_io_toCore_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+  wire              _refillQueue_io_toCore_bits_probeMatch;	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+  wire              _probeQueue_io_mainPipeReq_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire [1:0]        _probeQueue_io_mainPipeReq_bits_source;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire [38:0]       _probeQueue_io_mainPipeReq_bits_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire [4:0]        _probeQueue_io_mainPipeReq_bits_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire [1:0]        _probeQueue_io_mainPipeReq_bits_probePerm;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire              _probeQueue_io_wbReq_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire [32:0]       _probeQueue_io_wbReq_bits_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire [2:0]        _probeQueue_io_wbReq_bits_perm;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire              _probeQueue_io_probeCheck_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire [1:0]        _probeQueue_io_probeCheck_probePermission;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire [32:0]       _probeQueue_io_probeCheck_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  wire              _wbQueue_io_req_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
+  wire              _wbQueue_io_missCheck_blockMiss;	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
+  wire              _mshrs_io_pipelineReq_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [1:0]        _mshrs_io_toL2Req_bits_perm;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [2:0]        _mshrs_io_toL2Req_bits_entryId;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [32:0]       _mshrs_io_toL2Req_bits_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire              _mshrs_io_fromRefill_ready;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire              _mshrs_io_fromProbe_hitGo;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire              _mshrs_io_fromProbe_hit;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire              _mshrs_io_probeRefill_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [2:0]        _mshrs_io_probeRefill_bits_entryId;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire              _mshrs_io_toPipeline_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [1:0]        _mshrs_io_toPipeline_bits_sID;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [4:0]        _mshrs_io_toPipeline_bits_regIdx;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [511:0]      _mshrs_io_toPipeline_bits_regData;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire              _mshrs_io_toPipeline_bits_nextCycleWb;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire              _mshrs_io_toReplace_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [1:0]        _mshrs_io_toReplace_bits_state;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [32:0]       _mshrs_io_toReplace_bits_lineAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [511:0]      _mshrs_io_toReplace_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire [63:0]       _dataArray_io_resp_0_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_0_1;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_0_2;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_0_3;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_0_4;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_0_5;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_0_6;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_0_7;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_1_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_1_1;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_1_2;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_1_3;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_1_4;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_1_5;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_1_6;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_1_7;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_2_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_2_1;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_2_2;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_2_3;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_2_4;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_2_5;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_2_6;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_2_7;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_3_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_3_1;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_3_2;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_3_3;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_3_4;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_3_5;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_3_6;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [63:0]       _dataArray_io_resp_3_7;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [25:0]       _metaArray_io_resp_0_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
+  wire [1:0]        _metaArray_io_resp_0_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
+  wire [25:0]       _metaArray_io_resp_1_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
+  wire [1:0]        _metaArray_io_resp_1_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
+  wire [25:0]       _metaArray_io_resp_2_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
+  wire [1:0]        _metaArray_io_resp_2_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
+  wire [25:0]       _metaArray_io_resp_3_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
+  wire [1:0]        _metaArray_io_resp_3_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
   wire              nodeOut_a_ready = auto_out_a_ready;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
   wire              nodeOut_b_valid = auto_out_b_valid;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
   wire [2:0]        nodeOut_b_bits_opcode = auto_out_b_bits_opcode;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
@@ -2959,97 +2959,97 @@ module GPCDCache(	// @[<stdin>:8137:10]
   wire [511:0]      nodeOut_d_bits_data = auto_out_d_bits_data;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
   wire              nodeOut_d_bits_corrupt = auto_out_d_bits_corrupt;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
   wire              nodeOut_e_ready = auto_out_e_ready;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  wire [2:0]        nodeOut_e_bits_sink = 3'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:65:26]
-  wire              nodeOut_a_bits_corrupt = 1'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire              nodeOut_c_bits_corrupt = 1'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire              nodeOut_e_valid = 1'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire [63:0]       nodeOut_a_bits_mask = 64'hFFFFFFFFFFFFFFFF;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:165:9]
-  wire [511:0]      nodeOut_a_bits_data = 512'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:408:25]
-  wire [2:0]        nodeOut_a_bits_opcode = 3'h6;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:25:27]
-  wire [2:0]        nodeOut_a_bits_size = 3'h6;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:25:27]
-  wire [2:0]        nodeOut_c_bits_size = 3'h6;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:25:27]
-  reg               s1_bypassStore_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29]
-  reg  [511:0]      s1_bypassStore_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29]
-  reg  [25:0]       s1_bypassStore_bits_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29]
-  reg  [1:0]        s1_bypassStore_bits_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29]
-  reg  [3:0]        s1_bypassStore_bits_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29]
-  reg               s1_bypassReplace;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:33]
+  wire [2:0]        nodeOut_e_bits_sink = 3'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:66:26]
+  wire              nodeOut_a_bits_corrupt = 1'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire              nodeOut_c_bits_corrupt = 1'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire              nodeOut_e_valid = 1'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire [63:0]       nodeOut_a_bits_mask = 64'hFFFFFFFFFFFFFFFF;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:166:9]
+  wire [511:0]      nodeOut_a_bits_data = 512'h0;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:409:25]
+  wire [2:0]        nodeOut_a_bits_opcode = 3'h6;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:26:27]
+  wire [2:0]        nodeOut_a_bits_size = 3'h6;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:26:27]
+  wire [2:0]        nodeOut_c_bits_size = 3'h6;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:26:27]
+  reg               s1_bypassStore_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29]
+  reg  [511:0]      s1_bypassStore_bits_data;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29]
+  reg  [25:0]       s1_bypassStore_bits_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29]
+  reg  [1:0]        s1_bypassStore_bits_coh;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29]
+  reg  [3:0]        s1_bypassStore_bits_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29]
+  reg               s1_bypassReplace;	// @[src/main/scala/grapecoveDcache/DCache.scala:51:33]
   wire              blockReq =
     _mshrs_io_toPipeline_bits_nextCycleWb | _io_resp_valid_output
-    & _io_resp_bits_status_output == 2'h2;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :59:{33,51,74}, :478:40, :479:24]
+    & _io_resp_bits_status_output == 2'h2;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27, :60:{33,51,74}, :479:40, :480:24]
   wire              s0_valid =
-    _mainReqArb_io_out_valid & ~(io_s0_kill & _mainReqArb_io_out_bits_isFromCore);	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :80:{42,44,57}]
-  reg  [1:0]        s1_req_source;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg  [38:0]       s1_req_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg  [4:0]        s1_req_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg  [2:0]        s1_req_size;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg               s1_req_signed;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg  [511:0]      s1_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg  [63:0]       s1_req_wmask;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg  [4:0]        s1_req_dest;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg               s1_req_isFromCore;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg               s1_req_isProbe;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg               s1_req_isRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg  [1:0]        s1_req_probePerm;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg  [1:0]        s1_req_refillWay;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg  [1:0]        s1_req_refillCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  reg               s1_valid_REG;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:25]
-  wire              s1_valid = s1_valid_REG & ~(io_s1_kill & s1_req_isFromCore);	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :100:{25,36,38,51}]
-  wire              s1_cacheResp_valid = s1_valid & s1_req_isFromCore;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :100:36, :102:35]
-  wire              s1_validProbe = s1_valid & s1_req_isProbe;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :100:36, :103:35]
-  wire              s1_validRefill = s1_valid & s1_req_isRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :100:36, :104:35]
+    _mainReqArb_io_out_valid & ~(io_s0_kill & _mainReqArb_io_out_bits_isFromCore);	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :81:{42,44,57}]
+  reg  [1:0]        s1_req_source;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg  [38:0]       s1_req_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg  [4:0]        s1_req_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg  [2:0]        s1_req_size;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg               s1_req_signed;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg  [511:0]      s1_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg  [63:0]       s1_req_wmask;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg  [4:0]        s1_req_dest;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg               s1_req_isFromCore;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg               s1_req_isProbe;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg               s1_req_isRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg  [1:0]        s1_req_probePerm;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg  [1:0]        s1_req_refillWay;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg  [1:0]        s1_req_refillCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  reg               s1_valid_REG;	// @[src/main/scala/grapecoveDcache/DCache.scala:101:25]
+  wire              s1_valid = s1_valid_REG & ~(io_s1_kill & s1_req_isFromCore);	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :101:{25,36,38,51}]
+  wire              s1_validFromCore = s1_valid & s1_req_isFromCore;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :101:36, :103:35]
+  wire              s1_validProbe = s1_valid & s1_req_isProbe;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :101:36, :104:35]
+  wire              s1_validRefill = s1_valid & s1_req_isRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :101:36, :105:35]
   wire              s1_tagMatchWayPreBypassVec_0 =
-    _metaArray_io_resp_0_tag == s1_req_paddr[38:13] & (|_metaArray_io_resp_0_coh);	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:22:27, :99:27, :113:{29,54,81}]
+    _metaArray_io_resp_0_tag == s1_req_paddr[38:13] & (|_metaArray_io_resp_0_coh);	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:23:27, :100:27, :114:{29,54,81}]
   wire              s1_tagMatchWayPreBypassVec_1 =
-    _metaArray_io_resp_1_tag == s1_req_paddr[38:13] & (|_metaArray_io_resp_1_coh);	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:22:27, :99:27, :113:{29,54,81}]
+    _metaArray_io_resp_1_tag == s1_req_paddr[38:13] & (|_metaArray_io_resp_1_coh);	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:23:27, :100:27, :114:{29,54,81}]
   wire              s1_tagMatchWayPreBypassVec_2 =
-    _metaArray_io_resp_2_tag == s1_req_paddr[38:13] & (|_metaArray_io_resp_2_coh);	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:22:27, :99:27, :113:{29,54,81}]
+    _metaArray_io_resp_2_tag == s1_req_paddr[38:13] & (|_metaArray_io_resp_2_coh);	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:23:27, :100:27, :114:{29,54,81}]
   wire              s1_tagMatchWayPreBypassVec_3 =
-    _metaArray_io_resp_3_tag == s1_req_paddr[38:13] & (|_metaArray_io_resp_3_coh);	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:22:27, :99:27, :113:{29,54,81}]
+    _metaArray_io_resp_3_tag == s1_req_paddr[38:13] & (|_metaArray_io_resp_3_coh);	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:23:27, :100:27, :114:{29,54,81}]
   wire              s1_tagMatchWayVec_0 =
     ~s1_bypassReplace
     & (s1_bypassStore_valid
          ? s1_bypassStore_bits_wayEn[0] & (|s1_bypassStore_bits_coh)
-         : s1_tagMatchWayPreBypassVec_0);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:49:29, :50:33, :113:54, :122:{36,40,67}]
+         : s1_tagMatchWayPreBypassVec_0);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:50:29, :51:33, :114:54, :123:{36,40,67}]
   wire              s1_tagMatchWayVec_1 =
     ~s1_bypassReplace
     & (s1_bypassStore_valid
          ? s1_bypassStore_bits_wayEn[1] & (|s1_bypassStore_bits_coh)
-         : s1_tagMatchWayPreBypassVec_1);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:49:29, :50:33, :113:54, :122:{36,40,67}]
+         : s1_tagMatchWayPreBypassVec_1);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:50:29, :51:33, :114:54, :123:{36,40,67}]
   wire              s1_tagMatchWayVec_2 =
     ~s1_bypassReplace
     & (s1_bypassStore_valid
          ? s1_bypassStore_bits_wayEn[2] & (|s1_bypassStore_bits_coh)
-         : s1_tagMatchWayPreBypassVec_2);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:49:29, :50:33, :113:54, :122:{36,40,67}]
+         : s1_tagMatchWayPreBypassVec_2);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:50:29, :51:33, :114:54, :123:{36,40,67}]
   wire              s1_tagMatchWayVec_3 =
     ~s1_bypassReplace
     & (s1_bypassStore_valid
          ? s1_bypassStore_bits_wayEn[3] & (|s1_bypassStore_bits_coh)
-         : s1_tagMatchWayPreBypassVec_3);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:49:29, :50:33, :113:54, :122:{36,40,67}]
+         : s1_tagMatchWayPreBypassVec_3);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:50:29, :51:33, :114:54, :123:{36,40,67}]
   wire [3:0]        _s1_tagMatch_T =
-    {s1_tagMatchWayVec_3, s1_tagMatchWayVec_2, s1_tagMatchWayVec_1, s1_tagMatchWayVec_0};	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:128:39]
+    {s1_tagMatchWayVec_3, s1_tagMatchWayVec_2, s1_tagMatchWayVec_1, s1_tagMatchWayVec_0};	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:129:39]
   wire [25:0]       _s1_metaPreBypass_WIRE_2 =
     (s1_tagMatchWayPreBypassVec_0 ? _metaArray_io_resp_0_tag : 26'h0)
     | (s1_tagMatchWayPreBypassVec_1 ? _metaArray_io_resp_1_tag : 26'h0)
     | (s1_tagMatchWayPreBypassVec_2 ? _metaArray_io_resp_2_tag : 26'h0)
-    | (s1_tagMatchWayPreBypassVec_3 ? _metaArray_io_resp_3_tag : 26'h0);	// @[src/main/scala/chisel3/util/Mux.scala:30:73, src/main/scala/grapecoveDcache/DCache.scala:22:27, :113:54]
+    | (s1_tagMatchWayPreBypassVec_3 ? _metaArray_io_resp_3_tag : 26'h0);	// @[src/main/scala/chisel3/util/Mux.scala:30:73, src/main/scala/grapecoveDcache/DCache.scala:23:27, :114:54]
   wire [3:0][25:0]  _GEN =
     {{_metaArray_io_resp_3_tag},
      {_metaArray_io_resp_2_tag},
      {_metaArray_io_resp_1_tag},
-     {_metaArray_io_resp_0_tag}};	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27, :130:29]
-  wire [25:0]       _GEN_0 = _GEN[s1_req_refillWay];	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :130:29]
+     {_metaArray_io_resp_0_tag}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :131:29]
+  wire [25:0]       _GEN_0 = _GEN[s1_req_refillWay];	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :131:29]
   wire [3:0][1:0]   _GEN_1 =
     {{_metaArray_io_resp_3_coh},
      {_metaArray_io_resp_2_coh},
      {_metaArray_io_resp_1_coh},
-     {_metaArray_io_resp_0_coh}};	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27, :130:29]
+     {_metaArray_io_resp_0_coh}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :131:29]
   wire [25:0]       s1_meta_tag =
     s1_bypassReplace
       ? 26'h0
       : s1_bypassStore_valid
           ? s1_bypassStore_bits_tag
-          : s1_req_isRefill ? _GEN_0 : _s1_metaPreBypass_WIRE_2;	// @[src/main/scala/chisel3/util/Mux.scala:30:73, :141:16, src/main/scala/grapecoveDcache/DCache.scala:49:29, :50:33, :99:27, :130:29]
+          : s1_req_isRefill ? _GEN_0 : _s1_metaPreBypass_WIRE_2;	// @[src/main/scala/chisel3/util/Mux.scala:30:73, :141:16, src/main/scala/grapecoveDcache/DCache.scala:50:29, :51:33, :100:27, :131:29]
   wire [1:0]        s1_cohMeta_state =
     s1_bypassReplace
       ? 2'h0
@@ -3060,83 +3060,83 @@ module GPCDCache(	// @[<stdin>:8137:10]
               : (s1_tagMatchWayPreBypassVec_0 ? _metaArray_io_resp_0_coh : 2'h0)
                 | (s1_tagMatchWayPreBypassVec_1 ? _metaArray_io_resp_1_coh : 2'h0)
                 | (s1_tagMatchWayPreBypassVec_2 ? _metaArray_io_resp_2_coh : 2'h0)
-                | (s1_tagMatchWayPreBypassVec_3 ? _metaArray_io_resp_3_coh : 2'h0);	// @[src/main/scala/chisel3/util/Mux.scala:30:73, :141:16, src/main/scala/grapecoveDcache/DCache.scala:22:27, :49:29, :50:33, :65:26, :99:27, :113:54, :130:29]
-  wire              _mshrs_io_pipelineReq_bits_meta_rwType_T = s1_req_cmd == 5'h1;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:32, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _mshrs_io_pipelineReq_bits_meta_rwType_T_1 = s1_req_cmd == 5'h11;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:49, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_3 = s1_req_cmd == 5'h7;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:66, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_7 = s1_req_cmd == 5'h4;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_8 = s1_req_cmd == 5'h9;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_9 = s1_req_cmd == 5'hA;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_10 = s1_req_cmd == 5'hB;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_14 = s1_req_cmd == 5'h8;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_15 = s1_req_cmd == 5'hC;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_16 = s1_req_cmd == 5'hD;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_17 = s1_req_cmd == 5'hE;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_18 = s1_req_cmd == 5'hF;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_newHitCohMeta_c_cat_T_46 = s1_req_cmd == 5'h3;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:54, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              _s1_cacheResp_bits_hasData_T_2 = s1_req_cmd == 5'h6;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:71, src/main/scala/grapecoveDcache/DCache.scala:99:27]
+                | (s1_tagMatchWayPreBypassVec_3 ? _metaArray_io_resp_3_coh : 2'h0);	// @[src/main/scala/chisel3/util/Mux.scala:30:73, :141:16, src/main/scala/grapecoveDcache/DCache.scala:23:27, :50:29, :51:33, :66:26, :100:27, :114:54, :131:29]
+  wire              _mshrs_io_pipelineReq_bits_meta_rwType_T = s1_req_cmd == 5'h1;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:32, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _mshrs_io_pipelineReq_bits_meta_rwType_T_1 = s1_req_cmd == 5'h11;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:49, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_3 = s1_req_cmd == 5'h7;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:66, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_9 = s1_req_cmd == 5'h4;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_10 = s1_req_cmd == 5'h9;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_11 = s1_req_cmd == 5'hA;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_12 = s1_req_cmd == 5'hB;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_16 = s1_req_cmd == 5'h8;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_17 = s1_req_cmd == 5'hC;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_18 = s1_req_cmd == 5'hD;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_19 = s1_req_cmd == 5'hE;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_20 = s1_req_cmd == 5'hF;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_valid_T_1 = s1_req_cmd == 5'h3;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:54, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              _s1_cacheResp_bits_hasData_T_2 = s1_req_cmd == 5'h6;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:71, src/main/scala/grapecoveDcache/DCache.scala:100:27]
   wire [3:0]        _s1_hasPerm_T =
     {_mshrs_io_pipelineReq_bits_meta_rwType_T | _mshrs_io_pipelineReq_bits_meta_rwType_T_1
-       | _s1_cacheResp_bits_hasData_T_3 | _s1_cacheResp_bits_hasData_T_7
-       | _s1_cacheResp_bits_hasData_T_8 | _s1_cacheResp_bits_hasData_T_9
-       | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_14
-       | _s1_cacheResp_bits_hasData_T_15 | _s1_cacheResp_bits_hasData_T_16
-       | _s1_cacheResp_bits_hasData_T_17 | _s1_cacheResp_bits_hasData_T_18,
-     _mshrs_io_pipelineReq_bits_meta_rwType_T | _mshrs_io_pipelineReq_bits_meta_rwType_T_1
-       | _s1_cacheResp_bits_hasData_T_3 | _s1_cacheResp_bits_hasData_T_7
-       | _s1_cacheResp_bits_hasData_T_8 | _s1_cacheResp_bits_hasData_T_9
-       | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_14
-       | _s1_cacheResp_bits_hasData_T_15 | _s1_cacheResp_bits_hasData_T_16
+       | _s1_cacheResp_bits_hasData_T_3 | _s1_cacheResp_bits_hasData_T_9
+       | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_11
+       | _s1_cacheResp_bits_hasData_T_12 | _s1_cacheResp_bits_hasData_T_16
        | _s1_cacheResp_bits_hasData_T_17 | _s1_cacheResp_bits_hasData_T_18
-       | _s1_newHitCohMeta_c_cat_T_46 | _s1_cacheResp_bits_hasData_T_2,
+       | _s1_cacheResp_bits_hasData_T_19 | _s1_cacheResp_bits_hasData_T_20,
+     _mshrs_io_pipelineReq_bits_meta_rwType_T | _mshrs_io_pipelineReq_bits_meta_rwType_T_1
+       | _s1_cacheResp_bits_hasData_T_3 | _s1_cacheResp_bits_hasData_T_9
+       | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_11
+       | _s1_cacheResp_bits_hasData_T_12 | _s1_cacheResp_bits_hasData_T_16
+       | _s1_cacheResp_bits_hasData_T_17 | _s1_cacheResp_bits_hasData_T_18
+       | _s1_cacheResp_bits_hasData_T_19 | _s1_cacheResp_bits_hasData_T_20
+       | _s1_cacheResp_valid_T_1 | _s1_cacheResp_bits_hasData_T_2,
      s1_cohMeta_state};	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66,76}, :87:{54,64,71}, rocket-chip/src/main/scala/tilelink/Metadata.scala:58:19, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/chisel3/util/Mux.scala:141:16]
   wire              s1_hasPerm =
     _s1_hasPerm_T == 4'h3 | _s1_hasPerm_T == 4'h2 | _s1_hasPerm_T == 4'h1
     | _s1_hasPerm_T == 4'h7 | _s1_hasPerm_T == 4'h6 | (&_s1_hasPerm_T)
     | _s1_hasPerm_T == 4'hE;	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:58:19, :60:10, :61:10, :62:10, :63:10, :64:10, rocket-chip/src/main/scala/util/Misc.scala:35:9, :49:20, rocket-chip/src/main/scala/util/package.scala:16:47]
-  wire              _s1_upgradePermMiss_T = s1_valid & (|_s1_tagMatch_T);	// @[src/main/scala/grapecoveDcache/DCache.scala:100:36, :128:{39,46}, :150:37]
-  wire              s1_hit = _s1_upgradePermMiss_T & s1_hasPerm;	// @[rocket-chip/src/main/scala/util/Misc.scala:35:9, src/main/scala/grapecoveDcache/DCache.scala:150:{37,52}]
-  wire              s1_upgradePermMiss = _s1_upgradePermMiss_T & ~s1_hasPerm;	// @[rocket-chip/src/main/scala/util/Misc.scala:35:9, src/main/scala/grapecoveDcache/DCache.scala:150:37, :153:{52,55}]
+  wire              _s1_upgradePermMiss_T = s1_validFromCore & (|_s1_tagMatch_T);	// @[src/main/scala/grapecoveDcache/DCache.scala:103:35, :129:{39,46}, :151:45]
+  wire              s1_hit = _s1_upgradePermMiss_T & s1_hasPerm;	// @[rocket-chip/src/main/scala/util/Misc.scala:35:9, src/main/scala/grapecoveDcache/DCache.scala:151:{45,60}]
+  wire              s1_upgradePermMiss = _s1_upgradePermMiss_T & ~s1_hasPerm;	// @[rocket-chip/src/main/scala/util/Misc.scala:35:9, src/main/scala/grapecoveDcache/DCache.scala:151:45, :154:{60,63}]
   wire [3:0][63:0]  _GEN_2 =
     {{_dataArray_io_resp_3_0},
      {_dataArray_io_resp_2_0},
      {_dataArray_io_resp_1_0},
-     {_dataArray_io_resp_0_0}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :157:8]
+     {_dataArray_io_resp_0_0}};	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :158:8]
   wire [3:0][63:0]  _GEN_3 =
     {{_dataArray_io_resp_3_1},
      {_dataArray_io_resp_2_1},
      {_dataArray_io_resp_1_1},
-     {_dataArray_io_resp_0_1}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :157:8]
+     {_dataArray_io_resp_0_1}};	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :158:8]
   wire [3:0][63:0]  _GEN_4 =
     {{_dataArray_io_resp_3_2},
      {_dataArray_io_resp_2_2},
      {_dataArray_io_resp_1_2},
-     {_dataArray_io_resp_0_2}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :157:8]
+     {_dataArray_io_resp_0_2}};	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :158:8]
   wire [3:0][63:0]  _GEN_5 =
     {{_dataArray_io_resp_3_3},
      {_dataArray_io_resp_2_3},
      {_dataArray_io_resp_1_3},
-     {_dataArray_io_resp_0_3}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :157:8]
+     {_dataArray_io_resp_0_3}};	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :158:8]
   wire [3:0][63:0]  _GEN_6 =
     {{_dataArray_io_resp_3_4},
      {_dataArray_io_resp_2_4},
      {_dataArray_io_resp_1_4},
-     {_dataArray_io_resp_0_4}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :157:8]
+     {_dataArray_io_resp_0_4}};	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :158:8]
   wire [3:0][63:0]  _GEN_7 =
     {{_dataArray_io_resp_3_5},
      {_dataArray_io_resp_2_5},
      {_dataArray_io_resp_1_5},
-     {_dataArray_io_resp_0_5}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :157:8]
+     {_dataArray_io_resp_0_5}};	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :158:8]
   wire [3:0][63:0]  _GEN_8 =
     {{_dataArray_io_resp_3_6},
      {_dataArray_io_resp_2_6},
      {_dataArray_io_resp_1_6},
-     {_dataArray_io_resp_0_6}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :157:8]
+     {_dataArray_io_resp_0_6}};	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :158:8]
   wire [3:0][63:0]  _GEN_9 =
     {{_dataArray_io_resp_3_7},
      {_dataArray_io_resp_2_7},
      {_dataArray_io_resp_1_7},
-     {_dataArray_io_resp_0_7}};	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27, :157:8]
+     {_dataArray_io_resp_0_7}};	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :158:8]
   wire [511:0]      wbPipeReq_bits_data =
     s1_bypassStore_valid
       ? s1_bypassStore_bits_data
@@ -3187,28 +3187,28 @@ module GPCDCache(	// @[<stdin>:8137:10]
            : (s1_tagMatchWayPreBypassVec_0 ? _dataArray_io_resp_0_0 : 64'h0)
              | (s1_tagMatchWayPreBypassVec_1 ? _dataArray_io_resp_1_0 : 64'h0)
              | (s1_tagMatchWayPreBypassVec_2 ? _dataArray_io_resp_2_0 : 64'h0)
-             | (s1_tagMatchWayPreBypassVec_3 ? _dataArray_io_resp_3_0 : 64'h0)};	// @[src/main/scala/chisel3/util/Mux.scala:30:73, src/main/scala/grapecoveDcache/DCache.scala:23:27, :49:29, :65:26, :99:27, :113:54, :157:{8,115}, :158:20]
+             | (s1_tagMatchWayPreBypassVec_3 ? _dataArray_io_resp_3_0 : 64'h0)};	// @[src/main/scala/chisel3/util/Mux.scala:30:73, src/main/scala/grapecoveDcache/DCache.scala:24:27, :50:29, :66:26, :100:27, :114:54, :158:{8,115}, :159:20]
   wire [1:0]        _s1_storeGenMask_T =
-    {s1_req_paddr[0] | (|s1_req_size), ~(s1_req_paddr[0])};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{27,42,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:49:29, :99:27, src/main/scala/grapecoveDcache/DataExchangeIO.scala:106:27]
+    {s1_req_paddr[0] | (|s1_req_size), ~(s1_req_paddr[0])};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{27,42,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:50:29, :100:27, src/main/scala/grapecoveDcache/DataExchangeIO.scala:106:27]
   wire [3:0]        _s1_storeGenMask_T_1 =
     {(s1_req_paddr[1] ? _s1_storeGenMask_T : 2'h0) | {2{|(s1_req_size[2:1])}},
-     s1_req_paddr[1] ? 2'h0 : _s1_storeGenMask_T};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
+     s1_req_paddr[1] ? 2'h0 : _s1_storeGenMask_T};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
   wire [7:0]        _s1_storeGenMask_T_2 =
     {(s1_req_paddr[2] ? _s1_storeGenMask_T_1 : 4'h0) | {4{s1_req_size > 3'h2}},
-     s1_req_paddr[2] ? 4'h0 : _s1_storeGenMask_T_1};	// @[rocket-chip/src/main/scala/util/Misc.scala:38:36, src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:85:89, :99:27]
+     s1_req_paddr[2] ? 4'h0 : _s1_storeGenMask_T_1};	// @[rocket-chip/src/main/scala/util/Misc.scala:38:36, src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:86:89, :100:27]
   wire [15:0]       _s1_storeGenMask_T_3 =
     {(s1_req_paddr[3] ? _s1_storeGenMask_T_2 : 8'h0) | {8{s1_req_size[2]}},
-     s1_req_paddr[3] ? 8'h0 : _s1_storeGenMask_T_2};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:99:27, :168:42]
+     s1_req_paddr[3] ? 8'h0 : _s1_storeGenMask_T_2};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:100:27, :169:42]
   wire [31:0]       _s1_storeGenMask_T_4 =
     {(s1_req_paddr[4] ? _s1_storeGenMask_T_3 : 16'h0) | {16{s1_req_size > 3'h4}},
-     s1_req_paddr[4] ? 16'h0 : _s1_storeGenMask_T_3};	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:99:27]
+     s1_req_paddr[4] ? 16'h0 : _s1_storeGenMask_T_3};	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:100:27]
   wire [63:0]       s1_maskInBytes =
     s1_req_isRefill
       ? 64'hFFFFFFFFFFFFFFFF
       : _mshrs_io_pipelineReq_bits_meta_rwType_T_1
           ? s1_req_wmask
           : {(s1_req_paddr[5] ? _s1_storeGenMask_T_4 : 32'h0) | {32{s1_req_size > 3'h5}},
-             s1_req_paddr[5] ? 32'h0 : _s1_storeGenMask_T_4};	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:49, src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:99:27, :163:27, :165:9, :166:8]
+             s1_req_paddr[5] ? 32'h0 : _s1_storeGenMask_T_4};	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:49, src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:100:27, :164:27, :166:9, :167:8]
   wire [511:0]      s1_mask =
     {{8{s1_maskInBytes[63]}},
      {8{s1_maskInBytes[62]}},
@@ -3273,52 +3273,51 @@ module GPCDCache(	// @[<stdin>:8137:10]
      {8{s1_maskInBytes[3]}},
      {8{s1_maskInBytes[2]}},
      {8{s1_maskInBytes[1]}},
-     {8{s1_maskInBytes[0]}}};	// @[src/main/scala/grapecoveDcache/DCache.scala:163:27, :168:42]
+     {8{s1_maskInBytes[0]}}};	// @[src/main/scala/grapecoveDcache/DCache.scala:164:27, :169:42]
   wire [511:0]      s1_mergeStoreData =
-    s1_req_wdata & s1_mask | wbPipeReq_bits_data & ~s1_mask;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :158:20, :168:42, :169:{40,50,60,62}]
+    s1_req_wdata & s1_mask | wbPipeReq_bits_data & ~s1_mask;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :159:20, :169:42, :170:{40,50,60,62}]
   wire [574:0]      _s1_amoStoreData_T_1 =
-    {511'h0, _amoalu_io_out} << {566'h0, s1_req_paddr[5:0], 3'h0};	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:11:9, src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27, :174:31, :176:40]
+    {511'h0, _amoalu_io_out} << {566'h0, s1_req_paddr[5:0], 3'h0};	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:11:9, src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27, :175:31, :177:40]
   wire [511:0]      _GEN_10 =
-    _s1_amoStoreData_T_1[511:0] & s1_mask | wbPipeReq_bits_data & ~s1_mask;	// @[src/main/scala/grapecoveDcache/DCache.scala:158:20, :168:42, :169:62, :176:{40,65,76,86}]
+    _s1_amoStoreData_T_1[511:0] & s1_mask | wbPipeReq_bits_data & ~s1_mask;	// @[src/main/scala/grapecoveDcache/DCache.scala:159:20, :169:42, :170:62, :177:{40,65,76,86}]
   wire [1:0]        _amoalu_io_mask_T =
-    {s1_req_paddr[0] | (|s1_req_size), ~(s1_req_paddr[0])};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{27,42,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:49:29, :99:27, src/main/scala/grapecoveDcache/DataExchangeIO.scala:106:27]
+    {s1_req_paddr[0] | (|s1_req_size), ~(s1_req_paddr[0])};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{27,42,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:50:29, :100:27, src/main/scala/grapecoveDcache/DataExchangeIO.scala:106:27]
   wire [3:0]        _amoalu_io_mask_T_1 =
     {(s1_req_paddr[1] ? _amoalu_io_mask_T : 2'h0) | {2{|(s1_req_size[2:1])}},
-     s1_req_paddr[1] ? 2'h0 : _amoalu_io_mask_T};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
+     s1_req_paddr[1] ? 2'h0 : _amoalu_io_mask_T};	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
   wire [511:0]      _amoalu_io_lhs_T_1 =
-    wbPipeReq_bits_data >> {503'h0, s1_req_paddr[5:0], 3'h0};	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:11:9, src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27, :158:20, :180:30]
-  reg  [6:0]        lrscCount;	// @[src/main/scala/grapecoveDcache/DCache.scala:184:26]
-  assign _lrscCount_6to2 = lrscCount[6:2];	// @[src/main/scala/grapecoveDcache/DCache.scala:184:26, :185:29]
-  wire              s1_sc = s1_valid & _s1_cacheResp_bits_hasData_T_3;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:66, src/main/scala/grapecoveDcache/DCache.scala:100:36, :188:24]
-  reg  [32:0]       lrscAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:190:35]
+    wbPipeReq_bits_data >> {503'h0, s1_req_paddr[5:0], 3'h0};	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:11:9, src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27, :159:20, :181:30]
+  reg  [6:0]        lrscCount;	// @[src/main/scala/grapecoveDcache/DCache.scala:185:26]
+  assign _lrscCount_6to2 = lrscCount[6:2];	// @[src/main/scala/grapecoveDcache/DCache.scala:185:26, :186:29]
+  wire              s1_sc = s1_validFromCore & _s1_cacheResp_bits_hasData_T_3;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:66, src/main/scala/grapecoveDcache/DCache.scala:103:35, :189:32]
+  reg  [32:0]       lrscAddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:191:35]
   wire              s1_scFail =
-    s1_sc & ~((|_lrscCount_6to2) & s1_req_paddr[38:6] == lrscAddr);	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :185:29, :188:24, :190:{35,49}, :191:{36,69}, :192:{32,35}]
-  wire [3:0]        _s1_newProbeCoh_T = {s1_req_probePerm, s1_cohMeta_state};	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:120:19, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  wire              s1_probeUpdateMeta = s1_validProbe & (|_s1_tagMatch_T);	// @[src/main/scala/grapecoveDcache/DCache.scala:103:35, :128:{39,46}, :213:43]
+    s1_sc & ~((|_lrscCount_6to2) & s1_req_paddr[38:6] == lrscAddr);	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :186:29, :189:32, :191:{35,49}, :192:{36,69}, :193:{32,35}]
+  wire [3:0]        _s1_newProbeCoh_T = {s1_req_probePerm, s1_cohMeta_state};	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:120:19, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  wire              s1_probeUpdateMeta = s1_validProbe & (|_s1_tagMatch_T);	// @[src/main/scala/grapecoveDcache/DCache.scala:104:35, :129:{39,46}, :214:43]
   wire              s1_probeWbData =
     s1_probeUpdateMeta
     & (_s1_newProbeCoh_T == 4'h3
        | ~(_s1_newProbeCoh_T == 4'h2 | _s1_newProbeCoh_T == 4'h1 | ~(|_s1_newProbeCoh_T))
        & (_s1_newProbeCoh_T == 4'h7
           | ~(_s1_newProbeCoh_T == 4'h6 | _s1_newProbeCoh_T == 4'h5
-              | _s1_newProbeCoh_T == 4'h4) & _s1_newProbeCoh_T == 4'hB));	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:60:10, :61:10, :62:10, :63:10, :64:10, :69:10, :70:10, :120:19, rocket-chip/src/main/scala/util/Misc.scala:38:9, :56:20, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:213:43, :215:58]
-  wire              s1_replaceWb = s1_validRefill & (&s1_cohMeta_state);	// @[rocket-chip/src/main/scala/util/Misc.scala:56:20, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:104:35, :226:44]
+              | _s1_newProbeCoh_T == 4'h4) & _s1_newProbeCoh_T == 4'hB));	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:60:10, :61:10, :62:10, :63:10, :64:10, :69:10, :70:10, :120:19, rocket-chip/src/main/scala/util/Misc.scala:38:9, :56:20, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:214:43, :216:58]
   wire              _s1_storeData_T_16 =
-    _s1_cacheResp_bits_hasData_T_7 | _s1_cacheResp_bits_hasData_T_8
-    | _s1_cacheResp_bits_hasData_T_9 | _s1_cacheResp_bits_hasData_T_10
-    | _s1_cacheResp_bits_hasData_T_14 | _s1_cacheResp_bits_hasData_T_15
+    _s1_cacheResp_bits_hasData_T_9 | _s1_cacheResp_bits_hasData_T_10
+    | _s1_cacheResp_bits_hasData_T_11 | _s1_cacheResp_bits_hasData_T_12
     | _s1_cacheResp_bits_hasData_T_16 | _s1_cacheResp_bits_hasData_T_17
-    | _s1_cacheResp_bits_hasData_T_18;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/MemConstants.scala:42:52]
-  reg               s2_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:261:31]
-  reg  [38:0]       s2_req_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27]
-  reg  [4:0]        s2_req_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27]
-  reg  [511:0]      s2_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27]
-  reg  [3:0]        s2_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:263:31]
-  reg  [1:0]        s2_newCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:264:31]
-  reg               s2_updateMeta;	// @[src/main/scala/grapecoveDcache/DCache.scala:265:31]
-  reg               s2_updateData;	// @[src/main/scala/grapecoveDcache/DCache.scala:266:31]
-  reg               s2_validRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:267:31]
-  reg  [25:0]       REG;	// @[src/main/scala/grapecoveDcache/DCache.scala:318:55]
+    | _s1_cacheResp_bits_hasData_T_18 | _s1_cacheResp_bits_hasData_T_19
+    | _s1_cacheResp_bits_hasData_T_20;	// @[rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/MemConstants.scala:42:52]
+  reg               s2_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:262:31]
+  reg  [38:0]       s2_req_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27]
+  reg  [4:0]        s2_req_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27]
+  reg  [511:0]      s2_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27]
+  reg  [3:0]        s2_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:264:31]
+  reg  [1:0]        s2_newCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:265:31]
+  reg               s2_updateMeta;	// @[src/main/scala/grapecoveDcache/DCache.scala:266:31]
+  reg               s2_updateData;	// @[src/main/scala/grapecoveDcache/DCache.scala:267:31]
+  reg               s2_validRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:268:31]
+  reg  [25:0]       REG;	// @[src/main/scala/grapecoveDcache/DCache.scala:319:55]
   reg  [5:0]        state_vec_0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17]
   reg  [5:0]        state_vec_1;	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17]
   reg  [5:0]        state_vec_2;	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17]
@@ -3576,39 +3575,43 @@ module GPCDCache(	// @[<stdin>:8137:10]
      {state_vec_2},
      {state_vec_1},
      {state_vec_0}};	// @[rocket-chip/src/main/scala/util/Replacement.scala:93:36, :374:17]
-  wire [5:0]        _GEN_12 = _GEN_11[_mshrs_io_toReplace_bits_lineAddr[6:0]];	// @[rocket-chip/src/main/scala/util/Replacement.scala:93:36, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  wire [5:0]        _GEN_12 = _GEN_11[_mshrs_io_toReplace_bits_lineAddr[6:0]];	// @[rocket-chip/src/main/scala/util/Replacement.scala:93:36, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:25:27]
   wire              victimWay_mruWayDec_lowerMoreRecent_2 =
     ~(_GEN_12[2]) & ~(_GEN_12[4]) & ~(_GEN_12[5]);	// @[rocket-chip/src/main/scala/util/Replacement.scala:93:36, :130:{84,86,100}]
-  wire              s1_mshrAlloc = s1_cacheResp_valid & ~s1_hit & ~s1_scFail;	// @[src/main/scala/grapecoveDcache/DCache.scala:102:35, :150:52, :192:32, :349:{46,54,57}]
-  wire [32:0]       _GEN_13 = {6'h0, s1_req_paddr[32:6]};	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, src/main/scala/grapecoveDcache/AddrDecoder.scala:8:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :356:43]
-  wire [2:0]        nodeOut_a_bits_param = {1'h0, _mshrs_io_toL2Req_bits_perm};	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, rocket-chip/src/main/scala/tilelink/Edges.scala:348:15, src/main/scala/grapecoveDcache/DCache.scala:24:27, :408:25]
-  wire [3:0]        nodeOut_a_bits_source = {1'h0, _mshrs_io_toL2Req_bits_entryId};	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, rocket-chip/src/main/scala/tilelink/Edges.scala:350:15, src/main/scala/grapecoveDcache/DCache.scala:24:27, :408:25]
+  wire              s1_mshrAlloc = s1_validFromCore & ~s1_hit & ~s1_scFail;	// @[src/main/scala/grapecoveDcache/DCache.scala:103:35, :151:60, :193:32, :350:{46,54,57}]
+  wire [32:0]       _GEN_13 = {6'h0, s1_req_paddr[32:6]};	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, src/main/scala/grapecoveDcache/AddrDecoder.scala:8:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :357:43]
+  wire [2:0]        nodeOut_a_bits_param = {1'h0, _mshrs_io_toL2Req_bits_perm};	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, rocket-chip/src/main/scala/tilelink/Edges.scala:348:15, src/main/scala/grapecoveDcache/DCache.scala:25:27, :409:25]
+  wire [3:0]        nodeOut_a_bits_source = {1'h0, _mshrs_io_toL2Req_bits_entryId};	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, rocket-chip/src/main/scala/tilelink/Edges.scala:350:15, src/main/scala/grapecoveDcache/DCache.scala:25:27, :409:25]
   wire [31:0]       nodeOut_a_bits_address =
-    {_mshrs_io_toL2Req_bits_lineAddr[25:0], 6'h0};	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, rocket-chip/src/main/scala/tilelink/Edges.scala:351:15, rocket-chip/src/main/scala/util/Replacement.scala:85:34, src/main/scala/grapecoveDcache/DCache.scala:24:27]
-  wire              wbPipeReq_valid = s1_validProbe | s1_replaceWb;	// @[src/main/scala/grapecoveDcache/DCache.scala:103:35, :226:44, :411:42]
+    {_mshrs_io_toL2Req_bits_lineAddr[25:0], 6'h0};	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, rocket-chip/src/main/scala/tilelink/Edges.scala:351:15, rocket-chip/src/main/scala/util/Replacement.scala:85:34, src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  wire              wbPipeReq_valid =
+    s1_validProbe | s1_validRefill & s1_cohMeta_state[1];	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:104:35, :105:35, :227:{44,65}, :412:42]
+  wire              _s1_cacheResp_bits_hasData_T_4 = s1_req_cmd == 5'h2;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, src/main/scala/grapecoveDcache/MemConstants.scala:43:38]
+  wire              s1_cacheResp_valid =
+    s1_validFromCore & ~(_s1_cacheResp_bits_hasData_T_4 | _s1_cacheResp_valid_T_1);	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:54, src/main/scala/grapecoveDcache/DCache.scala:103:35, :455:{49,52}, src/main/scala/grapecoveDcache/MemConstants.scala:43:{38,48}]
   wire [255:0]      s1_cacheResp_bits_data_shifted =
-    s1_req_paddr[5] ? wbPipeReq_bits_data[511:256] : wbPipeReq_bits_data[255:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:99:27, :158:20]
+    s1_req_paddr[5] ? wbPipeReq_bits_data[511:256] : wbPipeReq_bits_data[255:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:100:27, :159:20]
   wire [127:0]      s1_cacheResp_bits_data_shifted_1 =
     s1_req_paddr[4]
       ? s1_cacheResp_bits_data_shifted[255:128]
-      : s1_cacheResp_bits_data_shifted[127:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:99:27]
+      : s1_cacheResp_bits_data_shifted[127:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:100:27]
   wire [63:0]       s1_cacheResp_bits_data_shifted_2 =
     s1_req_paddr[3]
       ? s1_cacheResp_bits_data_shifted_1[127:64]
-      : s1_cacheResp_bits_data_shifted_1[63:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:99:27]
+      : s1_cacheResp_bits_data_shifted_1[63:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:100:27]
   wire [31:0]       s1_cacheResp_bits_data_shifted_3 =
     s1_req_paddr[2]
       ? s1_cacheResp_bits_data_shifted_2[63:32]
-      : s1_cacheResp_bits_data_shifted_2[31:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:99:27]
+      : s1_cacheResp_bits_data_shifted_2[31:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:100:27]
   wire [15:0]       s1_cacheResp_bits_data_shifted_4 =
     s1_req_paddr[1]
       ? s1_cacheResp_bits_data_shifted_3[31:16]
-      : s1_cacheResp_bits_data_shifted_3[15:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:99:27]
+      : s1_cacheResp_bits_data_shifted_3[15:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:100:27]
   wire [7:0]        s1_cacheResp_bits_data_shifted_5 =
     s1_req_paddr[0]
       ? s1_cacheResp_bits_data_shifted_4[15:8]
-      : s1_cacheResp_bits_data_shifted_4[7:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:99:27]
-  assign _io_resp_valid_output = s1_cacheResp_valid | _mshrs_io_toPipeline_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :102:35, :478:40]
+      : s1_cacheResp_bits_data_shifted_4[7:0];	// @[src/main/scala/grapecoveDcache/AMOALU.scala:16:27, :38:{24,37,60}, src/main/scala/grapecoveDcache/DCache.scala:100:27]
+  assign _io_resp_valid_output = s1_cacheResp_valid | _mshrs_io_toPipeline_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27, :455:49, :479:40]
   assign _io_resp_bits_status_output =
     s1_cacheResp_valid
       ? (s1_hit
@@ -3616,50 +3619,50 @@ module GPCDCache(	// @[<stdin>:8137:10]
            : _wbQueue_io_missCheck_blockMiss | s1_mshrAlloc & ~_mshrs_io_pipelineReq_ready
                ? 2'h2
                : 2'h1)
-      : 2'h3;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:54, rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:24:27, :25:27, :59:74, :65:26, :102:35, :150:52, :349:54, :350:{39,42}, :479:24]
-  wire              _T_76 = nodeOut_d_bits_opcode == 3'h6;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:25:27, :492:29]
-  wire              _T_79 = nodeOut_d_bits_opcode == 3'h4 | nodeOut_d_bits_opcode == 3'h5;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AMOALU.scala:16:53, src/main/scala/grapecoveDcache/DCache.scala:494:{35,56,80}]
-  wire              nodeOut_d_ready = _T_76 | _T_79;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:492:{29,56}, :493:14, :494:{56,106}]
-  `ifndef SYNTHESIS	// @[src/main/scala/grapecoveDcache/DCache.scala:432:9]
-    always @(posedge clock) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:432:9]
-      if (~reset & s1_probeWbData & s1_replaceWb) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:215:58, :226:44, :432:9]
-        if (`ASSERT_VERBOSE_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:432:9]
-          $error("Assertion failed\n    at DCache.scala:432 assert(!(s1_probeWbData && s1_replaceWbData))\n");	// @[src/main/scala/grapecoveDcache/DCache.scala:432:9]
-        if (`STOP_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:432:9]
-          $fatal;	// @[src/main/scala/grapecoveDcache/DCache.scala:432:9]
+      : 2'h3;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:54, rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:25:27, :26:27, :60:74, :66:26, :151:60, :350:54, :351:{39,42}, :455:49, :480:24]
+  wire              _T_76 = nodeOut_d_bits_opcode == 3'h6;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:26:27, :493:29]
+  wire              _T_79 = nodeOut_d_bits_opcode == 3'h4 | nodeOut_d_bits_opcode == 3'h5;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AMOALU.scala:16:53, src/main/scala/grapecoveDcache/DCache.scala:495:{35,56,80}]
+  wire              nodeOut_d_ready = _T_76 | _T_79;	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:493:{29,56}, :494:14, :495:{56,106}]
+  `ifndef SYNTHESIS	// @[src/main/scala/grapecoveDcache/DCache.scala:433:9]
+    always @(posedge clock) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:433:9]
+      if (~reset & s1_probeWbData & (&s1_cohMeta_state)) begin	// @[rocket-chip/src/main/scala/util/Misc.scala:56:20, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:216:58, :433:9]
+        if (`ASSERT_VERBOSE_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:433:9]
+          $error("Assertion failed\n    at DCache.scala:433 assert(!(s1_probeWbData && s1_replaceWbData))\n");	// @[src/main/scala/grapecoveDcache/DCache.scala:433:9]
+        if (`STOP_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:433:9]
+          $fatal;	// @[src/main/scala/grapecoveDcache/DCache.scala:433:9]
       end
-      if (~reset & s1_cacheResp_valid & _mshrs_io_toPipeline_valid) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27, :102:35, :483:9]
-        if (`ASSERT_VERBOSE_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:483:9]
-          $error("Assertion failed\n    at DCache.scala:483 assert(~(s1_cacheResp.valid && mshrsResp.valid))\n");	// @[src/main/scala/grapecoveDcache/DCache.scala:483:9]
-        if (`STOP_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:483:9]
-          $fatal;	// @[src/main/scala/grapecoveDcache/DCache.scala:483:9]
+      if (~reset & s1_cacheResp_valid & _mshrs_io_toPipeline_valid) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27, :455:49, :484:9]
+        if (`ASSERT_VERBOSE_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:484:9]
+          $error("Assertion failed\n    at DCache.scala:484 assert(~(s1_cacheResp.valid && mshrsResp.valid))\n");	// @[src/main/scala/grapecoveDcache/DCache.scala:484:9]
+        if (`STOP_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:484:9]
+          $fatal;	// @[src/main/scala/grapecoveDcache/DCache.scala:484:9]
       end
-      if (~_T_76 & ~_T_79 & ~reset & nodeOut_d_ready & nodeOut_d_valid) begin	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:492:{29,56}, :494:{56,106}, :497:11]
-        if (`ASSERT_VERBOSE_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:497:11]
-          $error("Assertion failed\n    at DCache.scala:497 assert(!tl_out.d.fire)\n");	// @[src/main/scala/grapecoveDcache/DCache.scala:497:11]
-        if (`STOP_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:497:11]
-          $fatal;	// @[src/main/scala/grapecoveDcache/DCache.scala:497:11]
+      if (~_T_76 & ~_T_79 & ~reset & nodeOut_d_ready & nodeOut_d_valid) begin	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:493:{29,56}, :495:{56,106}, :498:11]
+        if (`ASSERT_VERBOSE_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:498:11]
+          $error("Assertion failed\n    at DCache.scala:498 assert(!tl_out.d.fire)\n");	// @[src/main/scala/grapecoveDcache/DCache.scala:498:11]
+        if (`STOP_COND_)	// @[src/main/scala/grapecoveDcache/DCache.scala:498:11]
+          $fatal;	// @[src/main/scala/grapecoveDcache/DCache.scala:498:11]
       end
     end // always @(posedge)
   `endif // not def SYNTHESIS
-  wire              s1_updateReplacer = s1_hit | s1_validRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:104:35, :150:52, :256:34]
-  wire [5:0]        _GEN_14 = _GEN_11[s1_req_paddr[12:6]];	// @[rocket-chip/src/main/scala/util/Replacement.scala:93:36, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27]
+  wire              s1_updateReplacer = s1_hit | s1_validRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:105:35, :151:60, :257:34]
+  wire [5:0]        _GEN_14 = _GEN_11[s1_req_paddr[12:6]];	// @[rocket-chip/src/main/scala/util/Replacement.scala:93:36, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27]
   wire [3:0]        _s1_newHitCohMeta_T =
     {_mshrs_io_pipelineReq_bits_meta_rwType_T | _mshrs_io_pipelineReq_bits_meta_rwType_T_1
-       | _s1_cacheResp_bits_hasData_T_3 | _s1_cacheResp_bits_hasData_T_7
-       | _s1_cacheResp_bits_hasData_T_8 | _s1_cacheResp_bits_hasData_T_9
-       | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_14
-       | _s1_cacheResp_bits_hasData_T_15 | _s1_cacheResp_bits_hasData_T_16
-       | _s1_cacheResp_bits_hasData_T_17 | _s1_cacheResp_bits_hasData_T_18,
-     _mshrs_io_pipelineReq_bits_meta_rwType_T | _mshrs_io_pipelineReq_bits_meta_rwType_T_1
-       | _s1_cacheResp_bits_hasData_T_3 | _s1_cacheResp_bits_hasData_T_7
-       | _s1_cacheResp_bits_hasData_T_8 | _s1_cacheResp_bits_hasData_T_9
-       | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_14
-       | _s1_cacheResp_bits_hasData_T_15 | _s1_cacheResp_bits_hasData_T_16
+       | _s1_cacheResp_bits_hasData_T_3 | _s1_cacheResp_bits_hasData_T_9
+       | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_11
+       | _s1_cacheResp_bits_hasData_T_12 | _s1_cacheResp_bits_hasData_T_16
        | _s1_cacheResp_bits_hasData_T_17 | _s1_cacheResp_bits_hasData_T_18
-       | _s1_newHitCohMeta_c_cat_T_46 | _s1_cacheResp_bits_hasData_T_2,
+       | _s1_cacheResp_bits_hasData_T_19 | _s1_cacheResp_bits_hasData_T_20,
+     _mshrs_io_pipelineReq_bits_meta_rwType_T | _mshrs_io_pipelineReq_bits_meta_rwType_T_1
+       | _s1_cacheResp_bits_hasData_T_3 | _s1_cacheResp_bits_hasData_T_9
+       | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_11
+       | _s1_cacheResp_bits_hasData_T_12 | _s1_cacheResp_bits_hasData_T_16
+       | _s1_cacheResp_bits_hasData_T_17 | _s1_cacheResp_bits_hasData_T_18
+       | _s1_cacheResp_bits_hasData_T_19 | _s1_cacheResp_bits_hasData_T_20
+       | _s1_cacheResp_valid_T_1 | _s1_cacheResp_bits_hasData_T_2,
      s1_cohMeta_state};	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66,76}, :87:{54,64,71}, rocket-chip/src/main/scala/tilelink/Metadata.scala:58:19, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/chisel3/util/Mux.scala:141:16]
-  wire [1:0]        _s1_newHitCohMeta_T_27 = {1'h0, _s1_newHitCohMeta_T == 4'hC};	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:58:19, rocket-chip/src/main/scala/util/Misc.scala:35:36, :49:20, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:408:25]
+  wire [1:0]        _s1_newHitCohMeta_T_27 = {1'h0, _s1_newHitCohMeta_T == 4'hC};	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:58:19, rocket-chip/src/main/scala/util/Misc.scala:35:36, :49:20, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:409:25]
   wire [15:0][1:0]  _GEN_15 =
     {{2'h3},
      {2'h3},
@@ -3676,20 +3679,20 @@ module GPCDCache(	// @[<stdin>:8137:10]
      {2'h3},
      {2'h2},
      {2'h1},
-     {2'h0}};	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:54, rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, rocket-chip/src/main/scala/util/Misc.scala:35:36, :49:20, src/main/scala/grapecoveDcache/DCache.scala:59:74, :65:26]
-  wire              s1_lr = s1_valid & _s1_cacheResp_bits_hasData_T_2;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:71, src/main/scala/grapecoveDcache/DCache.scala:100:36, :187:24]
+     {2'h0}};	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:54, rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, rocket-chip/src/main/scala/util/Misc.scala:35:36, :49:20, src/main/scala/grapecoveDcache/DCache.scala:60:74, :66:26]
+  wire              s1_lr = s1_validFromCore & _s1_cacheResp_bits_hasData_T_2;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:87:71, src/main/scala/grapecoveDcache/DCache.scala:103:35, :188:32]
   wire              s1_updateMeta =
     (s1_hit & _GEN_15[_s1_newHitCohMeta_T] != s1_cohMeta_state | s1_upgradePermMiss)
-    & ~s1_scFail | s1_probeUpdateMeta | s1_validRefill;	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:46:46, :58:19, rocket-chip/src/main/scala/util/Misc.scala:35:36, :49:20, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:104:35, :150:52, :151:35, :153:52, :192:32, :206:{47,70,73}, :213:43, :230:64]
+    & ~s1_scFail | s1_probeUpdateMeta | s1_validRefill;	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:46:46, :58:19, rocket-chip/src/main/scala/util/Misc.scala:35:36, :49:20, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:105:35, :151:60, :152:35, :154:60, :193:32, :207:{47,70,73}, :214:43, :231:64]
   wire              s1_updateData =
     s1_hit
     & (_mshrs_io_pipelineReq_bits_meta_rwType_T
        | _mshrs_io_pipelineReq_bits_meta_rwType_T_1 | _s1_cacheResp_bits_hasData_T_3
-       | _s1_cacheResp_bits_hasData_T_7 | _s1_cacheResp_bits_hasData_T_8
        | _s1_cacheResp_bits_hasData_T_9 | _s1_cacheResp_bits_hasData_T_10
-       | _s1_cacheResp_bits_hasData_T_14 | _s1_cacheResp_bits_hasData_T_15
+       | _s1_cacheResp_bits_hasData_T_11 | _s1_cacheResp_bits_hasData_T_12
        | _s1_cacheResp_bits_hasData_T_16 | _s1_cacheResp_bits_hasData_T_17
-       | _s1_cacheResp_bits_hasData_T_18) & ~s1_scFail | s1_validRefill;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66}, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:104:35, :150:52, :192:32, :206:73, :207:78, :231:42, src/main/scala/grapecoveDcache/MemConstants.scala:45:82]
+       | _s1_cacheResp_bits_hasData_T_18 | _s1_cacheResp_bits_hasData_T_19
+       | _s1_cacheResp_bits_hasData_T_20) & ~s1_scFail | s1_validRefill;	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66}, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:105:35, :151:60, :193:32, :207:73, :208:60, :232:42, src/main/scala/grapecoveDcache/MemConstants.scala:45:82]
   wire [1:0]        s1_bypassStoreCandidate_coh =
     s1_validProbe
       ? (_s1_newProbeCoh_T == 4'h3 | _s1_newProbeCoh_T == 4'h2
@@ -3703,40 +3706,40 @@ module GPCDCache(	// @[<stdin>:8137:10]
                    : 2'h0)
       : s1_validRefill
           ? s1_req_refillCoh
-          : s1_cacheResp_valid & s1_hit
+          : s1_hit
               ? _GEN_15[_s1_newHitCohMeta_T]
-              : s1_cacheResp_valid & s1_upgradePermMiss ? 2'h0 : s1_req_cmd[1:0];	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:58:19, :60:10, :61:10, :62:10, :63:10, :64:10, :69:10, :120:19, rocket-chip/src/main/scala/util/Misc.scala:35:36, :38:63, :49:20, :56:20, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:59:74, :65:26, :99:27, :102:35, :103:35, :104:35, :150:52, :153:52, :242:25, :243:25, :408:25]
-  wire              _GEN_16 = s1_validProbe | ~s1_validRefill;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:103:35, :104:35]
+              : s1_upgradePermMiss ? 2'h0 : s1_req_cmd[1:0];	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:58:19, :60:10, :61:10, :62:10, :63:10, :64:10, :69:10, :120:19, rocket-chip/src/main/scala/util/Misc.scala:35:36, :38:63, :49:20, :56:20, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:60:74, :66:26, :100:27, :104:35, :105:35, :151:60, :154:60, :409:25]
+  wire              _GEN_16 = s1_validProbe | ~s1_validRefill;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:104:35, :105:35]
   wire              _s1_wayEn_T_7_1 =
-    _GEN_16 ? s1_tagMatchWayVec_1 : s1_req_refillWay == 2'h1;	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:99:27, :251:62]
+    _GEN_16 ? s1_tagMatchWayVec_1 : s1_req_refillWay == 2'h1;	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:100:27, :252:62]
   wire              _s1_wayEn_T_7_2 =
-    _GEN_16 ? s1_tagMatchWayVec_2 : s1_req_refillWay == 2'h2;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:59:74, :99:27, :251:62]
-  wire              _s1_wayEn_T_7_3 = _GEN_16 ? s1_tagMatchWayVec_3 : (&s1_req_refillWay);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:99:27, :251:62]
+    _GEN_16 ? s1_tagMatchWayVec_2 : s1_req_refillWay == 2'h2;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:60:74, :100:27, :252:62]
+  wire              _s1_wayEn_T_7_3 = _GEN_16 ? s1_tagMatchWayVec_3 : (&s1_req_refillWay);	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:100:27, :252:62]
   wire [3:0]        s1_bypassStoreCandidate_wayEn =
     {_s1_wayEn_T_7_3,
      _s1_wayEn_T_7_2,
      _s1_wayEn_T_7_1,
-     _GEN_16 ? s1_tagMatchWayVec_0 : s1_req_refillWay == 2'h0};	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27, :251:62, :254:5]
-  wire              _T_9 = s1_updateMeta | s1_updateData;	// @[src/main/scala/grapecoveDcache/DCache.scala:230:64, :231:42, :261:46]
+     _GEN_16 ? s1_tagMatchWayVec_0 : s1_req_refillWay == 2'h0};	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27, :252:62, :255:5]
+  wire              _T_9 = s1_updateMeta | s1_updateData;	// @[src/main/scala/grapecoveDcache/DCache.scala:231:64, :232:42, :262:46]
   wire              _T_37 =
     _T_9
     & (_mshrs_io_pipelineReq_bits_meta_rwType_T
        | _mshrs_io_pipelineReq_bits_meta_rwType_T_1 | _s1_cacheResp_bits_hasData_T_3
-       | _s1_cacheResp_bits_hasData_T_7 | _s1_cacheResp_bits_hasData_T_8
        | _s1_cacheResp_bits_hasData_T_9 | _s1_cacheResp_bits_hasData_T_10
-       | _s1_cacheResp_bits_hasData_T_14 | _s1_cacheResp_bits_hasData_T_15
+       | _s1_cacheResp_bits_hasData_T_11 | _s1_cacheResp_bits_hasData_T_12
        | _s1_cacheResp_bits_hasData_T_16 | _s1_cacheResp_bits_hasData_T_17
-       | _s1_cacheResp_bits_hasData_T_18)
-    & _mainReqArb_io_out_bits_paddr[32:6] == s1_req_paddr[32:6];	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66}, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AddrDecoder.scala:8:9, src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27, :261:46, :306:{51,80}, src/main/scala/grapecoveDcache/MemConstants.scala:45:82]
-  wire [32:0]       _GEN_17 = {6'h0, _mainReqArb_io_out_bits_paddr[32:6]};	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, src/main/scala/grapecoveDcache/AddrDecoder.scala:8:9, src/main/scala/grapecoveDcache/DCache.scala:65:26, :322:40]
+       | _s1_cacheResp_bits_hasData_T_18 | _s1_cacheResp_bits_hasData_T_19
+       | _s1_cacheResp_bits_hasData_T_20)
+    & _mainReqArb_io_out_bits_paddr[32:6] == s1_req_paddr[32:6];	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66}, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AddrDecoder.scala:8:9, src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27, :262:46, :307:{33,62}, src/main/scala/grapecoveDcache/MemConstants.scala:45:82]
+  wire [32:0]       _GEN_17 = {6'h0, _mainReqArb_io_out_bits_paddr[32:6]};	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, src/main/scala/grapecoveDcache/AddrDecoder.scala:8:9, src/main/scala/grapecoveDcache/DCache.scala:66:26, :323:40]
   wire [1:0]        touchWay_hi = {_s1_wayEn_T_7_3, _s1_wayEn_T_7_2};	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/chisel3/util/OneHot.scala:30:18]
   wire              _touchWay_T_2 = _s1_wayEn_T_7_3 | _s1_wayEn_T_7_1;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/chisel3/util/OneHot.scala:32:28]
   wire [1:0]        touchWay = {|touchWay_hi, _touchWay_T_2};	// @[src/main/scala/chisel3/util/OneHot.scala:30:18, :32:{10,14,28}]
-  wire [3:0]        state_vec_wayDec = 4'h1 << {2'h0, |touchWay_hi, _touchWay_T_2};	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, src/main/scala/chisel3/util/OneHot.scala:30:18, :32:{14,28}, :65:12, src/main/scala/grapecoveDcache/DCache.scala:65:26]
+  wire [3:0]        state_vec_wayDec = 4'h1 << {2'h0, |touchWay_hi, _touchWay_T_2};	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, src/main/scala/chisel3/util/OneHot.scala:30:18, :32:{14,28}, :65:12, src/main/scala/grapecoveDcache/DCache.scala:66:26]
   wire [5:0]        _state_vec_T_4 =
     {touchWay != 2'h2 & (_GEN_14[5] | (&{|touchWay_hi, _touchWay_T_2})),
      touchWay == 2'h1 ? 2'h0 : _GEN_14[4:3] | state_vec_wayDec[3:2],
-     touchWay == 2'h0 ? 3'h0 : _GEN_14[2:0] | state_vec_wayDec[3:1]};	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, rocket-chip/src/main/scala/util/Replacement.scala:93:36, :107:{15,20,67}, :110:112, src/main/scala/chisel3/util/OneHot.scala:30:18, :32:{10,14,28}, :65:12, src/main/scala/grapecoveDcache/DCache.scala:59:74, :65:26]
+     touchWay == 2'h0 ? 3'h0 : _GEN_14[2:0] | state_vec_wayDec[3:1]};	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, rocket-chip/src/main/scala/util/Replacement.scala:93:36, :107:{15,20,67}, :110:112, src/main/scala/chisel3/util/OneHot.scala:30:18, :32:{10,14,28}, :65:12, src/main/scala/grapecoveDcache/DCache.scala:60:74, :66:26]
   always @(posedge clock) begin	// @[<stdin>:8138:11]
     s1_bypassStore_valid <=
       _T_37 | s2_valid
@@ -3744,70 +3747,70 @@ module GPCDCache(	// @[<stdin>:8137:10]
          | s2_req_cmd == 5'h4 | s2_req_cmd == 5'h9 | s2_req_cmd == 5'hA
          | s2_req_cmd == 5'hB | s2_req_cmd == 5'h8 | s2_req_cmd == 5'hC
          | s2_req_cmd == 5'hD | s2_req_cmd == 5'hE | s2_req_cmd == 5'hF)
-      & _mainReqArb_io_out_bits_paddr[32:6] == s2_req_paddr[32:6];	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66}, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AddrDecoder.scala:8:9, src/main/scala/grapecoveDcache/DCache.scala:49:29, :65:26, :261:31, :262:27, :306:{51,80}, :311:62, src/main/scala/grapecoveDcache/MemConstants.scala:45:{38,55,72,82}]
-    if (_T_37) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:306:51]
-      if (s1_req_isRefill)	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-        s1_bypassStore_bits_data <= s1_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29, :99:27]
+      & _mainReqArb_io_out_bits_paddr[32:6] == s2_req_paddr[32:6];	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66}, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AddrDecoder.scala:8:9, src/main/scala/grapecoveDcache/DCache.scala:50:29, :66:26, :262:31, :263:27, :307:{33,62}, :312:62, src/main/scala/grapecoveDcache/MemConstants.scala:45:{38,55,72,82}]
+    if (_T_37) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:307:33]
+      if (s1_req_isRefill)	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+        s1_bypassStore_bits_data <= s1_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29, :100:27]
       else if (_s1_storeData_T_16)	// @[src/main/scala/grapecoveDcache/MemConstants.scala:42:52]
-        s1_bypassStore_bits_data <= _GEN_10;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29, :176:76]
+        s1_bypassStore_bits_data <= _GEN_10;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29, :177:76]
       else	// @[src/main/scala/grapecoveDcache/MemConstants.scala:42:52]
-        s1_bypassStore_bits_data <= s1_mergeStoreData;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29, :169:50]
-      s1_bypassStore_bits_tag <= s1_req_paddr[38:13];	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:49:29, :99:27]
-      s1_bypassStore_bits_coh <= s1_bypassStoreCandidate_coh;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:49:29]
-      s1_bypassStore_bits_wayEn <= s1_bypassStoreCandidate_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29, :254:5]
+        s1_bypassStore_bits_data <= s1_mergeStoreData;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29, :170:50]
+      s1_bypassStore_bits_tag <= s1_req_paddr[38:13];	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:50:29, :100:27]
+      s1_bypassStore_bits_coh <= s1_bypassStoreCandidate_coh;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:50:29]
+      s1_bypassStore_bits_wayEn <= s1_bypassStoreCandidate_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29, :255:5]
     end
-    else begin	// @[src/main/scala/grapecoveDcache/DCache.scala:306:51]
-      s1_bypassStore_bits_data <= s2_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29, :262:27]
-      s1_bypassStore_bits_tag <= s2_req_paddr[38:13];	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:49:29, :262:27]
-      s1_bypassStore_bits_coh <= s2_newCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29, :264:31]
-      s1_bypassStore_bits_wayEn <= s2_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29, :263:31]
+    else begin	// @[src/main/scala/grapecoveDcache/DCache.scala:307:33]
+      s1_bypassStore_bits_data <= s2_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29, :263:27]
+      s1_bypassStore_bits_tag <= s2_req_paddr[38:13];	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:50:29, :263:27]
+      s1_bypassStore_bits_coh <= s2_newCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29, :265:31]
+      s1_bypassStore_bits_wayEn <= s2_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29, :264:31]
     end
-    if (s0_valid) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:80:42]
-      s1_req_source <= _mainReqArb_io_out_bits_source;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_paddr <= _mainReqArb_io_out_bits_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_cmd <= _mainReqArb_io_out_bits_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_size <= _mainReqArb_io_out_bits_size;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_signed <= _mainReqArb_io_out_bits_signed;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_wdata <= _mainReqArb_io_out_bits_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_wmask <= _mainReqArb_io_out_bits_wmask;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_dest <= _mainReqArb_io_out_bits_dest;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_isFromCore <= _mainReqArb_io_out_bits_isFromCore;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_isProbe <= _mainReqArb_io_out_bits_isProbe;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_isRefill <= _mainReqArb_io_out_bits_isRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_probePerm <= _mainReqArb_io_out_bits_probePerm;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_refillWay <= _mainReqArb_io_out_bits_refillWay;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
-      s1_req_refillCoh <= _mainReqArb_io_out_bits_refillCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27]
+    if (s0_valid) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:81:42]
+      s1_req_source <= _mainReqArb_io_out_bits_source;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_paddr <= _mainReqArb_io_out_bits_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_cmd <= _mainReqArb_io_out_bits_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_size <= _mainReqArb_io_out_bits_size;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_signed <= _mainReqArb_io_out_bits_signed;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_wdata <= _mainReqArb_io_out_bits_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_wmask <= _mainReqArb_io_out_bits_wmask;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_dest <= _mainReqArb_io_out_bits_dest;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_isFromCore <= _mainReqArb_io_out_bits_isFromCore;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_isProbe <= _mainReqArb_io_out_bits_isProbe;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_isRefill <= _mainReqArb_io_out_bits_isRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_probePerm <= _mainReqArb_io_out_bits_probePerm;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_refillWay <= _mainReqArb_io_out_bits_refillWay;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
+      s1_req_refillCoh <= _mainReqArb_io_out_bits_refillCoh;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27]
     end
-    s1_valid_REG <= s0_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:80:42, :100:25]
-    if (s1_lr)	// @[src/main/scala/grapecoveDcache/DCache.scala:187:24]
-      lrscAddr <= s1_req_paddr[38:6];	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :190:{35,49}]
-    s2_valid <= _T_9;	// @[src/main/scala/grapecoveDcache/DCache.scala:261:{31,46}]
-    if (_T_9) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:261:46]
-      s2_req_paddr <= s1_req_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :262:27]
-      s2_req_cmd <= s1_req_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :262:27]
-      if (s1_req_isRefill)	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-        s2_req_wdata <= s1_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :262:27]
+    s1_valid_REG <= s0_valid;	// @[src/main/scala/grapecoveDcache/DCache.scala:81:42, :101:25]
+    if (s1_lr)	// @[src/main/scala/grapecoveDcache/DCache.scala:188:32]
+      lrscAddr <= s1_req_paddr[38:6];	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :191:{35,49}]
+    s2_valid <= _T_9;	// @[src/main/scala/grapecoveDcache/DCache.scala:262:{31,46}]
+    if (_T_9) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:262:46]
+      s2_req_paddr <= s1_req_paddr;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :263:27]
+      s2_req_cmd <= s1_req_cmd;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :263:27]
+      if (s1_req_isRefill)	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+        s2_req_wdata <= s1_req_wdata;	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :263:27]
       else if (_s1_storeData_T_16)	// @[src/main/scala/grapecoveDcache/MemConstants.scala:42:52]
-        s2_req_wdata <= _GEN_10;	// @[src/main/scala/grapecoveDcache/DCache.scala:176:76, :262:27]
+        s2_req_wdata <= _GEN_10;	// @[src/main/scala/grapecoveDcache/DCache.scala:177:76, :263:27]
       else	// @[src/main/scala/grapecoveDcache/MemConstants.scala:42:52]
-        s2_req_wdata <= s1_mergeStoreData;	// @[src/main/scala/grapecoveDcache/DCache.scala:169:50, :262:27]
+        s2_req_wdata <= s1_mergeStoreData;	// @[src/main/scala/grapecoveDcache/DCache.scala:170:50, :263:27]
     end
-    s2_updateMeta <= s1_updateMeta;	// @[src/main/scala/grapecoveDcache/DCache.scala:230:64, :265:31]
-    s2_updateData <= s1_updateData;	// @[src/main/scala/grapecoveDcache/DCache.scala:231:42, :266:31]
-    s2_validRefill <= s1_validRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:104:35, :267:31]
-    if (s1_bypassReplace)	// @[src/main/scala/grapecoveDcache/DCache.scala:50:33]
-      REG <= 26'h0;	// @[src/main/scala/chisel3/util/Mux.scala:30:73, src/main/scala/grapecoveDcache/DCache.scala:318:55]
-    else if (s1_bypassStore_valid)	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29]
-      REG <= s1_bypassStore_bits_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29, :318:55]
-    else if (s1_req_isRefill)	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-      REG <= _GEN_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:130:29, :318:55]
-    else	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-      REG <= _s1_metaPreBypass_WIRE_2;	// @[src/main/scala/chisel3/util/Mux.scala:30:73, src/main/scala/grapecoveDcache/DCache.scala:318:55]
+    s2_updateMeta <= s1_updateMeta;	// @[src/main/scala/grapecoveDcache/DCache.scala:231:64, :266:31]
+    s2_updateData <= s1_updateData;	// @[src/main/scala/grapecoveDcache/DCache.scala:232:42, :267:31]
+    s2_validRefill <= s1_validRefill;	// @[src/main/scala/grapecoveDcache/DCache.scala:105:35, :268:31]
+    if (s1_bypassReplace)	// @[src/main/scala/grapecoveDcache/DCache.scala:51:33]
+      REG <= 26'h0;	// @[src/main/scala/chisel3/util/Mux.scala:30:73, src/main/scala/grapecoveDcache/DCache.scala:319:55]
+    else if (s1_bypassStore_valid)	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29]
+      REG <= s1_bypassStore_bits_tag;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29, :319:55]
+    else if (s1_req_isRefill)	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+      REG <= _GEN_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:131:29, :319:55]
+    else	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+      REG <= _s1_metaPreBypass_WIRE_2;	// @[src/main/scala/chisel3/util/Mux.scala:30:73, src/main/scala/grapecoveDcache/DCache.scala:319:55]
     if (reset) begin	// @[<stdin>:8138:11]
-      s1_bypassReplace <= 1'h0;	// @[src/main/scala/grapecoveDcache/DCache.scala:50:33, :408:25]
-      lrscCount <= 7'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:377:20, src/main/scala/grapecoveDcache/DCache.scala:184:26]
-      s2_wayEn <= 4'h0;	// @[src/main/scala/grapecoveDcache/DCache.scala:85:89, :263:31]
-      s2_newCoh <= 2'h0;	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26, :264:31]
+      s1_bypassReplace <= 1'h0;	// @[src/main/scala/grapecoveDcache/DCache.scala:51:33, :409:25]
+      lrscCount <= 7'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:377:20, src/main/scala/grapecoveDcache/DCache.scala:185:26]
+      s2_wayEn <= 4'h0;	// @[src/main/scala/grapecoveDcache/DCache.scala:86:89, :264:31]
+      s2_newCoh <= 2'h0;	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26, :265:31]
       state_vec_0 <= 6'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, :374:17]
       state_vec_1 <= 6'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, :374:17]
       state_vec_2 <= 6'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, :374:17]
@@ -3940,285 +3943,285 @@ module GPCDCache(	// @[<stdin>:8137:10]
     else begin	// @[<stdin>:8138:11]
       s1_bypassReplace <=
         s1_validRefill & _GEN_17 == {s1_meta_tag, s1_req_paddr[12:6]} | s2_validRefill
-        & _GEN_17 == {REG, s2_req_paddr[12:6]};	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:50:33, :99:27, :104:35, :262:27, :267:31, :318:55, :322:{10,40,47}, :323:14]
-      if (s1_valid & (|lrscCount))	// @[src/main/scala/grapecoveDcache/DCache.scala:100:36, :184:26, :198:{17,29}]
-        lrscCount <= 7'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:377:20, src/main/scala/grapecoveDcache/DCache.scala:184:26]
-      else if (s1_hit & s1_lr)	// @[src/main/scala/grapecoveDcache/DCache.scala:150:52, :187:24, :200:15]
-        lrscCount <= 7'h4F;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:184:26]
-      else if (|lrscCount)	// @[src/main/scala/grapecoveDcache/DCache.scala:184:26, :198:29]
-        lrscCount <= lrscCount - 7'h1;	// @[src/main/scala/grapecoveDcache/DCache.scala:184:26, :202:39]
-      if (_T_9) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:261:46]
-        s2_wayEn <= s1_bypassStoreCandidate_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:254:5, :263:31]
-        s2_newCoh <= s1_bypassStoreCandidate_coh;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:264:31]
+        & _GEN_17 == {REG, s2_req_paddr[12:6]};	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:51:33, :100:27, :105:35, :263:27, :268:31, :319:55, :323:{10,40,47}, :324:14]
+      if (s1_validFromCore & (|lrscCount))	// @[src/main/scala/grapecoveDcache/DCache.scala:103:35, :185:26, :199:{25,37}]
+        lrscCount <= 7'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:377:20, src/main/scala/grapecoveDcache/DCache.scala:185:26]
+      else if (s1_hit & s1_lr)	// @[src/main/scala/grapecoveDcache/DCache.scala:151:60, :188:32, :201:15]
+        lrscCount <= 7'h4F;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:185:26]
+      else if (|lrscCount)	// @[src/main/scala/grapecoveDcache/DCache.scala:185:26, :199:37]
+        lrscCount <= lrscCount - 7'h1;	// @[src/main/scala/grapecoveDcache/DCache.scala:185:26, :203:39]
+      if (_T_9) begin	// @[src/main/scala/grapecoveDcache/DCache.scala:262:46]
+        s2_wayEn <= s1_bypassStoreCandidate_wayEn;	// @[src/main/scala/grapecoveDcache/DCache.scala:255:5, :264:31]
+        s2_newCoh <= s1_bypassStoreCandidate_coh;	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:265:31]
       end
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h0)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h0)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_0 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_1 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_2 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_3 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_4 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_5 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_6 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_7 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h8)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h8)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_8 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h9)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h9)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_9 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hA)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hA)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_10 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hB)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hB)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_11 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hC)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hC)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_12 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hD)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hD)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_13 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hE)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hE)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_14 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hF)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'hF)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_15 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h10)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h10)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_16 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h11)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h11)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_17 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h12)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h12)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_18 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h13)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h13)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_19 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h14)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h14)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_20 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h15)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h15)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_21 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h16)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h16)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_22 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h17)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h17)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_23 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h18)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h18)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_24 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h19)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h19)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_25 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_26 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_27 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_28 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_29 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_30 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h1F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_31 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h20)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h20)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_32 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h21)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h21)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_33 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h22)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h22)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_34 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h23)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h23)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_35 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h24)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h24)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_36 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h25)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h25)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_37 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h26)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h26)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_38 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h27)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h27)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_39 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h28)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h28)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_40 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h29)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h29)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_41 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_42 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_43 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_44 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_45 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_46 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h2F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_47 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h30)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h30)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_48 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h31)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h31)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_49 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h32)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h32)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_50 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h33)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h33)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_51 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h34)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h34)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_52 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h35)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h35)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_53 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h36)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h36)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_54 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h37)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h37)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_55 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h38)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h38)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_56 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h39)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h39)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_57 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_58 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_59 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_60 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_61 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_62 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h3F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_63 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h40)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h40)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_64 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h41)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h41)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_65 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h42)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h42)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_66 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h43)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h43)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_67 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h44)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h44)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_68 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h45)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h45)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_69 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h46)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h46)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_70 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h47)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h47)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_71 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h48)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h48)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_72 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h49)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h49)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_73 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_74 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_75 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_76 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_77 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_78 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h4F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_79 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h50)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h50)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_80 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h51)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h51)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_81 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h52)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h52)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_82 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h53)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h53)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_83 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h54)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h54)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_84 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h55)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h55)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_85 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h56)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h56)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_86 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h57)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h57)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_87 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h58)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h58)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_88 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h59)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h59)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_89 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_90 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_91 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_92 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_93 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_94 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h5F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_95 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h60)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h60)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_96 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h61)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h61)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_97 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h62)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h62)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_98 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h63)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h63)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_99 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h64)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h64)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_100 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h65)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h65)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_101 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h66)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h66)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_102 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h67)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h67)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_103 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h68)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h68)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_104 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h69)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h69)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_105 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_106 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_107 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_108 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_109 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_110 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h6F)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_111 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h70)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h70)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_112 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h71)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h71)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_113 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h72)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h72)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_114 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h73)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h73)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_115 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h74)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h74)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_116 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h75)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h75)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_117 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h76)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h76)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_118 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h77)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h77)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_119 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h78)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h78)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_120 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h79)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h79)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_121 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7A)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_122 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7B)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_123 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7C)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_124 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7D)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_125 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & s1_req_paddr[12:6] == 7'h7E)	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_126 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
-      if (s1_updateReplacer & (&(s1_req_paddr[12:6])))	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :256:34, :335:27]
+      if (s1_updateReplacer & (&(s1_req_paddr[12:6])))	// @[rocket-chip/src/main/scala/util/Replacement.scala:374:17, :377:20, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :257:34, :336:27]
         state_vec_127 <= _state_vec_T_4;	// @[rocket-chip/src/main/scala/util/Replacement.scala:110:112, :374:17]
     end
   end // always @(posedge)
-  MetaArray metaArray (	// @[src/main/scala/grapecoveDcache/DCache.scala:22:27]
+  MetaArray metaArray (	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
     .clock                  (clock),
     .reset                  (reset),
-    .io_read_valid          (s0_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:80:42]
-    .io_read_bits_setIdx    (_mainReqArb_io_out_bits_paddr[12:6]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:65:26]
-    .io_write_valid         (s2_updateMeta),	// @[src/main/scala/grapecoveDcache/DCache.scala:265:31]
-    .io_write_bits_setIdx   (s2_req_paddr[12:6]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:262:27]
-    .io_write_bits_wayEn    (s2_wayEn),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:31]
-    .io_write_bits_data_tag (s2_req_paddr[38:13]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:262:27]
-    .io_write_bits_data_coh (s2_newCoh),	// @[src/main/scala/grapecoveDcache/DCache.scala:264:31]
+    .io_read_valid          (s0_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:81:42]
+    .io_read_bits_setIdx    (_mainReqArb_io_out_bits_paddr[12:6]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:66:26]
+    .io_write_valid         (s2_updateMeta),	// @[src/main/scala/grapecoveDcache/DCache.scala:266:31]
+    .io_write_bits_setIdx   (s2_req_paddr[12:6]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:263:27]
+    .io_write_bits_wayEn    (s2_wayEn),	// @[src/main/scala/grapecoveDcache/DCache.scala:264:31]
+    .io_write_bits_data_tag (s2_req_paddr[38:13]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:23:9, src/main/scala/grapecoveDcache/DCache.scala:263:27]
+    .io_write_bits_data_coh (s2_newCoh),	// @[src/main/scala/grapecoveDcache/DCache.scala:265:31]
     .io_resp_0_tag          (_metaArray_io_resp_0_tag),
     .io_resp_0_coh          (_metaArray_io_resp_0_coh),
     .io_resp_1_tag          (_metaArray_io_resp_1_tag),
@@ -4228,22 +4231,22 @@ module GPCDCache(	// @[<stdin>:8137:10]
     .io_resp_3_tag          (_metaArray_io_resp_3_tag),
     .io_resp_3_coh          (_metaArray_io_resp_3_coh)
   );
-  DataArray dataArray (	// @[src/main/scala/grapecoveDcache/DCache.scala:23:27]
+  DataArray dataArray (	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
     .clock                (clock),
     .reset                (reset),
-    .io_read_valid        (s0_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:80:42]
-    .io_read_bits_setIdx  (_mainReqArb_io_out_bits_paddr[12:6]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:65:26]
-    .io_write_valid       (s2_updateData),	// @[src/main/scala/grapecoveDcache/DCache.scala:266:31]
-    .io_write_bits_setIdx (s2_req_paddr[12:6]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:262:27]
-    .io_write_bits_wayEn  (s2_wayEn),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:31]
-    .io_write_bits_data_0 (s2_req_wdata[63:0]),	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27, :288:83]
-    .io_write_bits_data_1 (s2_req_wdata[127:64]),	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27, :288:83]
-    .io_write_bits_data_2 (s2_req_wdata[191:128]),	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27, :288:83]
-    .io_write_bits_data_3 (s2_req_wdata[255:192]),	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27, :288:83]
-    .io_write_bits_data_4 (s2_req_wdata[319:256]),	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27, :288:83]
-    .io_write_bits_data_5 (s2_req_wdata[383:320]),	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27, :288:83]
-    .io_write_bits_data_6 (s2_req_wdata[447:384]),	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27, :288:83]
-    .io_write_bits_data_7 (s2_req_wdata[511:448]),	// @[src/main/scala/grapecoveDcache/DCache.scala:262:27, :288:83]
+    .io_read_valid        (s0_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:81:42]
+    .io_read_bits_setIdx  (_mainReqArb_io_out_bits_paddr[12:6]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:66:26]
+    .io_write_valid       (s2_updateData),	// @[src/main/scala/grapecoveDcache/DCache.scala:267:31]
+    .io_write_bits_setIdx (s2_req_paddr[12:6]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:263:27]
+    .io_write_bits_wayEn  (s2_wayEn),	// @[src/main/scala/grapecoveDcache/DCache.scala:264:31]
+    .io_write_bits_data_0 (s2_req_wdata[63:0]),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27, :289:83]
+    .io_write_bits_data_1 (s2_req_wdata[127:64]),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27, :289:83]
+    .io_write_bits_data_2 (s2_req_wdata[191:128]),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27, :289:83]
+    .io_write_bits_data_3 (s2_req_wdata[255:192]),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27, :289:83]
+    .io_write_bits_data_4 (s2_req_wdata[319:256]),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27, :289:83]
+    .io_write_bits_data_5 (s2_req_wdata[383:320]),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27, :289:83]
+    .io_write_bits_data_6 (s2_req_wdata[447:384]),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27, :289:83]
+    .io_write_bits_data_7 (s2_req_wdata[511:448]),	// @[src/main/scala/grapecoveDcache/DCache.scala:263:27, :289:83]
     .io_resp_0_0          (_dataArray_io_resp_0_0),
     .io_resp_0_1          (_dataArray_io_resp_0_1),
     .io_resp_0_2          (_dataArray_io_resp_0_2),
@@ -4277,39 +4280,39 @@ module GPCDCache(	// @[<stdin>:8137:10]
     .io_resp_3_6          (_dataArray_io_resp_3_6),
     .io_resp_3_7          (_dataArray_io_resp_3_7)
   );
-  MSHRFile mshrs (	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  MSHRFile mshrs (	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
     .clock                             (clock),
     .reset                             (reset),
-    .io_pipelineReq_valid              (s1_mshrAlloc),	// @[src/main/scala/grapecoveDcache/DCache.scala:349:54]
-    .io_pipelineReq_bits_isUpgrade     (s1_upgradePermMiss),	// @[src/main/scala/grapecoveDcache/DCache.scala:153:52]
-    .io_pipelineReq_bits_lineAddr      (_GEN_13),	// @[src/main/scala/grapecoveDcache/DCache.scala:356:43]
-    .io_pipelineReq_bits_meta_sourceId (s1_req_source),	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-    .io_pipelineReq_bits_meta_regIdx   (s1_req_dest),	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-    .io_pipelineReq_bits_meta_size     (s1_req_size),	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-    .io_pipelineReq_bits_meta_signed   (s1_req_signed),	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-    .io_pipelineReq_bits_meta_offset   (s1_req_paddr[5:0]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:11:9, src/main/scala/grapecoveDcache/DCache.scala:99:27]
+    .io_pipelineReq_valid              (s1_mshrAlloc),	// @[src/main/scala/grapecoveDcache/DCache.scala:350:54]
+    .io_pipelineReq_bits_isUpgrade     (s1_upgradePermMiss),	// @[src/main/scala/grapecoveDcache/DCache.scala:154:60]
+    .io_pipelineReq_bits_lineAddr      (_GEN_13),	// @[src/main/scala/grapecoveDcache/DCache.scala:357:43]
+    .io_pipelineReq_bits_meta_sourceId (s1_req_source),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+    .io_pipelineReq_bits_meta_regIdx   (s1_req_dest),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+    .io_pipelineReq_bits_meta_size     (s1_req_size),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+    .io_pipelineReq_bits_meta_signed   (s1_req_signed),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+    .io_pipelineReq_bits_meta_offset   (s1_req_paddr[5:0]),	// @[src/main/scala/grapecoveDcache/AddrDecoder.scala:11:9, src/main/scala/grapecoveDcache/DCache.scala:100:27]
     .io_pipelineReq_bits_meta_rwType
       (_mshrs_io_pipelineReq_bits_meta_rwType_T
        | _mshrs_io_pipelineReq_bits_meta_rwType_T_1 | _s1_cacheResp_bits_hasData_T_3
-       | _s1_cacheResp_bits_hasData_T_7 | _s1_cacheResp_bits_hasData_T_8
        | _s1_cacheResp_bits_hasData_T_9 | _s1_cacheResp_bits_hasData_T_10
-       | _s1_cacheResp_bits_hasData_T_14 | _s1_cacheResp_bits_hasData_T_15
+       | _s1_cacheResp_bits_hasData_T_11 | _s1_cacheResp_bits_hasData_T_12
        | _s1_cacheResp_bits_hasData_T_16 | _s1_cacheResp_bits_hasData_T_17
-       | _s1_cacheResp_bits_hasData_T_18),	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66}, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/MemConstants.scala:45:82]
-    .io_pipelineReq_bits_mask          (s1_req_wmask),	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
+       | _s1_cacheResp_bits_hasData_T_18 | _s1_cacheResp_bits_hasData_T_19
+       | _s1_cacheResp_bits_hasData_T_20),	// @[rocket-chip/src/main/scala/rocket/Consts.scala:86:{32,49,66}, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/MemConstants.scala:45:82]
+    .io_pipelineReq_bits_mask          (s1_req_wmask),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
     .io_pipelineReq_bits_data
-      (s1_req_isRefill ? s1_req_wdata : _s1_storeData_T_16 ? _GEN_10 : s1_mergeStoreData),	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :169:50, :176:76, :235:{8,43}, src/main/scala/grapecoveDcache/MemConstants.scala:42:52]
+      (s1_req_isRefill ? s1_req_wdata : _s1_storeData_T_16 ? _GEN_10 : s1_mergeStoreData),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :170:50, :177:76, :236:{8,43}, src/main/scala/grapecoveDcache/MemConstants.scala:42:52]
     .io_toL2Req_ready                  (nodeOut_a_ready),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-    .io_fromRefill_valid               (_refillQueue_io_toCore_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
-    .io_fromRefill_bits_entryId        (_refillQueue_io_toCore_bits_entryId),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
-    .io_fromRefill_bits_data           (_refillQueue_io_toCore_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
-    .io_fromRefill_bits_probeMatch     (_refillQueue_io_toCore_bits_probeMatch),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
-    .io_fromProbe_valid                (_probeQueue_io_probeCheck_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_fromProbe_probePermission      (_probeQueue_io_probeCheck_probePermission),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_fromProbe_lineAddr             (_probeQueue_io_probeCheck_lineAddr),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_toPipeline_ready               (1'h1),	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-    .io_toReplace_ready                (1'h1),	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-    .io_replaceFinish                  (s2_validRefill),	// @[src/main/scala/grapecoveDcache/DCache.scala:267:31]
+    .io_fromRefill_valid               (_refillQueue_io_toCore_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+    .io_fromRefill_bits_entryId        (_refillQueue_io_toCore_bits_entryId),	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+    .io_fromRefill_bits_data           (_refillQueue_io_toCore_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+    .io_fromRefill_bits_probeMatch     (_refillQueue_io_toCore_bits_probeMatch),	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+    .io_fromProbe_valid                (_probeQueue_io_probeCheck_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_fromProbe_probePermission      (_probeQueue_io_probeCheck_probePermission),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_fromProbe_lineAddr             (_probeQueue_io_probeCheck_lineAddr),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_toPipeline_ready               (1'h1),	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+    .io_toReplace_ready                (1'h1),	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+    .io_replaceFinish                  (s2_validRefill),	// @[src/main/scala/grapecoveDcache/DCache.scala:268:31]
     .io_pipelineReq_ready              (_mshrs_io_pipelineReq_ready),
     .io_toL2Req_valid                  (nodeOut_a_valid),
     .io_toL2Req_bits_perm              (_mshrs_io_toL2Req_bits_perm),
@@ -4331,19 +4334,19 @@ module GPCDCache(	// @[<stdin>:8137:10]
     .io_toReplace_bits_lineAddr        (_mshrs_io_toReplace_bits_lineAddr),
     .io_toReplace_bits_data            (_mshrs_io_toReplace_bits_data)
   );
-  WritebackQueue wbQueue (	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+  WritebackQueue wbQueue (	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
     .clock                   (clock),
     .reset                   (reset),
-    .io_req_valid            (_wbArbiter_io_out_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-    .io_req_bits_voluntary   (_wbArbiter_io_out_bits_voluntary),	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-    .io_req_bits_lineAddr    (_wbArbiter_io_out_bits_lineAddr),	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-    .io_req_bits_perm        (_wbArbiter_io_out_bits_perm),	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-    .io_req_bits_hasData     (_wbArbiter_io_out_bits_hasData),	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-    .io_req_bits_data        (_wbArbiter_io_out_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-    .io_missCheck_valid      (s1_valid & ~s1_hit),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:36, :150:52, :349:46, :423:45]
-    .io_missCheck_lineAddr   (_GEN_13),	// @[src/main/scala/grapecoveDcache/DCache.scala:356:43]
+    .io_req_valid            (_wbArbiter_io_out_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+    .io_req_bits_voluntary   (_wbArbiter_io_out_bits_voluntary),	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+    .io_req_bits_lineAddr    (_wbArbiter_io_out_bits_lineAddr),	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+    .io_req_bits_perm        (_wbArbiter_io_out_bits_perm),	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+    .io_req_bits_hasData     (_wbArbiter_io_out_bits_hasData),	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+    .io_req_bits_data        (_wbArbiter_io_out_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+    .io_missCheck_valid      (s1_validFromCore & ~s1_hit),	// @[src/main/scala/grapecoveDcache/DCache.scala:103:35, :151:60, :350:46, :424:53]
+    .io_missCheck_lineAddr   (_GEN_13),	// @[src/main/scala/grapecoveDcache/DCache.scala:357:43]
     .io_release_ready        (nodeOut_c_ready),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-    .io_grant_valid          (_T_76 & nodeOut_d_valid),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:429:26, :492:{29,56}, :493:14]
+    .io_grant_valid          (_T_76 & nodeOut_d_valid),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:430:26, :493:{29,56}, :494:14]
     .io_grant_bits_source    (nodeOut_d_bits_source),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
     .io_req_ready            (_wbQueue_io_req_ready),
     .io_missCheck_blockMiss  (_wbQueue_io_missCheck_blockMiss),
@@ -4354,7 +4357,7 @@ module GPCDCache(	// @[<stdin>:8137:10]
     .io_release_bits_address (nodeOut_c_bits_address),
     .io_release_bits_data    (nodeOut_c_bits_data)
   );
-  ProbeQueue probeQueue (	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
+  ProbeQueue probeQueue (	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
     .clock                         (clock),
     .reset                         (reset),
     .io_memProbe_valid             (nodeOut_b_valid),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
@@ -4366,12 +4369,12 @@ module GPCDCache(	// @[<stdin>:8137:10]
     .io_memProbe_bits_mask         (nodeOut_b_bits_mask),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
     .io_memProbe_bits_data         (nodeOut_b_bits_data),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
     .io_memProbe_bits_corrupt      (nodeOut_b_bits_corrupt),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-    .io_wbReq_ready                (_wbArbiter_io_in_1_ready),	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-    .io_lrscAddr_valid             (|_lrscCount_6to2),	// @[src/main/scala/grapecoveDcache/DCache.scala:185:29]
-    .io_probeCheck_hitGo           (_mshrs_io_fromProbe_hitGo),	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-    .io_probeCheck_hit             (_mshrs_io_fromProbe_hit),	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+    .io_wbReq_ready                (_wbArbiter_io_in_1_ready),	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+    .io_lrscAddr_valid             (|_lrscCount_6to2),	// @[src/main/scala/grapecoveDcache/DCache.scala:186:29]
+    .io_probeCheck_hitGo           (_mshrs_io_fromProbe_hitGo),	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+    .io_probeCheck_hit             (_mshrs_io_fromProbe_hit),	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
     .io_probeResp
-      (s1_validProbe ? (_wbArbiter_io_in_0_ready & wbPipeReq_valid ? 2'h1 : 2'h2) : 2'h0),	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/DCache.scala:59:74, :65:26, :103:35, :408:25, :411:42, :444:33, :447:8]
+      (s1_validProbe ? (_wbArbiter_io_in_0_ready & wbPipeReq_valid ? 2'h1 : 2'h2) : 2'h0),	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/DCache.scala:60:74, :66:26, :104:35, :409:25, :412:42, :445:33, :448:8]
     .io_memProbe_ready             (nodeOut_b_ready),
     .io_mainPipeReq_valid          (_probeQueue_io_mainPipeReq_valid),
     .io_mainPipeReq_bits_source    (_probeQueue_io_mainPipeReq_bits_source),
@@ -4385,50 +4388,50 @@ module GPCDCache(	// @[<stdin>:8137:10]
     .io_probeCheck_probePermission (_probeQueue_io_probeCheck_probePermission),
     .io_probeCheck_lineAddr        (_probeQueue_io_probeCheck_lineAddr)
   );
-  RefillQueue refillQueue (	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+  RefillQueue refillQueue (	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
     .clock                     (clock),
     .reset                     (reset),
-    .io_fromL2_valid           (_refillInter_io_toRefill_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
-    .io_fromL2_bits_entryId    (_refillInter_io_toRefill_bits_entryId),	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
-    .io_fromL2_bits_data       (_refillInter_io_toRefill_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
-    .io_fromL2_bits_hasData    (_refillInter_io_toRefill_bits_hasData),	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
-    .io_fromProbe_valid        (_mshrs_io_probeRefill_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-    .io_fromProbe_bits_entryId (_mshrs_io_probeRefill_bits_entryId),	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-    .io_toCore_ready           (_mshrs_io_fromRefill_ready),	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+    .io_fromL2_valid           (_refillInter_io_toRefill_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:29:27]
+    .io_fromL2_bits_entryId    (_refillInter_io_toRefill_bits_entryId),	// @[src/main/scala/grapecoveDcache/DCache.scala:29:27]
+    .io_fromL2_bits_data       (_refillInter_io_toRefill_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:29:27]
+    .io_fromL2_bits_hasData    (_refillInter_io_toRefill_bits_hasData),	// @[src/main/scala/grapecoveDcache/DCache.scala:29:27]
+    .io_fromProbe_valid        (_mshrs_io_probeRefill_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+    .io_fromProbe_bits_entryId (_mshrs_io_probeRefill_bits_entryId),	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+    .io_toCore_ready           (_mshrs_io_fromRefill_ready),	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
     .io_fromL2_ready           (_refillQueue_io_fromL2_ready),
     .io_toCore_valid           (_refillQueue_io_toCore_valid),
     .io_toCore_bits_entryId    (_refillQueue_io_toCore_bits_entryId),
     .io_toCore_bits_data       (_refillQueue_io_toCore_bits_data),
     .io_toCore_bits_probeMatch (_refillQueue_io_toCore_bits_probeMatch)
   );
-  TLDInterface refillInter (	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
+  TLDInterface refillInter (	// @[src/main/scala/grapecoveDcache/DCache.scala:29:27]
     .clock                    (clock),
     .reset                    (reset),
     .io_fromL2_valid          (nodeOut_d_valid),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
     .io_fromL2_bits_opcode    (nodeOut_d_bits_opcode),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-    .io_fromL2_bits_source    (nodeOut_d_bits_source[2:0]),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:393:37]
+    .io_fromL2_bits_source    (nodeOut_d_bits_source[2:0]),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17, src/main/scala/grapecoveDcache/DCache.scala:394:37]
     .io_fromL2_bits_data      (nodeOut_d_bits_data),	// @[rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-    .io_toRefill_ready        (_refillQueue_io_fromL2_ready),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_toRefill_ready        (_refillQueue_io_fromL2_ready),	// @[src/main/scala/grapecoveDcache/DCache.scala:28:27]
     .io_toRefill_valid        (_refillInter_io_toRefill_valid),
     .io_toRefill_bits_entryId (_refillInter_io_toRefill_bits_entryId),
     .io_toRefill_bits_data    (_refillInter_io_toRefill_bits_data),
     .io_toRefill_bits_hasData (_refillInter_io_toRefill_bits_hasData)
   );
-  Arbiter_1 mainReqArb (	// @[src/main/scala/grapecoveDcache/DCache.scala:65:26]
-    .io_in_0_valid           (_probeQueue_io_mainPipeReq_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_in_0_bits_source     (_probeQueue_io_mainPipeReq_bits_source),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_in_0_bits_paddr      (_probeQueue_io_mainPipeReq_bits_paddr),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_in_0_bits_cmd        (_probeQueue_io_mainPipeReq_bits_cmd),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_in_0_bits_probePerm  (_probeQueue_io_mainPipeReq_bits_probePerm),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_in_1_valid           (_mshrs_io_toReplace_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-    .io_in_1_bits_paddr      ({_mshrs_io_toReplace_bits_lineAddr, 6'h0}),	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, src/main/scala/grapecoveDcache/DCache.scala:24:27, src/main/scala/grapecoveDcache/DataExchangeIO.scala:105:43]
-    .io_in_1_bits_wdata      (_mshrs_io_toReplace_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
+  Arbiter_1 mainReqArb (	// @[src/main/scala/grapecoveDcache/DCache.scala:66:26]
+    .io_in_0_valid           (_probeQueue_io_mainPipeReq_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_in_0_bits_source     (_probeQueue_io_mainPipeReq_bits_source),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_in_0_bits_paddr      (_probeQueue_io_mainPipeReq_bits_paddr),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_in_0_bits_cmd        (_probeQueue_io_mainPipeReq_bits_cmd),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_in_0_bits_probePerm  (_probeQueue_io_mainPipeReq_bits_probePerm),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_in_1_valid           (_mshrs_io_toReplace_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+    .io_in_1_bits_paddr      ({_mshrs_io_toReplace_bits_lineAddr, 6'h0}),	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, src/main/scala/grapecoveDcache/DCache.scala:25:27, src/main/scala/grapecoveDcache/DataExchangeIO.scala:105:43]
+    .io_in_1_bits_wdata      (_mshrs_io_toReplace_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
     .io_in_1_bits_refillWay
       ({|{victimWay_mruWayDec_lowerMoreRecent_2,
           _GEN_12[5] & ~(_GEN_12[1]) & ~(_GEN_12[3])},
         victimWay_mruWayDec_lowerMoreRecent_2 | (&(_GEN_12[4:3])) & ~(_GEN_12[0])}),	// @[rocket-chip/src/main/scala/util/Replacement.scala:93:36, :129:98, :130:{84,86,100}, :131:23, src/main/scala/chisel3/util/OneHot.scala:30:18, :32:{10,14,28}]
-    .io_in_1_bits_refillCoh  (_mshrs_io_toReplace_bits_state),	// @[src/main/scala/grapecoveDcache/DCache.scala:24:27]
-    .io_in_2_valid           (io_req_valid & ~blockReq),	// @[src/main/scala/grapecoveDcache/DCache.scala:59:33, :70:{45,47}]
+    .io_in_1_bits_refillCoh  (_mshrs_io_toReplace_bits_state),	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+    .io_in_2_valid           (io_req_valid & ~blockReq),	// @[src/main/scala/grapecoveDcache/DCache.scala:60:33, :71:{45,47}]
     .io_in_2_bits_source     (io_req_bits_source),
     .io_in_2_bits_paddr      (io_req_bits_paddr),
     .io_in_2_bits_cmd        (io_req_bits_cmd),
@@ -4437,7 +4440,7 @@ module GPCDCache(	// @[<stdin>:8137:10]
     .io_in_2_bits_wdata      (io_req_bits_wdata),
     .io_in_2_bits_wmask      (io_req_bits_wmask),
     .io_in_2_bits_dest       (io_req_bits_dest),
-    .io_in_2_bits_isFromCore (~io_req_bits_isRefill),	// @[src/main/scala/grapecoveDcache/DCache.scala:49:29, src/main/scala/grapecoveDcache/DataExchangeIO.scala:82:34, :106:27]
+    .io_in_2_bits_isFromCore (~io_req_bits_isRefill),	// @[src/main/scala/grapecoveDcache/DCache.scala:50:29, src/main/scala/grapecoveDcache/DataExchangeIO.scala:82:34, :106:27]
     .io_in_2_bits_isRefill   (io_req_bits_isRefill),
     .io_in_2_bits_refillWay  (io_req_bits_refillWay),
     .io_in_2_bits_refillCoh  (io_req_bits_refillCoh),
@@ -4458,21 +4461,21 @@ module GPCDCache(	// @[<stdin>:8137:10]
     .io_out_bits_refillWay   (_mainReqArb_io_out_bits_refillWay),
     .io_out_bits_refillCoh   (_mainReqArb_io_out_bits_refillCoh)
   );
-  AMOALU amoalu (	// @[src/main/scala/grapecoveDcache/DCache.scala:174:31]
+  AMOALU amoalu (	// @[src/main/scala/grapecoveDcache/DCache.scala:175:31]
     .io_mask
       (s1_req_paddr[5] | s1_req_paddr[4] | s1_req_paddr[3]
          ? 8'h0
          : {(s1_req_paddr[2] ? _amoalu_io_mask_T_1 : 4'h0) | {4{s1_req_size > 3'h2}},
-            s1_req_paddr[2] ? 4'h0 : _amoalu_io_mask_T_1}),	// @[rocket-chip/src/main/scala/util/Misc.scala:38:36, src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:85:89, :99:27, :168:42]
-    .io_cmd  (s1_req_cmd),	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-    .io_lhs  (_amoalu_io_lhs_T_1[63:0]),	// @[src/main/scala/grapecoveDcache/DCache.scala:180:{30,55}]
-    .io_rhs  (s1_req_wdata[63:0]),	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27, :181:18]
+            s1_req_paddr[2] ? 4'h0 : _amoalu_io_mask_T_1}),	// @[rocket-chip/src/main/scala/util/Misc.scala:38:36, src/main/scala/grapecoveDcache/AMOALU.scala:16:{22,27,42,47,53}, :17:22, :18:16, src/main/scala/grapecoveDcache/DCache.scala:86:89, :100:27, :169:42]
+    .io_cmd  (s1_req_cmd),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+    .io_lhs  (_amoalu_io_lhs_T_1[63:0]),	// @[src/main/scala/grapecoveDcache/DCache.scala:181:{30,55}]
+    .io_rhs  (s1_req_wdata[63:0]),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27, :182:18]
     .io_out  (_amoalu_io_out)
   );
-  Arbiter_2 wbArbiter (	// @[src/main/scala/grapecoveDcache/DCache.scala:408:25]
-    .io_in_0_valid          (wbPipeReq_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:411:42]
-    .io_in_0_bits_voluntary (s1_req_isRefill),	// @[src/main/scala/grapecoveDcache/DCache.scala:99:27]
-    .io_in_0_bits_lineAddr  (s1_validProbe ? _GEN_13 : {s1_meta_tag, s1_req_paddr[12:6]}),	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:99:27, :103:35, :218:30, :356:43, :415:34]
+  Arbiter_2 wbArbiter (	// @[src/main/scala/grapecoveDcache/DCache.scala:409:25]
+    .io_in_0_valid          (wbPipeReq_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:412:42]
+    .io_in_0_bits_voluntary (s1_req_isRefill),	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
+    .io_in_0_bits_lineAddr  (s1_validProbe ? _GEN_13 : {s1_meta_tag, s1_req_paddr[12:6]}),	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:100:27, :104:35, :219:30, :357:43, :416:34]
     .io_in_0_bits_perm
       (s1_validProbe
          ? (_s1_newProbeCoh_T == 4'h3 | _s1_newProbeCoh_T == 4'h2
@@ -4494,13 +4497,13 @@ module GPCDCache(	// @[<stdin>:8137:10]
                       : 3'h5)
          : (&s1_cohMeta_state) | s1_cohMeta_state == 2'h2
              ? 3'h1
-             : s1_cohMeta_state == 2'h1 ? 3'h2 : s1_cohMeta_state == 2'h0 ? 3'h5 : 3'h0),	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:60:10, :61:10, :62:10, :63:10, :64:10, :69:10, :70:10, :120:19, rocket-chip/src/main/scala/util/Misc.scala:38:36, :56:20, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/AMOALU.scala:16:53, src/main/scala/grapecoveDcache/DCache.scala:59:74, :65:26, :103:35, :414:34]
-    .io_in_0_bits_hasData   (s1_validProbe ? s1_probeWbData : s1_replaceWb),	// @[src/main/scala/grapecoveDcache/DCache.scala:103:35, :215:58, :226:44, :416:34]
-    .io_in_0_bits_data      (wbPipeReq_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:158:20]
-    .io_in_1_valid          (_probeQueue_io_wbReq_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_in_1_bits_lineAddr  (_probeQueue_io_wbReq_bits_lineAddr),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_in_1_bits_perm      (_probeQueue_io_wbReq_bits_perm),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
-    .io_out_ready           (_wbQueue_io_req_ready),	// @[src/main/scala/grapecoveDcache/DCache.scala:25:27]
+             : s1_cohMeta_state == 2'h1 ? 3'h2 : s1_cohMeta_state == 2'h0 ? 3'h5 : 3'h0),	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:60:10, :61:10, :62:10, :63:10, :64:10, :69:10, :70:10, :120:19, rocket-chip/src/main/scala/util/Misc.scala:38:36, :56:20, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/AMOALU.scala:16:53, src/main/scala/grapecoveDcache/DCache.scala:60:74, :66:26, :104:35, :415:34]
+    .io_in_0_bits_hasData   (s1_validProbe ? s1_probeWbData : (&s1_cohMeta_state)),	// @[rocket-chip/src/main/scala/util/Misc.scala:56:20, src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/DCache.scala:104:35, :216:58, :417:34]
+    .io_in_0_bits_data      (wbPipeReq_bits_data),	// @[src/main/scala/grapecoveDcache/DCache.scala:159:20]
+    .io_in_1_valid          (_probeQueue_io_wbReq_valid),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_in_1_bits_lineAddr  (_probeQueue_io_wbReq_bits_lineAddr),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_in_1_bits_perm      (_probeQueue_io_wbReq_bits_perm),	// @[src/main/scala/grapecoveDcache/DCache.scala:27:27]
+    .io_out_ready           (_wbQueue_io_req_ready),	// @[src/main/scala/grapecoveDcache/DCache.scala:26:27]
     .io_in_0_ready          (_wbArbiter_io_in_0_ready),
     .io_in_1_ready          (_wbArbiter_io_in_1_ready),
     .io_out_valid           (_wbArbiter_io_out_valid),
@@ -4531,21 +4534,21 @@ module GPCDCache(	// @[<stdin>:8137:10]
   assign auto_out_d_ready = nodeOut_d_ready;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
   assign auto_out_e_valid = nodeOut_e_valid;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
   assign auto_out_e_bits_sink = nodeOut_e_bits_sink;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign io_req_ready = _mainReqArb_io_in_2_ready & ~blockReq;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:59:33, :65:26, :70:47, :76:64]
-  assign io_resp_valid = _io_resp_valid_output;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:478:40]
+  assign io_req_ready = _mainReqArb_io_in_2_ready & ~blockReq;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:60:33, :66:26, :71:47, :77:64]
+  assign io_resp_valid = _io_resp_valid_output;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:479:40]
   assign io_resp_bits_source =
-    s1_cacheResp_valid ? s1_req_source : _mshrs_io_toPipeline_bits_sID;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:24:27, :99:27, :102:35, :479:24]
+    s1_cacheResp_valid ? s1_req_source : _mshrs_io_toPipeline_bits_sID;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:25:27, :100:27, :455:49, :480:24]
   assign io_resp_bits_dest =
-    s1_cacheResp_valid ? s1_req_dest : _mshrs_io_toPipeline_bits_regIdx;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:24:27, :99:27, :102:35, :479:24]
-  assign io_resp_bits_status = _io_resp_bits_status_output;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:479:24]
+    s1_cacheResp_valid ? s1_req_dest : _mshrs_io_toPipeline_bits_regIdx;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:25:27, :100:27, :455:49, :480:24]
+  assign io_resp_bits_status = _io_resp_bits_status_output;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:480:24]
   assign io_resp_bits_hasData =
     ~s1_cacheResp_valid | s1_req_cmd == 5'h0 | s1_req_cmd == 5'h10
     | _s1_cacheResp_bits_hasData_T_2 | _s1_cacheResp_bits_hasData_T_3
-    | _s1_cacheResp_bits_hasData_T_7 | _s1_cacheResp_bits_hasData_T_8
-    | _s1_cacheResp_bits_hasData_T_9 | _s1_cacheResp_bits_hasData_T_10
-    | _s1_cacheResp_bits_hasData_T_14 | _s1_cacheResp_bits_hasData_T_15
-    | _s1_cacheResp_bits_hasData_T_16 | _s1_cacheResp_bits_hasData_T_17
-    | _s1_cacheResp_bits_hasData_T_18;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/rocket/Consts.scala:86:66, :87:71, rocket-chip/src/main/scala/tilelink/Metadata.scala:140:24, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:65:26, :99:27, :102:35, :479:24]
+    | _s1_cacheResp_bits_hasData_T_4 | _s1_cacheResp_bits_hasData_T_9
+    | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_11
+    | _s1_cacheResp_bits_hasData_T_12 | _s1_cacheResp_bits_hasData_T_16
+    | _s1_cacheResp_bits_hasData_T_17 | _s1_cacheResp_bits_hasData_T_18
+    | _s1_cacheResp_bits_hasData_T_19 | _s1_cacheResp_bits_hasData_T_20;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/rocket/Consts.scala:86:66, :87:71, rocket-chip/src/main/scala/tilelink/Metadata.scala:140:24, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27, :455:49, :480:24, src/main/scala/grapecoveDcache/MemConstants.scala:43:38]
   assign io_resp_bits_data =
     s1_cacheResp_valid
       ? (s1_sc
@@ -4572,7 +4575,7 @@ module GPCDCache(	// @[<stdin>:8137:10]
                         s1_cacheResp_bits_data_shifted_3[31:16]},
                    s1_cacheResp_bits_data_shifted_4[15:8]},
               s1_cacheResp_bits_data_shifted_5})
-      : _mshrs_io_toPipeline_bits_regData;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/util/Misc.scala:38:36, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AMOALU.scala:16:53, :38:{24,37}, :41:16, :42:12, :43:16, :44:{15,49,58}, :45:14, src/main/scala/grapecoveDcache/DCache.scala:24:27, :65:26, :99:27, :102:35, :158:20, :176:40, :188:24, :192:32, :457:35, :479:24]
-  assign io_nextCycleWb = _mshrs_io_toPipeline_bits_nextCycleWb;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:24:27]
+      : _mshrs_io_toPipeline_bits_regData;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/util/Misc.scala:38:36, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AMOALU.scala:16:53, :38:{24,37}, :41:16, :42:12, :43:16, :44:{15,49,58}, :45:14, src/main/scala/grapecoveDcache/DCache.scala:25:27, :66:26, :100:27, :159:20, :177:40, :189:32, :193:32, :455:49, :458:35, :480:24]
+  assign io_nextCycleWb = _mshrs_io_toPipeline_bits_nextCycleWb;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:25:27]
 endmodule
 
