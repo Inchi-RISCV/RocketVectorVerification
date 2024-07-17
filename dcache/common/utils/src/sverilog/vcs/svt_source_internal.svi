@@ -1,0 +1,122 @@
+//=======================================================================
+// COPYRIGHT (C) 2007-2017 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_SOURCE_INTERNAL_SVI
+`define GUARD_SVT_SOURCE_INTERNAL_SVI
+
+
+//svt_vcs_lic_vip_protect
+`protected
+V]M-F5_AGF@<XE&VQXD=\ZF;BO9b_1-NYX-1dRb.bQEKQ\XP<_L63(8EGI(#Q^[>
+=gSB>D@(H;?=[8Pc)af&SC<BYR5/==FV>#:.[0eg\-H5RSg15;+(_4^-/^17;Rc^
+Ed+SY#C,ac.NdW/#=VYM0MA#Be^<CCVX(&-38LBe&<Q7>/MN4L+f#D0M5Z2.]G@@
+LROS9YFda.P>+gN4g]OBS:HR5a7c^c3#NI\:VMg#a3N0C2Fc\e[O?/3:^.YV,(,J
+S5MM=6+PS)DVQU?<^)92_@ZE<9>2^=CbccIE^ZQ(#b=AT@IaP-(8E&1L,:ZP_P(X
+,SV&BVT;V.[>LE@@3TW4>]a+<f>DZA@R52[YbaZ4d41KD2J8O@[IF0N(+a,6Q(D>
+GOV,?ANT.AJQ/^6aX9F?S[O,.Q.D<fEB:H9S3J2S4II5RN&@@?.8^S.58P>KH?BM
+fF]bYd&Z(]0cfO)#>O2P1^BL7Y\(XF[,:X009@Q?EHA0Heb/cF3:UeGW8D69FXZ-
+R8LcJ59A5aOE-NF0C6NT=XaDVS6P=b.R#U&TOI@85K54e-B#/6OZZ>P71fL6e:ZY
+WJUZDD1O,]3dUV5-cbR2M5ZaI10[W/aH6,AbFQ@57H2UZ1HYb2L&>:g,7+MQg22/
+4C<DGQ8RRST<1CHN?YI5c]:W/W8dLS<LONGN0+2P(ABJLAHE)-4?AHY6N9g/U=#;
+0IAEVg#Mb#e9KIRR#\35EBAX@bW>Q?I>^eD58cI-/.d92B7=LGFERD>/J;GC[LaR
+9R@7=#D9.<B&>06BOSV#_U8<:[DVONUg-PK2^ZFRFcLd+_E1#PY1R[>/M$
+`endprotected
+
+
+// Certain things need to be treated differently if we are using UVM 1.2 or higher, so make it easy to key off this.
+`ifdef UVM_MAJOR_REV_1
+`ifdef UVM_MINOR_REV_0
+`define SVT_PRE_UVM_12
+`elsif UVM_MINOR_REV_1
+`define SVT_PRE_UVM_12
+`endif
+`endif
+
+`ifdef SVT_UVM_TECHNOLOGY
+`ifndef SVT_PRE_UVM_12
+`define SVT_UVM_12_OR_HIGHER
+`endif
+`endif
+
+// The UVM_RESOURCE_DEFINES_SVH macro was added for the 1800.2-2017 release
+`ifdef SVT_UVM_TECHNOLOGY
+`ifdef UVM_RESOURCE_DEFINES_SVH
+`define SVT_UVM_1800_2_2017_OR_HIGHER
+`endif
+`endif
+
+//svt_vcs_lic_vip_protect
+`protected
+26@Bdf7e:\bXPYfS&_O_H5]R;f=DEB1U(_RV-XHH-.b90G5VQF=H-(+UDZ#<QP.1
+=>ON>fP@FCIK5.GR8[W7F[RQ[E.@U?,9[3[H5J\cdfcKL6;_-.=:K_L95WdDO?7]
+BfW-5O:/&7e08+Cdf2EYQ,RMg_=eQQcfGDD[.4EO5(/<a\Pa5a1B1PGeGL?dLgg(
+\7_^cXR;0f?B1B)G(BBaJKO_23<S0[H1:[Q,c/0-Q[L8MV,LHX1g#H<1J&[WXF(>
+(AEL(;A-ETH1_Jgd6LPf9VSPa.QeYZF1fe-b/U6UA_LL)]6RO84ebTR^FB>728MD
+IFG>A5CAP?\.0VHg8/.6O=<&22TX3CTVfQ>A[DZP7SS1UU^U;1A@I@3EG9)MJUHG
+]0-c4=IJ#=Vgg[6OWGVBATTGe=I8[E>8;+)Ic[<=V\?/NPSbe)M_^#d9Xb<N[bbF
+Q#6?OU0_C(<.EaK#3>e.4UIMKLSAL?1QHbeB(e9#XAA)3bd^TJP\D77WaKN+KE/-
+4K.#/b;UB39^1Y,KB(L68b6YGG3?(9G3I&SPT^]1--f<,RGR+I.WX-eO(A#g&GfM
+@X[J;[BD.\B;HeQN:U5b,DOBGN5Q#V0RL<N?/CG>(=gUDU63eK</2SFGJEYAR3\=
+_BHZf[7O2=574-ZETG6HEIbB@3KGMb;0U305R1YXbIU>Z-9U_,P^T7G9?<>59GM.
+N?LfC;5N)g_Y+T3e[YY:UNS,U>Cf;2&JKN2](^OR<e+5?0G&\V/g54C&RIV8M8TV
+JXcb4#g@,-Q\/<N6G-CLV,/X].NR/X=+ZdCKaKZ]ZaR:.5X3RYD?[L.g&)FO#H0\
+NL_4Xbb.,(Ze,W>H3K17S@<f=871S^]@.@;O/c\SfeN6F>_3X@c5;A8SR)KD9M<&
+gLScd;I:8g]b6S4_YIf/D;)f.1D4/C7T,I))DDQ)_04/MR@6Nb;_8EC2Z.3^\M.?
+)M)6Qb6F2N^O#[[^R\XSfKBeB)VeI@&2UA_/W[I>C)a7eU6FDSDP1MIF6B^11D<[
+4026W,M3@93fFb]H#[<Of6+)]bPId+H#8YbY#5LP@K99T^QK(\O:gJgLCe-V7ZR&
+P:8N08d9^7_67XS44d.d)^gBH,6<+,RP43QIYc?2+5HVWDH]Nf83GI6H=I6Vb;Df
+-AQV.CYGB+1?aA2FdZW?TOb9Ba4Y-cI&W5=4R9eZ4?b8.QNGEAfa/BO;74D:K\-8
+Z3;CS(fgF04#b4/2U4<C^2P/A2UL=b/3Z)-XQRR<&@0J+>FYbb,E62&87C\C+3<b
+D0&9_A_ecg_e;?EBd;/RePgG:cMA/5-I7@\0;b?L@JZ,^3<QS[8FV>GW:C?L,9BU
+ABLe<)6\cN2fc3)G_f=O\VI;I]C@5;P6;68B;3>?TKG_NYg)Z.U:)I[GO&]Y?D(.
+:D?KcV_D6DZ#Y@31HD+(BWA02C&I^)]:1)81S/L3UdD\IF;Hg<)>HQ[_[&^f+aLS
+.Q/=K[HU[L[QVLaT>ZVfVM\NMMb1+G^BISeXdI>I=WHT0W4X@.4L+-GCf:K>-/B6
+ZH3NaNV6W\0eXK>C\,0+(L57,S8:OE0EV:Wb/H#7.aaRW;BV8CPLg-RWG46<D3Q[
+bFFRg;QE2<aCBRDEZZ7XGY1--A]=6+cPI@eHZe_gI27YSA+P>RXNY]d_TWOPZ;A0
+PTfW(d4C8^UEK2?+/6.GKK7Mg&&N3WL53d&4(J<,03:;R?2K;af=DV:I\]C0\<L3
+(<fDKXER:1\M:7?3YJ4];J1L\f>A)=aK?K=Vag>&#6<+RgF-B:BLdZ]?e4I8C?4a
+,Y<J8&=83YV&g&]<g&Nd(OX.)2Ld&0HfY&2b/WS:=3G5;EHaa3a@3=VXOQ]K)Ude
+LaS6>I9,/1L^+3XVX=-RObfdUAFMPX&)\bE8,0C.+SGI1.K(E?23>XW5L6gZ(TDb
+B779ac7-V?+eWgY,O6:X=F(>U5G;M<W2154@)WdM;H.HY1.ML.-#1g59.V:KPU&Z
+bb/2Q1,5+:H#HHe\Ybe/=\Y^L#6\fZc3OQVV]@:O&Y)d:a)]:#7.P(bAS6U=,K:D
+Feb98.PVNE#R>2g8E(4-)U@e_M_M1X[WE(#]FTgQ#Fa7BB1YUOVeYN0=.AXU2,1e
+<?PXIAMHL^4CF60^f<,1KeQ\2P_/)VR]^XF=I>HM5#5:?LSfPeA?b@==_E5=M)[3
+EeP]_@&J]SGUY3VB#\&\XZ6OL_<b7GD0-aYQbJ0W0g6J3^,U0<;GbO:b\6M@G?U)
+]A4@U+EQC2<c^G4_f4WU]NZ_IBR9CfU;E9eZP2^R?b#>H(5TN[_IeP6M]X+1G3>Y
+MAaGU\#35I3H]6W:d7I6SHa>=D3+7Ne>g)1DT[5@g.&T=^OTEJ]CEL-U0)Y#D[QS
+XS)+6\F:eGF4324MMK0KD_]e^cWb.L7(YK29131IT^e&J1OG,<L30Cd=8C4#Y^,0
+a0U4V2D5;]_6<;+WEUM>fdd2Ye0]4;RZ4:_O1V]3fI1H<J_MM0c)ffAKgUOO2T5[
+0<eMZfOQY:BE4cXVWOU0X@\(M9<X,N04@bP7:O/VHGZUe9b(:K@dI7B?Qa=(d-F,
+e(;gg=?64,7E0D;1cQ2eLP/(OS,4N-7F>e[Z<V-Z>>d;=_<^M]>d:YF,X;;Q/UV+
+208&(\LL5<IbgM33c@@ZV65/b&)bMeFS.I8c+;Q]PeH8+Y1/L@B0DZZOLQOI_K](
+9bLS)D4,bI>TD8C3af)GV)FcIUDAN:/TN,=HRYHWY84,W[TR?J_NZY9>@TCc=&c:
+#A@EA/^S_ce5D,.ODcNO)@MT=U:;-aLa?D9cO_I9/E;2TIXd85+4e8C.=OC[&7N9
+)U95..)O9?5W2;:@-7^VRZE\FSYIT=YC^R1;c\35&PHg4W45UGE[X416W_>EaUIb
+S&JLB\1S)#P_QJFcN((-;2.PN3[I?,^dJHDd6V28[CD;D+^N#UDe?\:&D5&8Ub>(
+X=K3I]9,>O33/4A\[O^18ZSaOMIE&PMU7g--fOEGCER45GTAC::?]J8=Fdg^2McQ
+T.W.2JB4O=[FHAfB0=P\7NW9<[]9JN_2(ZMR8Fg#YO?@,d<GV5+2+1IT:AGZ9[ea
+M3gH\0BHAU6J0Ka^14ZKSQbP^+.4cdeAGD^TLaa&38eKfED8Df^H.5_gI#^N<UO:
+@&V29W>#7]M\1:e5J[C?BM7P<@I]cL.-5A@BT@);6KR&ANBe[HPd_.67V;e;P&BY
+g?)OaE7P(XQPTZW15E?#E6=K@KS4V8GJD4\.b/)d&^?N7Pe:5@5MU,U2b:.OE-0,
+48/4=51.d[#P)$
+`endprotected
+
+
+//Added to fix DVT error reported from svt_Agent. Macro definition at #140 is
+//not visible in case of DVT. 
+`ifndef SVT_UVM_FGP_LOCK
+`define SVT_UVM_FGP_LOCK
+`endif
+
+`endif //GUARD_SVT_SOURCE_INTERNAL_SVI

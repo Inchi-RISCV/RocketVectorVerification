@@ -1,0 +1,41 @@
+//-----------------------------------------------------------------------------
+// COPYRIGHT (C) 2016 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//-----------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_TILELINK_VMM_PKG
+`define GUARD_SVT_TILELINK_VMM_PKG
+
+`include "svt.vmm.pkg"
+
+`include "svt_tilelink_if.svi"
+`include "svt_tilelink_master_if.svi"
+`include "svt_tilelink_slave_if.svi"
+
+package svt_tilelink_vmm_pkg;
+  import `SVT_VMM_PKG::*;
+
+  import svt_vmm_pkg::*;
+
+`ifndef __SVDOC__
+  typedef virtual svt_tilelink_if        svt_tilelink_vif; 
+  typedef virtual svt_tilelink_master_if svt_tilelink_master_vif; 
+  typedef virtual svt_tilelink_slave_if  svt_tilelink_slave_vif; 
+`endif
+
+  `include "svt_tilelink_master_group_source.vmm.svi"
+  `include "svt_tilelink_slave_group_source.vmm.svi"
+  
+
+endpackage
+
+`endif // GUARD_SVT_TILELINK_VMM_PKG
+

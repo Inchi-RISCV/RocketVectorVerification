@@ -1,0 +1,92 @@
+//-----------------------------------------------------------------------------
+// COPYRIGHT (C) 2016 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//-----------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_TILELINK_IF_SVI
+`define GUARD_SVT_TILELINK_IF_SVI
+
+`include "svt_tilelink_port_defines.svi"
+
+typedef virtual svt_tilelink_if svt_tilelink_vif;
+
+`define SVT_TILELINK_IF_SETUP_TIME 0
+`define SVT_TILELINK_IF_HOLD_TIME  0
+ 
+/**
+ * This SystemVerilog 'interface' definition declares all of the signals
+ * (scoped within an instance of this interface) that are specified by
+ * the Tilelink Protocol Specification as being (potentially) included in
+ * a Tilelink master/slave connection.
+ **< Input signals >
+ **< Bus clock(Global clock signal). Inputs are sampled on the rising edge.>**
+ **< Bus reset(Global reset signal). Active HIGH. May be asserted asynchronously, but must be deasserted synchronous with a rising edge of clock.>**
+ */
+interface svt_tilelink_if (
+  input logic tl_clock
+);
+
+  //----------------------------------------------------------------------------
+  // Interface Ports
+  // ---------------------------------------------------------------------------
+  /** Bus reset(Global reset signal). Active HIGH. May be asserted asynchronously, but must be deasserted synchronous with a rising edge of clock. */
+  logic  tl_reset;
+
+
+
+  //----------------------------------------------------------------------------
+  // Internal assign
+  // ---------------------------------------------------------------------------
+
+
+  //----------------------------------------------------------------------------
+  // Clocking Block
+  // ---------------------------------------------------------------------------
+  /** Clocking block for Tilelink master */
+  clocking tilelink_master_cb @( posedge tl_clock);
+    default input  #`SVT_TILELINK_MONITOR_IF_SETUP_TIME
+            output #`SVT_TILELINK_MONITOR_IF_HOLD_TIME;
+    input  tl_reset;
+  endclocking : tilelink_master_cb
+
+  /** Clocking block for Tilelink master */
+  clocking tilelink_slave_cb @( posedge tl_clock);
+    default input  #`SVT_TILELINK_MONITOR_IF_SETUP_TIME
+            output #`SVT_TILELINK_MONITOR_IF_HOLD_TIME;
+    output tl_reset;
+  endclocking : tilelink_slave_cb
+
+  /** Clocking block for Tilelink master */
+  clocking tilelink_master_slave_monitor_cb @( posedge tl_clock);
+    default input  #`SVT_TILELINK_MONITOR_IF_SETUP_TIME
+            output #`SVT_TILELINK_MONITOR_IF_HOLD_TIME;
+    input tl_reset;
+  endclocking : tilelink_master_slave_monitor_cb
+
+  /** Clocking block for Tilelink master */
+  clocking tilelink_master_slave_debug_cb @( posedge tl_clock);
+    default input  #`SVT_TILELINK_MONITOR_IF_SETUP_TIME
+            output #`SVT_TILELINK_MONITOR_IF_HOLD_TIME;
+    inout tl_reset;
+  endclocking : tilelink_master_slave_debug_cb
+
+  //----------------------------------------------------------------------------
+  // Modports
+  //----------------------------------------------------------------------------
+  modport svt_tilelink_master_modport (clocking tilelink_master_cb);
+  modport svt_tilelink_slave_modport (clocking tilelink_slave_cb);
+  modport svt_tilelink_master_slave_monitor_modport (clocking tilelink_master_slave_monitor_cb);
+  modport svt_tilelink_master_slave_debug_modport (clocking tilelink_master_slave_debug_cb);
+  
+
+endinterface: svt_tilelink_if 
+
+`endif // GUARD_SVT_TILELINK_IF_SVI

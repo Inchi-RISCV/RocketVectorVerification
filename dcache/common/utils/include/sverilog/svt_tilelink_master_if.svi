@@ -1,0 +1,537 @@
+//-----------------------------------------------------------------------------
+// COPYRIGHT (C) 2016 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//-----------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_TILELINK_MASTER_IF_SVI
+`define GUARD_SVT_TILELINK_MASTER_IF_SVI
+
+`include "svt_tilelink_port_defines.svi"
+
+typedef virtual svt_tilelink_master_if svt_tilelink_master_vif;
+
+`define SVT_TILELINK_IF_SETUP_TIME 0
+`define SVT_TILELINK_IF_HOLD_TIME  0
+ 
+/**
+ * This SystemVerilog 'interface' definition declares all of the signals
+ * (scoped within an instance of this interface) that are specified by
+ * the Tilelink Protocol Specification as being (potentially) included in
+ * a Tilelink Master/Slave connection.
+ */
+interface svt_tilelink_master_if (
+  input logic tl_clock
+);
+
+  //----------------------------------------------------------------------------
+  // Interface Ports
+  // ---------------------------------------------------------------------------
+  
+  event event_mst_ch_A_fsm;
+  event event_mst_ch_a_idle_state;
+  event event_mst_ch_a_drive_state;
+  event event_mst_ch_a_wait_state;
+  event event_mst_ch_a_repeat_state;
+  event event_initialize_ch_a_vars;
+  event event_get_transaction;
+  event event_drive_ch_a_vif;
+  event event_request_timeout_or_discard;
+  event event_req_timeout_lapsed;
+  event event_retry_beat;
+  event event_txn_complete;
+  event event_mst_ch_D_fsm;
+  event event_set_a_data;
+  event event_status_object;
+  event event_sampling_starts;
+  event event_req_driven;
+  event event_channel_a_sampling_starts;
+  event event_rx_out_xact_created;
+  event event_mst_ch_D_vld_sample;
+  event event_mst_ch_D_rdy_drive;
+  event event_d_ready_state_ready;
+  event event_d_ready_state_wait;
+
+  /**
+   * <b> Event trigger to indicate END of simulation.</b>
+   */
+  event trigger_end_of_simulation;
+
+  int cfg_d_valid_d_ready_delay,cfg_d_ready_d_ready_delay,cfg_d_ready_deassert_delay;
+
+  int xact_count;
+  int resp_num;
+  int req_sent;
+  int xact_num;
+  int num_xact_discarded;
+  int object_num_chnl_a;
+  int object_num_chnl_d;
+  int chnl_a_beat;
+  int chnl_d_beat;
+  bit dummy_a_valid;
+  bit drive_chnl_A_or_C;
+
+  event event_cfg_d_valid_d_ready_delay_accounted,event_cfg_d_ready_d_ready_delay_accounted,event_cfg_d_ready_deassert_delay_accounted;
+
+  /**
+   * Bus reset(Global reset signal). Active HIGH. May be asserted asynchronously, but must be deasserted synchronous with a rising edge of clock. */
+  logic  tl_reset;
+
+  /**
+   * Master Out - Slave In: This pin is used to transmit the Operation code. Identifies the type of message carried by the channel-A. */
+  logic [(`SVT_TILELINK_A_OPCODE_WIDTH-1):0] a_opcode;
+
+  /**
+   * Master Out - Slave In: This pin is used to transmit the Parameter code. Meaning depends on a_opcode; specifies a transfer of caching permissions or a sub-opcode. */
+  logic [(`SVT_TILELINK_A_PARAM_WIDTH-1):0] a_param;
+
+  /**
+   * Master Out - Slave In: This pin is used to transmit the Logarithm of the operation size: 2**n bytes. */
+  logic [(`SVT_TILELINK_SIZE_WIDTH-1):0] a_size;
+
+  /**
+   * Master Out - Slave In: Unique, This pin refers per-link master source identifier. */
+  logic [(`SVT_TILELINK_SOURCE_WIDTH-1):0] a_source;
+
+  /**
+   * Master Out - Slave In: This pin is used to transmit the target byte address of the operation. Must be aligned to a_size. */
+  logic [(`SVT_TILELINK_ADDR_WIDTH-1):0] a_address;
+
+  /**
+   * Master Out - Slave In: This pin is used to transmit the Byte lane select for messages with data. */
+  logic [(`SVT_TILELINK_DATA_WIDTH/8-1):0] a_mask;
+
+  /**
+   * Master Out - Slave In: This pin is used to transmit the Data payload for messages with data. */
+  logic [(`SVT_TILELINK_DATA_WIDTH-1):0] a_data;
+
+  /**
+   * Master Out - Slave In: This pin is used to transmit the corrupt data beat. */
+  logic  a_corrupt;
+
+  /**
+   * Master Out - Slave In: This pin is used by the sender offering progress on an operation. */
+  logic  a_valid;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: This pin is used to transmit the Operation code. Identifies the type of message carried by the channel-C.
+   */
+  logic [(`SVT_TILELINK_C_OPCODE_WIDTH-1):0] c_opcode;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: This pin is used to transmit the Parameter code. Meaning depends on c_opcode; specifies a transfer of caching permissions. */
+  logic [(`SVT_TILELINK_C_PARAM_WIDTH-1):0] c_param;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: This pin is used to transmit the Logarithm of the operation size: 2**n bytes. */
+  logic [(`SVT_TILELINK_SIZE_WIDTH-1):0] c_size;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: Unique, This pin refers per-link master source identifier. */
+  logic [(`SVT_TILELINK_SOURCE_WIDTH-1):0] c_source;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: This pin is used to transmit the target byte address of the operation. Must be aligned to c_size. */
+  logic [(`SVT_TILELINK_ADDR_WIDTH-1):0] c_address;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: This pin is used to transmit the Data payload for messages with data. */
+  logic [(`SVT_TILELINK_DATA_WIDTH-1):0] c_data;
+
+  logic [31:0] data_width;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: This pin is used to transmit the detected corrupted data beat. */
+  logic  c_corrupt;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: This pin is used by the sender offering progress on an operation. */
+  logic  c_valid;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: Unique, This pin refers per-link slave sink identifier. */
+  logic [(`SVT_TILELINK_SINK_WIDTH-1):0] e_sink;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: This pin is used by the sender offering progress on an operation. */
+  logic  e_valid;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master Out - Slave In: This pin is used by the receiver accepted the offered progress on an operation. */
+  logic  b_ready;
+
+  /**
+   * Master Out - Slave In: This pin is used by the receiver accepted the offered progress on an operation. */
+  logic  d_ready;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used to transmit the Operation code. Identifies the type of message carried by the channel-B. */
+  logic [(`SVT_TILELINK_B_OPCODE_WIDTH-1):0] b_opcode;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used to transmit the Parameter code. Meaning depends on b_opcode; specifies a transfer of caching permissions or a sub-opcode. */
+  logic [(`SVT_TILELINK_B_PARAM_WIDTH-1):0] b_param;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used to transmit the Logarithm of the operation size: 2**n bytes. */
+  logic [(`SVT_TILELINK_SIZE_WIDTH-1):0] b_size;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: Unique, This pin refers per-link master source identifier. */
+  logic [(`SVT_TILELINK_SOURCE_WIDTH-1):0] b_source;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used to transmit the target byte address of the operation. Must be aligned to b_size. */
+  logic [(`SVT_TILELINK_ADDR_WIDTH-1):0] b_address;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used to transmit the Byte lane select for messages with data. */
+  logic [(`SVT_TILELINK_DATA_WIDTH/8-1):0] b_mask;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used to transmit the Data payload for messages with data. */
+  logic [(`SVT_TILELINK_DATA_WIDTH-1):0] b_data;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used to transmit the corrupt data beat. */
+  logic  b_corrupt;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used by the sender offering progress on an operation. */
+  logic  b_valid;
+
+  /**
+   * Master In - Slave Out: This pin is used to transmit the Operation code. Identifies the type of message carried by the channel-D. */
+  logic [(`SVT_TILELINK_D_OPCODE_WIDTH-1):0] d_opcode;
+
+  /**
+   * Master In - Slave Out: This pin is used to transmit the Parameter code. Meaning depends on d_opcode; specifies a transfer of caching permissions or a sub-opcode. */
+  logic [(`SVT_TILELINK_D_PARAM_WIDTH-1):0] d_param;
+
+  /**
+   * Master In - Slave Out: This pin is used to transmit the Logarithm of the operation size: 2**n bytes. */
+  logic [(`SVT_TILELINK_SIZE_WIDTH-1):0] d_size;
+
+  /**
+   * Master In - Slave Out: Unique, This pin refers per-link master source identifier. */
+  logic [(`SVT_TILELINK_SOURCE_WIDTH-1):0] d_source;
+
+  /**
+   * Master In - Slave Out: Unique, This pin refers per-link slave sink identifier. */
+  logic [(`SVT_TILELINK_SINK_WIDTH-1):0] d_sink;
+
+  /**
+   * Master In - Slave Out: This pin refers that the slave was unable to service the request. */
+  logic  d_denied;
+
+  /**
+   * Master In - Slave Out: This pin is used to transmit the Data payload for messages with data. */
+  logic [(`SVT_TILELINK_DATA_WIDTH-1):0] d_data;
+
+  /**
+   * Master In - Slave Out: This pin is used to transmit the corrupt data beat. */
+  logic  d_corrupt;
+
+  /**
+   * Master In - Slave Out: This pin is used by the sender offering progress on an operation. */
+  logic  d_valid;
+
+  /**
+   * Master In - Slave Out: This pin is used by the receiver accepted the offered progress on an operation. */
+  logic  a_ready;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used by the receiver accepted the offered progress on an operation. */
+  logic  c_ready;
+
+  /**
+   * <b>NOTE: THIS FEATURE IS NOT SUPPORTED FOR THIS RELEASE. </b> <br>
+   * Master In - Slave Out: This pin is used by the receiver accepted the offered progress on an operation. */
+  logic  e_ready;
+
+
+  logic [3:0] bus_id;
+
+
+
+  //----------------------------------------------------------------------------
+  // Internal assign
+  // ---------------------------------------------------------------------------
+  //
+  //Tells current state of Master on Channel-A
+  int current_state;
+
+  int req_beats_sampled;
+  int resp_beats_sampled;
+  int beats_sent;
+  int cross_chnl_delay;
+  int st_a_vld_2_d_rdy_delay;
+  int a_chnl_hndshk,cross_chnl_lapsed;
+
+  //----------------------------------------------------------------------------
+  // Initial values
+  // ---------------------------------------------------------------------------
+  initial begin
+     a_opcode   = 'hz;
+     a_param    = 'hz;
+     a_size     = 'hz;
+     a_source   = 'hz;
+     a_address  = 'hz;
+     a_mask     = 'hz;
+     a_data     = 'hz;
+     a_corrupt  = 'hz;
+     a_valid    = 'hz;
+     c_opcode   = 'hz;
+     c_param    = 'hz;
+     c_size     = 'hz;
+     c_source   = 'hz;
+     c_address  = 'hz;
+     c_data     = 'hz;
+     c_corrupt  = 'hz;
+     c_valid    = 'hz;
+     e_sink     = 'hz;
+     e_valid    = 'hz;
+     b_ready    = 'hz;
+     d_ready    = 'hz;
+  end
+  
+  //----------------------------------------------------------------------------
+  // Clocking Block
+  // ---------------------------------------------------------------------------
+  /** Clocking block for Tilelink master */
+  clocking tilelink_master_cb @( posedge tl_clock);
+    default input  #`SVT_TILELINK_MONITOR_IF_SETUP_TIME
+            output #`SVT_TILELINK_MONITOR_IF_HOLD_TIME;
+    input  tl_reset;
+    input  b_opcode;
+    input  b_param;
+    input  b_size;
+    input  b_source;
+    input  b_address;
+    input  b_mask;
+    input  b_data;
+    input  b_corrupt;
+    input  b_valid;
+    input  d_opcode;
+    input  d_param;
+    input  d_size;
+    input  d_source;
+    input  d_sink;
+    input  d_denied;
+    input  d_data;
+    input  d_corrupt;
+    input  d_valid;
+    input  a_ready;
+    input  c_ready;
+    input  e_ready;
+    output a_opcode;
+    output a_param;
+    output a_size;
+    output a_source;
+    output a_address;
+    output a_mask;
+    output a_data;
+    output a_corrupt;
+    output a_valid;
+    output c_opcode;
+    output c_param;
+    output c_size;
+    output c_source;
+    output c_address;
+    output c_data;
+    output c_corrupt;
+    output c_valid;
+    output e_sink;
+    output e_valid;
+    output b_ready;
+    output d_ready;
+  endclocking : tilelink_master_cb
+
+  /** Clocking block for Tilelink master */
+  clocking tilelink_slave_cb @( posedge tl_clock);
+    default input  #`SVT_TILELINK_MONITOR_IF_SETUP_TIME
+            output #`SVT_TILELINK_MONITOR_IF_HOLD_TIME;
+    output tl_reset;
+    output b_opcode;
+    output b_param;
+    output b_size;
+    output b_source;
+    output b_address;
+    output b_mask;
+    output b_data;
+    output b_corrupt;
+    output b_valid;
+    output d_opcode;
+    output d_param;
+    output d_size;
+    output d_source;
+    output d_sink;
+    output d_denied;
+    output d_data;
+    output d_corrupt;
+    output d_valid;
+    output a_ready;
+    output c_ready;
+    output e_ready;
+    input  a_opcode;
+    input  a_param;
+    input  a_size;
+    input  a_source;
+    input  a_address;
+    input  a_mask;
+    input  a_data;
+    input  a_corrupt;
+    input  a_valid;
+    input  c_opcode;
+    input  c_param;
+    input  c_size;
+    input  c_source;
+    input  c_address;
+    input  c_data;
+    input  c_corrupt;
+    input  c_valid;
+    input  e_sink;
+    input  e_valid;
+    input  b_ready;
+    input  d_ready;
+  endclocking : tilelink_slave_cb
+
+  /** Clocking block for Tilelink master */
+  clocking tilelink_master_slave_monitor_cb @( posedge tl_clock);
+    default input  #`SVT_TILELINK_MONITOR_IF_SETUP_TIME
+            output #`SVT_TILELINK_MONITOR_IF_HOLD_TIME;
+    input tl_reset;
+    input a_opcode;
+    input a_param;
+    input a_size;
+    input a_source;
+    input a_address;
+    input a_mask;
+    input a_data;
+    input a_corrupt;
+    input a_valid;
+    input c_opcode;
+    input c_param;
+    input c_size;
+    input c_source;
+    input c_address;
+    input c_data;
+    input c_corrupt;
+    input c_valid;
+    input e_sink;
+    input e_valid;
+    input b_ready;
+    input d_ready;
+    input b_opcode;
+    input b_param;
+    input b_size;
+    input b_source;
+    input b_address;
+    input b_mask;
+    input b_data;
+    input b_corrupt;
+    input b_valid;
+    input d_opcode;
+    input d_param;
+    input d_size;
+    input d_source;
+    input d_sink;
+    input d_denied;
+    input d_data;
+    input d_corrupt;
+    input d_valid;
+    input a_ready;
+    input c_ready;
+    input e_ready;
+  endclocking : tilelink_master_slave_monitor_cb
+
+  /** Clocking block for Tilelink master */
+  clocking tilelink_master_slave_debug_cb @( posedge tl_clock);
+    default input  #`SVT_TILELINK_MONITOR_IF_SETUP_TIME
+            output #`SVT_TILELINK_MONITOR_IF_HOLD_TIME;
+    inout tl_reset;
+    inout a_opcode;
+    inout a_param;
+    inout a_size;
+    inout a_source;
+    inout a_address;
+    inout a_mask;
+    inout a_data;
+    inout a_corrupt;
+    inout a_valid;
+    inout c_opcode;
+    inout c_param;
+    inout c_size;
+    inout c_source;
+    inout c_address;
+    inout c_data;
+    inout c_corrupt;
+    inout c_valid;
+    inout e_sink;
+    inout e_valid;
+    inout b_ready;
+    inout d_ready;
+    inout b_opcode;
+    inout b_param;
+    inout b_size;
+    inout b_source;
+    inout b_address;
+    inout b_mask;
+    inout b_data;
+    inout b_corrupt;
+    inout b_valid;
+    inout d_opcode;
+    inout d_param;
+    inout d_size;
+    inout d_source;
+    inout d_sink;
+    inout d_denied;
+    inout d_data;
+    inout d_corrupt;
+    inout d_valid;
+    inout a_ready;
+    inout c_ready;
+    inout e_ready;
+  endclocking : tilelink_master_slave_debug_cb
+
+  //----------------------------------------------------------------------------
+  // Modports
+  //----------------------------------------------------------------------------
+  modport svt_tilelink_master_modport (clocking tilelink_master_cb);
+  modport svt_tilelink_slave_modport (clocking tilelink_slave_cb);
+  modport svt_tilelink_master_slave_monitor_modport (clocking tilelink_master_slave_monitor_cb);
+  modport svt_tilelink_master_slave_debug_modport (clocking tilelink_master_slave_debug_cb);
+  modport svt_tilelink_master_debug_modport (clocking tilelink_master_slave_debug_cb);
+  
+
+endinterface: svt_tilelink_master_if 
+
+`endif // GUARD_SVT_TILELINK_MASTER_IF_SVI

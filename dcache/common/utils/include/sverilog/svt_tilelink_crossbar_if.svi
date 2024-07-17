@@ -1,0 +1,61 @@
+//-----------------------------------------------------------------------------
+// COPYRIGHT (C) 2016 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//-----------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_TILELINK_IF_CROSSBAR_SVI
+`define GUARD_SVT_TILELINK_IF_CROSSBAR_SVI
+
+`include "svt_tilelink_port_defines.svi"
+`include "svt_tilelink_if.svi"
+`include "svt_tilelink_master_if.svi"
+`include "svt_tilelink_slave_if.svi"
+
+typedef virtual svt_tilelink_crossbar_if svt_tilelink_crossbar_vif;
+
+/**
+ * This SystemVerilog 'interface' definition declares all of the signals
+ * (scoped within an instance of this interface) that are specified by
+ * the Tilelink Protocol Specification as being (potentially) included in
+ * a Tilelink master/slave connection.
+ **< Input signals >
+ **< Bus clock(Global clock signal). Inputs are sampled on the rising edge.>**
+ **< Bus reset(Global reset signal). Active HIGH. May be asserted asynchronously, but must be deasserted synchronous with a rising edge of clock.>**
+ * The Crossbar interface contains virtual master and slave interface which can be instanciated in top.sv according to required Master/Slave agents in Crossbar.
+ */
+interface svt_tilelink_crossbar_if ();
+
+  //----------------------------------------------------------------------------
+  // Interface Ports
+  // ---------------------------------------------------------------------------
+  /** Bus reset(Global reset signal). Active HIGH. May be asserted asynchronously, but must be deasserted synchronous with a rising edge of clock. */
+  logic tl_clock;
+  logic  tl_reset;
+
+  //local variables for debugging
+  bit slv_a_ready_control;
+  event event_populate_slv_txn_for_unknown_addr;
+
+  svt_tilelink_master_vif tilelink_master_if [];
+  svt_tilelink_slave_vif  tilelink_slave_if [];
+
+  function svt_tilelink_master_vif get_master_if(int id);
+      get_master_if = tilelink_master_if[id];
+  endfunction
+
+  function svt_tilelink_slave_vif get_slave_if(int id);
+      get_slave_if = tilelink_slave_if[id];
+  endfunction
+
+
+endinterface: svt_tilelink_crossbar_if
+
+`endif // GUARD_SVT_TILELINK_IF_CROSSBAR_SVI

@@ -1,0 +1,349 @@
+//-----------------------------------------------------------------------------
+// COPYRIGHT (C) 2016 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//-----------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_TILELINK_COMMON_DEFINES_SVI
+`define GUARD_SVT_TILELINK_COMMON_DEFINES_SVI
+
+
+/** Defines the Tilink VIP specification supported version. **/
+`define SVT_TILELINK_VER_1_8_0 0
+
+/** Defines the put_full_data message type transaction. **/
+`define SVT_TILELINK_CMD_PUT_FULL_DATA_TYPE 0
+
+/** Defines the put_partial_data message type transaction. **/
+`define SVT_TILELINK_CMD_PUT_PARTIAL_DATA_TYPE 1
+
+/** Defines the arithmetic_data message type transaction. **/
+`define SVT_TILELINK_CMD_ARITHMETIC_DATA_TYPE 2
+
+/** Defines the logical_data message type transaction. **/
+`define SVT_TILELINK_CMD_LOGICAL_DATA_TYPE 3
+
+/** Defines the get message type transaction. **/
+`define SVT_TILELINK_CMD_GET_TYPE 4
+
+/** Defines the intent message type transaction. **/
+`define SVT_TILELINK_CMD_INTENT_TYPE 5
+
+/** Defines the aquire_block message type transaction. **/
+`define SVT_TILELINK_CMD_AQUIRE_BLOCK_TYPE 6
+
+/** Defines the aquire_perm message type transaction. **/
+`define SVT_TILELINK_CMD_AQUIRE_PERM_TYPE 7
+
+/** Defines the probe_block message type transaction. **/
+`define SVT_TILELINK_CMD_PROBE_BLOCK_TYPE 6
+
+/** Defines the probe_perm message type transaction. **/
+`define SVT_TILELINK_CMD_PROBE_PERM_TYPE 7
+
+/** Defines the access_ack message type transaction. **/
+`define SVT_TILELINK_CMD_ACCESS_ACK_TYPE 0
+
+/** Defines the access_ack_data message type transaction. **/
+`define SVT_TILELINK_CMD_ACCESS_ACK_DATA_TYPE 1
+
+/** Defines the hint_ack message type transaction. **/
+`define SVT_TILELINK_CMD_HINT_ACK_TYPE 2
+
+/** Defines the probe_ack message type transaction. **/
+`define SVT_TILELINK_CMD_PROBE_ACK_TYPE 4
+
+/** Defines the probe_ack_data message type transaction. **/
+`define SVT_TILELINK_CMD_PROBE_ACK_DATA_TYPE 5
+
+/** Defines the release message type transaction. **/
+`define SVT_TILELINK_CMD_RELEASE_TYPE 6
+
+/** Defines the release_data message type transaction. **/
+`define SVT_TILELINK_CMD_RELEASE_DATA_TYPE 7
+
+/** Defines the grant message type transaction. **/
+`define SVT_TILELINK_CMD_GRANT_TYPE 4
+
+/** Defines the grant_data message type transaction. **/
+`define SVT_TILELINK_CMD_GRANT_DATA_TYPE 5
+
+/** Defines the release_ack message type transaction. **/
+`define SVT_TILELINK_CMD_RELEASE_ACK_TYPE 6
+
+/** Defines the grant_ack message type transaction. **/
+`define SVT_TILELINK_CMD_GRANT_ACK_TYPE 0
+
+/** Defines the invalid grant_ack message type transaction. **/
+`define SVT_TILELINK_CMD_NO_OPCODE 1
+
+/** Defines the width of Operation code. Identifies the type of message carried by the channel-A. **/
+`define SVT_TILELINK_A_OPCODE_WIDTH 3
+
+/** Defines the width of Operation code. Identifies the type of message carried by the channel-B. **/
+`define SVT_TILELINK_B_OPCODE_WIDTH 3
+
+/** Defines the width of Operation code. Identifies the type of message carried by the channel-C. **/
+`define SVT_TILELINK_C_OPCODE_WIDTH 3
+
+/** Defines the width of Operation code. Identifies the type of message carried by the channel-D. **/
+`define SVT_TILELINK_D_OPCODE_WIDTH 3
+
+/** Defines the width of parameter code. Meaning depends on a_opcode; specifies a transfer of caching permissions or a sub-opcode for Channel-A. **/
+`define SVT_TILELINK_A_PARAM_WIDTH 3
+
+/** Defines the width of parameter code. Meaning depends on b_opcode; specifies a transfer of caching permissions or a sub-opcode for Channel-B. **/
+`define SVT_TILELINK_B_PARAM_WIDTH 3
+
+/** Defines the width of parameter code. Meaning depends on c_opcode; specifies a transfer of caching permissions for Channel-C. **/
+`define SVT_TILELINK_C_PARAM_WIDTH 3
+
+/** Defines the width of parameter code. Meaning depends on d_opcode; specifies a transfer of caching permissions or a sub-opcode for Channel-D. **/
+`define SVT_TILELINK_D_PARAM_WIDTH 2
+
+/** Unique, per-link master source identifier. **/
+`define SVT_TILELINK_SOURCE_WIDTH 16
+
+/** Unique, per-link slave sink identifier. **/
+`define SVT_TILELINK_SINK_WIDTH 4
+
+/** Defines the address width. **/
+`define SVT_TILELINK_ADDR_WIDTH 64
+
+/** Defines the data width. **/
+`define SVT_TILELINK_DATA_WIDTH 1024
+
+/** Defines the size width. **/
+`define SVT_TILELINK_SIZE_WIDTH 64
+
+/** Defines the buffer size of a_channel in slave. **/
+`define SVT_TILELINK_A_CHNL_BUFFER_DEPTH 10
+
+/** Defines the buffer size of d_channel in slave. **/
+`define SVT_TILELINK_D_CHNL_BUFFER_DEPTH 10
+
+/** Defines the maximum idle bus time in terms of number of clock cycles. If there is no activity on the link for specified time/number of clock cycles then VIP terminates the simulation. **/
+`ifndef SVT_TILELINK_IDLE_TIMEOUT_NUM_CYCLES
+`define SVT_TILELINK_IDLE_TIMEOUT_NUM_CYCLES 10000
+`endif
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 0  - TXN_size=2**0=1byte. **/
+`define SVT_TILELINK_TXN_SIZE_1_BYTE 0
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 1  - TXN_size=2**1=2bytes. **/
+`define SVT_TILELINK_TXN_SIZE_2_BYTE 1
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 2  - TXN_size=2**2=4bytes. **/
+`define SVT_TILELINK_TXN_SIZE_4_BYTE 2
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 3  - TXN_size=2**3=8bytes. **/
+`define SVT_TILELINK_TXN_SIZE_8_BYTE 3
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 4  - TXN_size=2**4=16bytes. **/
+`define SVT_TILELINK_TXN_SIZE_16_BYTE 4
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 5  - TXN_size=2**5=32bytes. **/
+`define SVT_TILELINK_TXN_SIZE_32_BYTE 5
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 6  - TXN_size=2**6=64bytes. **/
+`define SVT_TILELINK_TXN_SIZE_64_BYTE 6
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 7  - TXN_size=2**7=128bytes. **/
+`define SVT_TILELINK_TXN_SIZE_128_BYTE 7
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 8  - TXN_size=2**8=256bytes. **/
+`define SVT_TILELINK_TXN_SIZE_256_BYTE 8
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 9  - TXN_size=2**9=512bytes. **/
+`define SVT_TILELINK_TXN_SIZE_512_BYTE 9
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 10  - TXN_size=2**10=1Kbytes. **/
+`define SVT_TILELINK_TXN_SIZE_1K_BYTE 10
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 11  - TXN_size=2**11=2Kbytes. **/
+`define SVT_TILELINK_TXN_SIZE_2K_BYTE 11
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 12  - TXN_size=2**12=4Kbytes. **/
+`define SVT_TILELINK_TXN_SIZE_4K_BYTE 12
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 13  - TXN_size=2**13=8Kbytes. **/
+`define SVT_TILELINK_TXN_SIZE_8K_BYTE 13
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 14  - TXN_size=2**14=16Kbytes. **/
+`define SVT_TILELINK_TXN_SIZE_16K_BYTE 14
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 15  - TXN_size=2**15=32Kbytes. **/
+`define SVT_TILELINK_TXN_SIZE_32K_BYTE 15
+
+/** Defines the total amount of data (number of bytes) to be transmit. Value 16  - TXN_size=2**16=64Kbytes. **/
+`define SVT_TILELINK_TXN_SIZE_64K_BYTE 16
+
+`define SVT_TILELINK_MASTER_CH_A_IDLE_STATE 0
+
+`define SVT_TILELINK_MASTER_CH_A_DRIVE_STATE 1
+
+`define SVT_TILELINK_MASTER_CH_A_WAIT_STATE 2
+
+`define SVT_TILELINK_MASTER_CH_A_REPEAT_STATE 3
+
+`define SVT_TILELINK_MASTER_CH_D_WAIT_STATE 0
+
+`define SVT_TILELINK_MASTER_CH_D_READY_STATE 1
+
+`define SVT_TILELINK_MASTER_CH_E_STANDBY_STATE 0
+
+`define SVT_TILELINK_MASTER_CH_E_DRIVE_STATE 3
+
+`define SVT_TILELINK_MASTER_CH_C_IDLE_STATE 0
+
+`define SVT_TILELINK_MASTER_CH_C_DRIVE_STATE 1
+
+`define SVT_TILELINK_MASTER_CH_C_WAIT_STATE 2
+
+`define SVT_TILELINK_MASTER_CH_C_REPEAT_STATE 3
+
+`define CLK_PERIOD 50
+
+  `define ACTIVE_MASTER_CROSSBAR_SLAVE_INTERFACE(ACTIVE_MASTER_VAL,CROSSBAR_SLAVE_VAL) \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].a_opcode           ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_opcode     =  tilelink_master_if[ACTIVE_MASTER_VAL].a_opcode; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].a_param            ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_param      =  tilelink_master_if[ACTIVE_MASTER_VAL].a_param; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].a_size             ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_size       =  tilelink_master_if[ACTIVE_MASTER_VAL].a_size; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].a_source           ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_source     =  tilelink_master_if[ACTIVE_MASTER_VAL].a_source; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].a_address          ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_address    =  tilelink_master_if[ACTIVE_MASTER_VAL].a_address; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].a_mask             ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_mask       =  tilelink_master_if[ACTIVE_MASTER_VAL].a_mask; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].a_data             ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_data       =  tilelink_master_if[ACTIVE_MASTER_VAL].a_data; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].a_corrupt          ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_corrupt    =  tilelink_master_if[ACTIVE_MASTER_VAL].a_corrupt; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].a_valid            ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_valid      =  tilelink_master_if[ACTIVE_MASTER_VAL].a_valid; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].c_opcode           ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_opcode     =  tilelink_master_if[ACTIVE_MASTER_VAL].c_opcode; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].c_param            ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_param      =  tilelink_master_if[ACTIVE_MASTER_VAL].c_param; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].c_size             ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_size       =  tilelink_master_if[ACTIVE_MASTER_VAL].c_size; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].c_source           ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_source     =  tilelink_master_if[ACTIVE_MASTER_VAL].c_source; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].c_address          ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_address    =  tilelink_master_if[ACTIVE_MASTER_VAL].c_address; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].c_data             ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_data       =  tilelink_master_if[ACTIVE_MASTER_VAL].c_data; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].c_corrupt          ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_corrupt    =  tilelink_master_if[ACTIVE_MASTER_VAL].c_corrupt; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].c_valid            ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_valid      =  tilelink_master_if[ACTIVE_MASTER_VAL].c_valid; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].e_sink             ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].e_sink       =  tilelink_master_if[ACTIVE_MASTER_VAL].e_sink;  \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].e_valid            ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].e_valid      =  tilelink_master_if[ACTIVE_MASTER_VAL].e_valid; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].b_ready            ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_ready      =  tilelink_master_if[ACTIVE_MASTER_VAL].b_ready; \
+always @(tilelink_master_if[ACTIVE_MASTER_VAL].d_ready            ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_ready      =  tilelink_master_if[ACTIVE_MASTER_VAL].d_ready; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_opcode  ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].b_opcode              =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_opcode; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_param   ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].b_param               =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_param; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_size    ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].b_size                =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_size; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_source  ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].b_source              =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_source; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_address ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].b_address             =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_address; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_mask    ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].b_mask                =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_mask; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_data    ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].b_data                =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_data; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_corrupt ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].b_corrupt             =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_corrupt; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_valid   ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].b_valid               =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_valid; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_opcode  ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].d_opcode              =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_opcode; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_param   ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].d_param               =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_param; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_size    ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].d_size                =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_size; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_source  ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].d_source              =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_source; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_sink    ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].d_sink                =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_sink; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_denied  ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].d_denied              =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_denied; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_data    ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].d_data                =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_data; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_corrupt ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].d_corrupt             =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_corrupt; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_valid   ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].d_valid               =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_valid; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_ready   ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].a_ready               =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_ready; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_ready   ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].c_ready               =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_ready; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].e_ready   ) assign  tilelink_master_if[ACTIVE_MASTER_VAL].e_ready               =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].e_ready; 
+
+
+  `define ACTIVE_SLAVE_CROSSBAR_MASTER_INTERFACE(ACTIVE_SLAVE_VAL,CROSSBAR_MASTER_VAL) \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_opcode  ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_opcode                =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_opcode; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_param   ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_param                 =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_param; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_size    ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_size                  =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_size; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_source  ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_source                =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_source; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_address ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_address               =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_address; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_mask    ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_mask                  =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_mask; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_data    ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_data                  =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_data; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_corrupt ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_corrupt               =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_corrupt; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_valid   ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_valid                 =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_valid; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_opcode  ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].c_opcode                =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_opcode; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_param   ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].c_param                 =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_param; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_size    ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].c_size                  =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_size; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_source  ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].c_source                =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_source; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_address ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].c_address               =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_address; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_data    ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].c_data                  =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_data; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_corrupt ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].c_corrupt               =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_corrupt; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_valid   ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].c_valid                 =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_valid; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_sink    ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].e_sink                  =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_sink;  \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_valid   ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].e_valid                 =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_valid; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_ready   ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_ready                 =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_ready; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_ready   ) assign  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_ready                 =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_ready; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].b_opcode               ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_opcode   =  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_opcode; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].b_param                ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_param    =  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_param; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].b_size                 ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_size     =  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_size; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].b_source               ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_source   =  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_source; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].b_address              ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_address  =  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_address; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].b_mask                 ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_mask     =  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_mask; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].b_data                 ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_data     =  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_data; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].b_corrupt              ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_corrupt  =  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_corrupt; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].b_valid                ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_valid    =  tilelink_slave_if[ACTIVE_SLAVE_VAL].b_valid; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].d_opcode               ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_opcode   =  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_opcode; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].d_param                ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_param    =  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_param; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].d_size                 ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_size     =  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_size; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].d_source               ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_source   =  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_source; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].d_sink                 ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_sink     =  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_sink; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].d_denied               ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_denied   =  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_denied; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].d_data                 ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_data     =  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_data; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].d_corrupt              ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_corrupt  =  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_corrupt; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].d_valid                ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_valid    =  tilelink_slave_if[ACTIVE_SLAVE_VAL].d_valid; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].a_ready                ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_ready    =  tilelink_slave_if[ACTIVE_SLAVE_VAL].a_ready; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].c_ready                ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_ready    =  tilelink_slave_if[ACTIVE_SLAVE_VAL].c_ready; \
+always @(tilelink_slave_if[ACTIVE_SLAVE_VAL].e_ready                ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_ready    =  tilelink_slave_if[ACTIVE_SLAVE_VAL].e_ready;
+
+  `define SLAVE_CROSSBAR_MASTER_CROSSBAR_INTERFACE(CROSSBAR_SLAVE_VAL,CROSSBAR_MASTER_VAL) \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_opcode  ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_opcode    =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_opcode; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_param   ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_param     =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_param; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_size    ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_size      =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_size; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_source  ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_source    =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_source; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_address ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_address   =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_address; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_mask    ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_mask      =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_mask; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_data    ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_data      =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_data; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_corrupt ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_corrupt   =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_corrupt; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_valid   ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_valid     =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_valid; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_opcode  ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_opcode    =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_opcode; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_param   ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_param     =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_param; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_size    ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_size      =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_size; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_source  ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_source    =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_source; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_address ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_address   =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_address; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_data    ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_data      =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_data; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_corrupt ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_corrupt   =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_corrupt; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_valid   ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_valid     =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_valid; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_sink    ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].e_sink      =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_sink;  \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_valid   ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].e_valid     =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_valid; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_ready   ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_ready     =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_ready; \
+always @(tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_ready   ) assign  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_ready     =  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_ready; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_opcode    ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_opcode  =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_opcode; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_param     ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_param   =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_param; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_size      ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_size    =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_size; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_source    ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_source  =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_source; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_address   ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_address =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_address; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_mask      ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_mask    =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_mask; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_data      ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_data    =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_data; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_corrupt   ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_corrupt =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_corrupt; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_valid     ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].b_valid   =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].b_valid; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_opcode    ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_opcode  =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_opcode; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_param     ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_param   =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_param; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_size      ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_size    =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_size; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_source    ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_source  =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_source; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_sink      ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_sink    =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_sink; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_denied    ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_denied  =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_denied; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_data      ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_data    =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_data; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_corrupt   ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_corrupt =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_corrupt; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_valid     ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].d_valid   =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].d_valid; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_ready     ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].a_ready   =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].a_ready; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_ready     ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].c_ready   =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].c_ready; \
+always @(tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].e_ready     ) assign  tilelink_cb_master_agent_if[CROSSBAR_MASTER_VAL].e_ready   =  tilelink_cb_slave_agent_if[CROSSBAR_SLAVE_VAL].e_ready;
+
+
+`endif // GUARD_SVT_TILELINK_COMMON_DEFINES_SVI
+

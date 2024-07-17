@@ -1,0 +1,75 @@
+`ifndef GUARD_SVT_NVS_LOADER_UTIL_SVI
+`define GUARD_SVT_NVS_LOADER_UTIL_SVI
+`ifndef SVT_NVS_SOURCE_MAP_SUITE_MODULE_V
+// -------------------------------------------------------------------------
+// Macros used to module names to specific source files
+// -------------------------------------------------------------------------
+`ifdef VIP_INTERNAL_BUILD
+  `ifdef SVT_VERILOG_TECHNOLOGY
+    `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_V(suite,version,module)             `"module.v`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_LIB_MODULE_V(suite,version,module)         `"module.v`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_COMP_MODULE_V(suite,model,version,module)  `"module.v`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_H(suite,version,common)             `"common.h`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VI(suite,version,common)            `"common.vi`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_COMP_COMMON_VI(suite,model,version,common) `"common.vi`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VIH(suite,version,common)           `"common.vih`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_SVH(suite,version,common)           `"common.svh`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_INTERFACE_SV(suite,version,interface)      `"interface.sv`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_V(suite,version,module)     `"module.v`"
+    `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_VIH(suite,version,module)   `"module.vih`"
+  `else
+    `ifndef INCA
+      `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_V(suite,version,module)             `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/src/verilog/module.v)
+      `define SVT_NVS_SOURCE_MAP_SUITE_LIB_MODULE_V(suite,version,module)         `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/include/module.v)
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMP_MODULE_V(suite,model,version,module)  `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/model/bfm/include/module.v)
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_H(suite,version,common)             `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/include/common.h)
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VI(suite,version,common)            `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/include/common.vi)
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMP_COMMON_VI(suite,model,version,common) `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/model/bfm/include/common.vi)
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VIH(suite,version,common)           `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/include/common.vih)
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_SVH(suite,version,common)           `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/include/common.svh)
+      `define SVT_NVS_SOURCE_MAP_SUITE_INTERFACE_SV(suite,version,interface)      `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/include/interface.sv)
+      `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_V(suite,version,module)     `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/include/verilog/module.v)
+      `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_VIH(suite,version,module)   `SVT_SOURCE_QUOTE_DESIGNWARE_HOME(suite/include/verilog/module.vih)
+    `else
+      `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_V(suite,version,module)               `"module.v`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_LIB_MODULE_V(suite,version,module)           `"module.v`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMP_MODULE_V(suite,model,version,module)    `"module.v`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_H(suite,version,common)               `"common.h`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VI(suite,version,common)              `"common.vi`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMP_COMMON_VI(suite,model,version,common)   `"common.vi`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VIH(suite,version,common)             `"common.vih`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_SVH(suite,version,common)             `"common.svh`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_INTERFACE_SV(suite,version,interface)        `"interface.sv`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_V(suite,version,module)       `"module.v`"
+      `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_VIH(suite,version,module)     `"module.vih`"
+    `endif//`ifndef INCA
+  `endif//`ifdef SVT_VERILOG_TECHNOLOGY
+`else // !`ifdef VIP_INTERNAL_BUILD
+  `ifdef SVT_LOADER_UTIL_ENABLE_DWHOME_INCDIRS
+     `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_V(suite,version,module)               `"../../verilog/src/`SVT_VENDOR_LC/module.vp`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_LIB_MODULE_V(suite,version,module)           `"../../verilog/src/`SVT_VENDOR_LC/module.vp`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMP_MODULE_V(suite,model,version,module)    `"../../verilog/src/`SVT_VENDOR_LC/module.vp`" 
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_H(suite,version,common)               `"../../verilog/src/`SVT_VENDOR_LC/common.hp`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VI(suite,version,common)              `"../../verilog/src/`SVT_VENDOR_LC/common.vip`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMP_COMMON_VI(suite,model,version,common)   `"../../verilog/src/`SVT_VENDOR_LC/common.vip`" 
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VIH(suite,version,common)             `"../../verilog/src/`SVT_VENDOR_LC/common.vihp`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_SVH(suite,version,common)             `"../../sverilog/src/`SVT_VENDOR_LC/common.svhp`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_INTERFACE_SV(suite,version,interface)        `"../../verilog/include/interface.sv`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_V(suite,version,module)       `"../../verilog/include/module.v`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_VIH(suite,version,module)     `"../../verilog/include/module.vih`"
+  `else
+     `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_V(suite,version,module)               `"module.v`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_LIB_MODULE_V(suite,version,module)           `"module.v`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMP_MODULE_V(suite,model,version,module)    `"module.v`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_H(suite,version,common)               `"common.h`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VI(suite,version,common)              `"common.vi`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMP_COMMON_VI(suite,model,version,common)   `"common.vi`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_VIH(suite,version,common)             `"common.vih`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_COMMON_SVH(suite,version,common)             `"common.svh`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_INTERFACE_SV(suite,version,interface)        `"interface.sv`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_V(suite,version,module)       `"module.v`"
+     `define SVT_NVS_SOURCE_MAP_SUITE_MODULE_INCLUDE_VIH(suite,version,module)     `"module.vih`"
+  `endif//`ifdef SVT_LOADER_UTIL_ENABLE_DWHOME_INCDIRS
+`endif // !`ifdef VIP_INTERNAL_BUILD
+`endif //`ifndef SVT_NVS_SOURCE_MAP_SUITE_MODULE_V
+`endif //`ifndef GUARD_SVT_NVS_LOADER_UTIL_SVI

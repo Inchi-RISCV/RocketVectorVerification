@@ -1,0 +1,69 @@
+`ifndef GUARD_TILELINK_SLAVE_RESPONSE_CTRL_SIG_ERROR_CALLBACK
+`define GUARD_TILELINK_SLAVE_RESPONSE_CTRL_SIG_ERROR_CALLBACK
+
+/**
+ * Abstract: 
+ * class 'tilelink_slave_resp_ctrl_sig_error_callback' is extended from svt_tilelink_slave_callback class.
+ * It implements the post_seq_item_get method to insert error value in control signals of d-channel from slave during multi-beat responses.
+ */
+
+class tilelink_slave_response_ctrl_sig_error_callback extends svt_tilelink_slave_callback;
+
+  /**
+   *  Possible Values:
+   * 'b000: d_opcode control signal error
+   * 'b001: d_param control signal error
+   * 'b010: d_source control signal error
+   * 'b011: d_size control signal error
+   * 'b100: d_sink control signal error
+   * 'b101: d_denied control signal error
+   */
+  bit [2:0] d_ctrl_sig;
+  int d_ctrl_sig_beat;
+  bit[`SVT_TILELINK_SOURCE_WIDTH-1:0] d_source;
+  bit[(`SVT_TILELINK_D_OPCODE_WIDTH-1):0] d_opcode;
+  bit[(`SVT_TILELINK_D_PARAM_WIDTH-1):0] d_param;
+  bit[`SVT_TILELINK_SIZE_WIDTH-1:0] d_size;
+
+  bit is_valid=1;
+
+    //create a local handle of exception class and exception list
+    svt_tilelink_slave_transaction_exception_list cust_tilelink_slave_exception_list;
+    svt_tilelink_slave_transaction_exception      tilelink_slave_exception;
+
+  //Class Constructor
+  function new(string name);
+    super.new(name);
+  endfunction: new
+  
+  //Callback method
+  virtual function void post_seq_item_get(svt_tilelink_slave slave, svt_tilelink_slave_transaction xact, ref bit drop);
+
+    //create the exception class
+    tilelink_slave_exception = new("tilelink_slave_cust_exception");
+
+    //create the exception list
+    cust_tilelink_slave_exception_list = new("cust_tilelink_slave_exception_list",tilelink_slave_exception);
+
+    //assign the type of error to be inserted in exception class
+    tilelink_slave_exception.error_kind = svt_tilelink_slave_transaction_exception::RESP_D_CNTRL_SIG_ERR;
+    tilelink_slave_exception.d_control_sig        = this.d_ctrl_sig;
+    tilelink_slave_exception.d_control_sig_beat   = this.d_ctrl_sig_beat;
+    tilelink_slave_exception.d_opcode             = this.d_opcode;
+    tilelink_slave_exception.d_param              = this.d_param;
+    tilelink_slave_exception.d_size               = this.d_size;
+    tilelink_slave_exception.d_source             = this.d_source;
+    is_valid=tilelink_slave_exception.do_is_valid();
+
+    if (is_valid) begin
+      //Add the exception class to the exception list
+      cust_tilelink_slave_exception_list.add_exception(tilelink_slave_exception);
+
+      //write the handle of the exception list on the trans class handle
+      xact.exception_list = cust_tilelink_slave_exception_list;
+    end
+
+  endfunction: post_seq_item_get
+  
+endclass: tilelink_slave_response_ctrl_sig_error_callback
+`endif //GUARD_TILELINK_SLAVE_RESPONSE_CTRL_SIG_ERROR_CALLBACK

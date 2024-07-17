@@ -1,0 +1,45 @@
+//-----------------------------------------------------------------------------
+// COPYRIGHT (C) 2016 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//-----------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_TILELINK_OVM_PKG
+`define GUARD_SVT_TILELINK_OVM_PKG
+
+`include "svt.ovm.pkg"
+
+`include "svt_tilelink_if.svi"
+`include "svt_tilelink_master_if.svi"
+`include "svt_tilelink_slave_if.svi"
+`include "svt_tilelink_crossbar_if.svi"
+
+package svt_tilelink_ovm_pkg;
+  import ovm_pkg::*;
+  `include "ovm_macros.svh"
+
+  import svt_ovm_pkg::*;
+
+`ifndef __SVDOC__
+  typedef virtual svt_tilelink_if        svt_tilelink_vif; 
+  typedef virtual svt_tilelink_master_if svt_tilelink_master_vif; 
+  typedef virtual svt_tilelink_slave_if  svt_tilelink_slave_vif; 
+  typedef virtual svt_tilelink_crossbar_if svt_tilelink_crossbar_vif; 
+`endif
+
+  `include `SVT_SOURCE_MAP_ENV_INCLUDE_SVI(tilelink_svt,tilelink_master_agent_svt,V-2024.03,svt_tilelink_master_agent_source.ovm)
+  `include `SVT_SOURCE_MAP_ENV_INCLUDE_SVI(tilelink_svt,tilelink_slave_agent_svt,V-2024.03,svt_tilelink_slave_agent_source.ovm)
+  `include `SVT_SOURCE_MAP_ENV_INCLUDE_SVI(tilelink_svt,tilelink_crossbar_agent_svt,V-2024.03,svt_tilelink_crossbar_agent_source.ovm)
+  `include `SVT_SOURCE_MAP_ENV_INCLUDE_SVI(tilelink_svt,tilelink_system_env_svt,V-2024.03,svt_tilelink_system_env_source.ovm)
+
+endpackage
+
+`endif // GUARD_SVT_TILELINK_OVM_PKG
+

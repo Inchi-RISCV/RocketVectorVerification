@@ -1,0 +1,107 @@
+//-----------------------------------------------------------------------------
+// COPYRIGHT (C) 2016 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//-----------------------------------------------------------------------------
+
+`ifndef GUARD_SVT_TILELINK_PORT_DEFINES_SVI
+`define GUARD_SVT_TILELINK_PORT_DEFINES_SVI
+
+
+/** I/O signals width. */
+`define SVT_TILELINK_IO_WIDTH 1
+
+/** Max number of masters. */
+`ifndef SVT_TILELINK_NUM_OF_MASTER
+`define SVT_TILELINK_NUM_OF_MASTER 1
+`endif
+
+/** Max number of slaves. */
+`ifndef SVT_TILELINK_NUM_OF_SLAVE
+`define SVT_TILELINK_NUM_OF_SLAVE 1
+`endif
+
+/** Max number of crossbars. */
+`ifndef SVT_TILELINK_NUM_OF_CROSSBAR
+`define SVT_TILELINK_NUM_OF_CROSSBAR 1
+`endif
+
+/** Max number of masters. */
+`ifndef SVT_TILELINK_CB_AGNT_NUM_OF_MASTER
+`define SVT_TILELINK_CB_AGNT_NUM_OF_MASTER 1
+`endif
+
+/** Max number of slaves. */
+`ifndef SVT_TILELINK_CB_AGNT_NUM_OF_SLAVE
+`define SVT_TILELINK_CB_AGNT_NUM_OF_SLAVE 1
+`endif
+
+/** Default setup time. */
+`ifndef SVT_TILELINK_MONITOR_IF_SETUP_TIME
+`define SVT_TILELINK_MONITOR_IF_SETUP_TIME 1
+`endif
+
+/** Default hold time. */
+`ifndef SVT_TILELINK_MONITOR_IF_HOLD_TIME
+`define SVT_TILELINK_MONITOR_IF_HOLD_TIME 1
+`endif
+
+/** Default Crossbar's Master interface. */
+`ifndef SVT_TILELINK_CB_NUM_MST
+`define SVT_TILELINK_CB_NUM_MST 1
+`endif
+
+/** Default Crossbar's Slave interface. */
+`ifndef SVT_TILELINK_CB_NUM_SLV
+`define SVT_TILELINK_CB_NUM_SLV 1
+`endif
+
+/** Defines the width of Operation code. Identifies the type of message carried by the channel-A. **/
+`define SVT_TILELINK_A_OPCODE_WIDTH 3
+
+/** Defines the width of Operation code. Identifies the type of message carried by the channel-B. **/
+`define SVT_TILELINK_B_OPCODE_WIDTH 3
+
+/** Defines the width of Operation code. Identifies the type of message carried by the channel-C. **/
+`define SVT_TILELINK_C_OPCODE_WIDTH 3
+
+/** Defines the width of Operation code. Identifies the type of message carried by the channel-D. **/
+`define SVT_TILELINK_D_OPCODE_WIDTH 3
+
+/** Defines the width of parameter code. Meaning depends on a_opcode; specifies a transfer of caching permissions or a sub-opcode for Channel-A. **/
+`define SVT_TILELINK_A_PARAM_WIDTH 3
+
+/** Defines the width of parameter code. Meaning depends on b_opcode; specifies a transfer of caching permissions or a sub-opcode for Channel-B. **/
+`define SVT_TILELINK_B_PARAM_WIDTH 3
+
+/** Defines the width of parameter code. Meaning depends on c_opcode; specifies a transfer of caching permissions for Channel-C. **/
+`define SVT_TILELINK_C_PARAM_WIDTH 3
+
+/** Defines the width of parameter code. Meaning depends on d_opcode; specifies a transfer of caching permissions or a sub-opcode for Channel-D. **/
+`define SVT_TILELINK_D_PARAM_WIDTH 2
+
+/** Unique, per-link master source identifier. **/
+`define SVT_TILELINK_SOURCE_WIDTH 16
+
+/** Unique, per-link slave sink identifier. **/
+`define SVT_TILELINK_SINK_WIDTH 4
+
+/** Defines the address width. **/
+`define SVT_TILELINK_ADDR_WIDTH 64
+
+/** Defines the data width. **/
+`define SVT_TILELINK_DATA_WIDTH 1024
+
+/** Defines the size width. **/
+`define SVT_TILELINK_SIZE_WIDTH 64
+
+
+`endif // GUARD_SVT_TILELINK_PORT_DEFINES_SVI
+

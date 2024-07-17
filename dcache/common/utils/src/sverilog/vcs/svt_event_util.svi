@@ -1,0 +1,113 @@
+//=======================================================================
+// COPYRIGHT (C) 2010-2022 SYNOPSYS INC.
+// This software and the associated documentation are confidential and
+// proprietary to Synopsys, Inc. Your use or disclosure of this software
+// is subject to the terms and conditions of a written license agreement
+// between you, or your company, and Synopsys, Inc. In the event of
+// publications, the following notice is applicable:
+//
+// ALL RIGHTS RESERVED
+//
+// The entire notice above must be reproduced on all authorized copies.
+//
+//-----------------------------------------------------------------------
+
+`ifndef GUARD_SVT_EVENT_UTIL_SVI
+`define GUARD_SVT_EVENT_UTIL_SVI
+
+`protected
+3;<5Aa&?d(6Y&V[9^BTGHGX@5/IY&;YU^PK0->LM63.&[6O-PEA+1),GU_E3E?cc
+a-\SC9OR<d8Y-$
+`endprotected
+
+
+/** @cond PRIVATE */
+
+`ifdef SVT_VMM_TECHNOLOGY
+
+ `define SVT_EVENT_DECL(ev_name) \
+    int NOTIFY_``ev_name;
+
+ `define SVT_EVENT_INIT_EVENT(ev_name) \
+    NOTIFY_``ev_name = this.notify.configure(, vmm_notify::ONE_SHOT); 
+
+ `define SVT_EVENT_INIT_PEVENT(ev_name) \
+    NOTIFY_``ev_name = this.notify.configure(, vmm_notify::BLAST); 
+
+ `define SVT_EVENT_INIT_ONOFF_EVENT(ev_name) \
+    NOTIFY_``ev_name = this.notify.configure(, vmm_notify::ON_OFF); 
+
+  `define SVT_EVENT_TRIGGER_EVENT(ev_name) \
+    this.notify.indicate(NOTIFY_``ev_name);
+
+  `define SVT_EVENT_TRIGGER_EVENT_W_DATA(ev_name,ev_obj) \
+    this.notify.indicate(NOTIFY_``ev_name,ev_obj);
+
+  `define SVT_EVENT_WAIT_EVENT(ev_name) \
+    this.notify.wait_for(NOTIFY_``ev_name); 
+
+  `define SVT_EVENT_WAIT_EVENT_W_DATA(ev_name,ev_obj) \
+    this.notify.wait_for(NOTIFY_``ev_name); \
+    ev_obj = this.notify.status(NOTIFY_``ev_name);
+
+  `define SVT_EVENT_WAIT_PEVENT(ev_name) \
+    `SVT_EVENT_WAIT_EVENT(ev_name)
+
+  `define SVT_EVENT_WAIT_PEVENT_W_DATA(ev_name,ev_obj) \
+    `SVT_EVENT_WAIT_EVENT_W_DATA(ev_name,ev_obj)
+  
+  `define SVT_EVENT_WAIT_ON(ev_name) \
+    this.notify.wait_for(NOTIFY_``ev_name);
+
+  `define SVT_EVENT_WAIT_OFF(ev_name) \
+    this.notify.wait_for_off(NOTIFY_``ev_name);
+
+  `define SVT_EVENT_GET_TRIGGER_DATA(ev_name,ev_obj) \
+    ev_obj = this.notify.status(NOTIFY_``ev_name);
+
+`else
+
+ `define SVT_EVENT_DECL(ev_name) \
+    `SVT_XVM(event) EVENT_``ev_name;
+
+ `define SVT_EVENT_INIT_EVENT(ev_name) \
+    EVENT_``ev_name = new({"EVENT_", `"ev_name`"});
+
+ `define SVT_EVENT_INIT_PEVENT(ev_name) \
+    `SVT_EVENT_INIT_EVENT(ev_name)
+
+ `define SVT_EVENT_INIT_ONOFF_EVENT(ev_name) \
+    `SVT_EVENT_INIT_EVENT(ev_name)
+
+  `define SVT_EVENT_TRIGGER_EVENT(ev_name) \
+    EVENT_``ev_name.trigger();
+
+  `define SVT_EVENT_TRIGGER_EVENT_W_DATA(ev_name,ev_obj) \
+    EVENT_``ev_name.trigger(ev_obj);
+
+  `define SVT_EVENT_WAIT_EVENT(ev_name) \
+    EVENT_``ev_name.wait_trigger();
+
+  `define SVT_EVENT_WAIT_EVENT_W_DATA(ev_name,ev_obj) \
+    EVENT_``ev_name.wait_trigger_data(ev_obj);
+
+  `define SVT_EVENT_WAIT_PEVENT(ev_name) \
+    EVENT_``ev_name.wait_ptrigger();
+  
+  `define SVT_EVENT_WAIT_PEVENT_W_DATA(ev_name,ev_obj) \
+    EVENT_``ev_name.wait_ptrigger_data(ev_obj);
+
+  `define SVT_EVENT_WAIT_ON(ev_name) \
+    EVENT_``ev_name.wait_on();
+
+  `define SVT_EVENT_WAIT_OFF(ev_name) \
+    EVENT_``ev_name.wait_off();
+
+  `define SVT_EVENT_GET_TRIGGER_DATA(ev_name,ev_obj) \
+    ev_obj = EVENT_``ev_name.get_trigger_data();
+
+`endif
+
+/** @endcond */
+
+`endif // GUARD_SVT_EVENT_UTIL_SVI

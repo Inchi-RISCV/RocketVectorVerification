@@ -1,0 +1,162 @@
+Magic 271485
+Revision Verdi_V-2023.12
+
+; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
+viewPort 0 29 2230 693 452 150
+
+; File list:
+; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
+openDirFile -d / "" "/datahdd/riscv/huangxiaogang/dcache/sim/base_func/wave/dcache_sanity_test_2.fsdb"
+
+; file time scale:
+; fileTimeScale ### s|ms|us|ns|ps
+
+; signal spacing:
+signalSpacing 5
+
+; windowTimeUnit is used for zoom, cursor & marker
+windowTimeUnit 10ns
+
+; waveform viewport range
+zoom 32.798242 36.663000 10n
+cursor 35.500000
+marker 35.900000
+
+; user define markers
+; userMarker time_pos marker_name color linestyle
+; visible top row signal index
+top 36
+; marker line index
+markerPos 63
+
+; event list
+; addEvent event_name event_expression
+; curEvent event_name
+
+
+
+COMPLEX_EVENT_BEGIN
+
+
+COMPLEX_EVENT_END
+
+
+
+; toolbar current search type
+; curSTATUS search_type
+curSTATUS ByChange
+
+
+addGroup "G1"
+activeDirFile "" "/datahdd/riscv/huangxiaogang/dcache/sim/base_func/wave/dcache_sanity_test_2.fsdb"
+addSignal -h 22 /tb_top/m_lsu_if/clk
+addSignal -h 22 -holdScope rst_n
+addSignal -h 22 -holdScope io_req_ready
+addSignal -h 22 -holdScope io_req_valid
+addSignal -h 22 -holdScope io_nextCycleWb
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_cmd[4:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_size[2:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_paddr[38:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_wmask[63:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_wdata[511:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_dest[4:0]
+addSignal -h 22 -holdScope io_req_bits_noAlloc
+addSignal -c ID_RED5 -ls solid -lw 1 -h 22 -holdScope io_req_bits_isRefill
+addSignal -c ID_RED5 -ls solid -lw 1 -h 22 -holdScope io_req_bits_refillCoh
+addSignal -c ID_RED5 -ls solid -lw 1 -h 22 -UNSIGNED -HEX -holdScope io_req_bits_refillWay[1:0]
+addSignal -h 22 -holdScope io_req_bits_signed
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_source[7:0]
+addSignal -h 22 -holdScope io_s0_kill
+addSignal -h 22 -holdScope io_s1_kill
+addGroup "G2"
+addSignal -h 22 /tb_top/m_lsu_if/clk
+addSignal -h 22 -holdScope io_resp_valid
+addSignal -h 22 -holdScope io_resp_bits_hasData
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_data[511:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_dest[4:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_source[7:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_status[1:0]
+addGroup "tilelink"
+addSubGroup "A"
+addSignal -h 22 /tb_top/tilelink_slave_if[0]/tl_clock
+addSignal -h 22 -holdScope a_ready
+addSignal -h 22 -holdScope a_valid
+addSignal -h 22 -UNSIGNED -HEX -holdScope a_address[63:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope a_size[63:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope a_opcode[2:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope a_param[2:0]
+addSignal -h 22 -holdScope a_data[512:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope a_mask[127:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope a_source[15:0]
+addSignal -h 22 -holdScope a_corrupt
+endSubGroup "A"
+addSubGroup "B" -e FALSE
+addSignal -h 22 -UNSIGNED -HEX /tb_top/tilelink_slave_if[0]/b_address[63:0]
+addSignal -h 22 -holdScope b_corrupt
+addSignal -h 22 -UNSIGNED -HEX -holdScope b_data[1023:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope b_mask[127:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope b_opcode[2:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope b_param[2:0]
+addSignal -h 22 -holdScope b_ready
+addSignal -h 22 -UNSIGNED -HEX -holdScope b_size[63:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope b_source[15:0]
+addSignal -h 22 -holdScope b_valid
+endSubGroup "B"
+addSubGroup "C" -e FALSE
+addSignal -h 22 /tb_top/tilelink_slave_if[0]/c_ready
+addSignal -h 22 -holdScope c_valid
+addSignal -h 22 -UNSIGNED -HEX -holdScope c_address[63:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope c_opcode[2:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope c_size[63:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope c_param[2:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope c_data[1023:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope c_source[15:0]
+addSignal -h 22 -holdScope c_corrupt
+endSubGroup "C"
+addSubGroup "D"
+addSignal -h 22 /tb_top/tilelink_slave_if[0]/d_ready
+addSignal -h 22 -holdScope d_valid
+addSignal -h 22 -UNSIGNED -HEX -holdScope d_opcode[2:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope d_size[63:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope d_data[511:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope d_sink[3:0]
+addSignal -h 22 -holdScope d_denied
+addSignal -h 22 -UNSIGNED -HEX -holdScope d_source[15:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope d_param[1:0]
+addSignal -h 22 -holdScope d_corrupt
+endSubGroup "D"
+addSubGroup "E"
+addSignal -h 22 /tb_top/tilelink_slave_if[0]/e_ready
+addSignal -h 22 -UNSIGNED -HEX -holdScope e_sink[3:0]
+addSignal -h 22 -holdScope e_valid
+endSubGroup "E"
+addGroup "G4"
+addGroup "G5"
+addGroup "G6"
+addGroup "G7"
+addGroup "G8"
+
+; getSignalForm Scope Hierarchy Status
+; active file of getSignalForm
+activeDirFile "" "/datahdd/riscv/huangxiaogang/dcache/sim/base_func/wave/dcache_sanity_test_2.fsdb"
+
+GETSIGNALFORM_SCOPE_HIERARCHY_BEGIN
+getSignalForm close
+
+"/_vcs_unit__517536623"
+"/tb_top"
+
+SCOPE_LIST_BEGIN
+"/_vcs_unit__517536623"
+"/_vcs_unit__930505288"
+"/tb_top/U_CCDCache"
+"/tb_top/m_lsu_if"
+"/tb_top/U_GPCDCache"
+"/tb_top/tilelink_master_if[0]"
+"/tb_top/tilelink_slave_if[0]"
+"/uvm_pkg"
+SCOPE_LIST_END
+
+GETSIGNALFORM_SCOPE_HIERARCHY_END
+
+
