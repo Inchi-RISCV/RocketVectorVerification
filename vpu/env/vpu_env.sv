@@ -26,6 +26,7 @@ class vpu_env extends uvm_env;
 	
   
 	uvm_tlm_analysis_fifo#(data_trans) data_trans_fifo;
+	uvm_tlm_analysis_fifo#(data_trans) data_trans_fifo_update;
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
@@ -55,6 +56,7 @@ function void vpu_env::build_phase(uvm_phase phase);
 	m_scb = vpu_scb::type_id::create("m_scb", this);
 
 	data_trans_fifo = new("data_trans_fifo",this);
+	data_trans_fifo_update = new("data_trans_fifo_update",this);
 
 
 
@@ -63,9 +65,10 @@ endfunction : build_phase
 function void vpu_env::connect_phase(uvm_phase phase);
 
   `uvm_info(get_type_name(), "In connect_phase", UVM_HIGH)
-	m_data_agent.analysis_port.connect(data_trans_fifo.analysis_export);
+	m_data_agent.m_monitor.analysis_port.connect(data_trans_fifo.analysis_export);
+	m_data_agent.m_monitor.analysis_port_update.connect(data_trans_fifo_update.analysis_export);	
   m_scb.data_agent_port.connect(data_trans_fifo.blocking_get_export);	
-
+  m_scb.data_agent_port_update.connect(data_trans_fifo_update.blocking_get_export);	
 endfunction : connect_phase
 
 // Could print out diagnostic information, for example

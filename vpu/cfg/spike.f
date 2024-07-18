@@ -1,8 +1,5 @@
 #!SV_LIBRARIES
-../common/libcustomext
-../common/libfdt
-../common/libriscv
-../common/libsoftfloat
+../common/libriscv64-spike
 
 
 

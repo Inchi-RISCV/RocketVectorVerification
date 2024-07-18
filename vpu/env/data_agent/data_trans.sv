@@ -19,6 +19,7 @@
 class data_trans extends uvm_sequence_item; 
   `uvm_object_utils_begin(data_trans)
     `uvm_field_int(verif_commit_valid,UVM_ALL_ON)
+    //`uvm_field_int(verif_commit_start,UVM_ALL_ON)		
     `uvm_field_int(verif_commit_prevPc,UVM_ALL_ON)
     `uvm_field_int(verif_commit_currPc,UVM_ALL_ON)
     `uvm_field_int(verif_commit_order,UVM_ALL_ON)
@@ -102,9 +103,18 @@ class data_trans extends uvm_sequence_item;
     `uvm_field_int(verif_mem_dataWr,UVM_ALL_ON)
     `uvm_field_int(verif_mem_dataRd,UVM_ALL_ON)
 
+    `uvm_field_int(verif_update_reg_pc,UVM_ALL_ON)
+    `uvm_field_int(verif_update_reg_pc,UVM_ALL_ON)
+    `uvm_field_int(verif_update_reg_rd,UVM_ALL_ON)
+    `uvm_field_int(verif_update_reg_rfd,UVM_ALL_ON)
+    `uvm_field_int(verif_update_reg_data,UVM_ALL_ON)
+    `uvm_field_int(verif_update_reg_gpr_en,UVM_ALL_ON)
+
+    `uvm_field_int(verif_sfma,UVM_ALL_ON)
 	`uvm_object_utils_end
 
-  rand bit [`NRET-1:0]          verif_commit_valid;
+  //rand bit [`NRET-1:0]          verif_commit_start;
+  rand bit [`NRET-1:0]          verif_commit_valid;	
   rand bit [`NRET*`XLEN-1:0]    verif_commit_prevPc;
   rand bit [`NRET*`XLEN-1:0]    verif_commit_currPc;
   rand bit [`NRET*10-1:0]       verif_commit_order;
@@ -112,7 +122,7 @@ class data_trans extends uvm_sequence_item;
   rand bit [`NRET-1:0]          verif_commit_fused;
   
   //sim signals
-  rand bit [`NRET-1:0]          verif_sim_halt;
+  rand bit [1:0]          verif_sim_halt;
 
   //trap signals
   rand bit [`NTRAP-1:0]         verif_trap_valid;
@@ -197,6 +207,15 @@ class data_trans extends uvm_sequence_item;
   rand bit [`NRET*`XLEN/8-1:0] verif_mem_maskRd;
   rand bit [`NRET*`VLEN*8-1:0] verif_mem_dataWr;
   rand bit [`NRET*`VLEN*8-1:0] verif_mem_dataRd;
+
+  rand bit [`NRET-1:0]         verif_update_reg_valid;
+  rand bit [`NRET*`XLEN-1:0]   verif_update_reg_pc; 
+  rand bit [`NRET*5-1:0]       verif_update_reg_rd; 
+  rand bit [`NRET*5-1:0]       verif_update_reg_rfd; 
+  rand bit [`NRET*`XLEN-1:0]   verif_update_reg_data; 
+  rand bit [`NRET-1:0]         verif_update_reg_gpr_en;
+
+	rand bit [`NRET-1:0]         verif_sfma;
 
   extern function new(string name = "data_trans");
 

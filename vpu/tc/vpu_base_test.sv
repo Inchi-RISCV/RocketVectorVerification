@@ -50,6 +50,7 @@ function void vpu_base_test::build_phase(uvm_phase phase);
   uvm_config_db#(instr_agent_config)::set(this, "m_env.*", "m_instr_agent_config", m_instr_agent_config);
 
   uvm_config_db#(data_agent_config)::set(this, "m_env.*", "m_data_agent_config", m_data_agent_config);
+	set_report_max_quit_count(1);
 
 endfunction : build_phase
 

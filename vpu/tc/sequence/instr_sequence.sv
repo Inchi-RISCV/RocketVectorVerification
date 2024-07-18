@@ -37,8 +37,8 @@ class instr_sequence extends uvm_sequence;
 
 	`uvm_info("body", "sequence start", UVM_NONE)
 
-	//$readmemh("../tc/sequence/riscv_machine_mode_rand_test_0.hex",tb_top.testHarness.mem.srams.mem.mem_ext.ram);
 	//#1us;
+	///$readmemh("/datahdd/riscv/sunjiawen/rocketverification/vpu/sim1/hex_file/vadd.vv_10001.hex",tb_top.testHarness.mem.srams.mem.mem_ext.ram);
 
 
 

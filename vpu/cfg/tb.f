@@ -17,4 +17,5 @@
 -f ../env/env.f
 -f ../tc/tc.f 
 ../th/tb_top.sv 
+//../cfg/cov.cfg
 

@@ -19,6 +19,8 @@
 interface data_if(input clk, input rst_n);
   
   //commit signals
+	//logic [`NRET-1:0]          verif_commit_start;
+
   logic [`NRET-1:0]          verif_commit_valid;
   logic [`NRET*`XLEN-1:0]    verif_commit_prevPc;
   logic [`NRET*`XLEN-1:0]    verif_commit_currPc;
@@ -27,7 +29,7 @@ interface data_if(input clk, input rst_n);
   logic [`NRET-1:0]          verif_commit_fused;
   
   //sim signals
-  logic [`NRET-1:0]          verif_sim_halt;
+  logic [1:0]          verif_sim_halt;
 
   //trap signals
   logic [`NTRAP-1:0]         verif_trap_valid;
@@ -114,8 +116,20 @@ interface data_if(input clk, input rst_n);
   logic [`NRET*`VLEN*8-1:0]    verif_mem_dataWr;
   logic [`NRET*`VLEN*8-1:0]    verif_mem_dataRd;
 
+	logic [`NRET-1:0]         verif_sfma;
+
+
+  logic [`NRET-1:0]         verif_update_reg_valid;
+  logic [`NRET*`XLEN-1:0]   verif_update_reg_pc; 
+  logic [`NRET*5-1:0]       verif_update_reg_rd; 
+  logic [`NRET*5-1:0]       verif_update_reg_rfd; 
+  logic [`NRET*`XLEN-1:0]   verif_update_reg_data; 
+  logic [`NRET-1:0]         verif_update_reg_gpr_en;
+
+
   clocking mon_cb@(posedge clk);
     //commit signals
+		//output  verif_commit_start;
     output  verif_commit_valid;
     output  verif_commit_prevPc;
     output  verif_commit_currPc;
@@ -199,6 +213,8 @@ interface data_if(input clk, input rst_n);
     output  verif_csr_vlRd;
     output  verif_csr_vstartRd;
 
+		output  verif_sfma;
+
     //mem signals
     output  verif_mem_valid;
     output  verif_mem_addr;
@@ -209,6 +225,15 @@ interface data_if(input clk, input rst_n);
     output  verif_mem_maskRd;
     output  verif_mem_dataWr;
     output  verif_mem_dataRd;
+
+
+    output  verif_update_reg_valid;
+    output  verif_update_reg_pc; 
+    output  verif_update_reg_rd; 
+    output  verif_update_reg_rfd; 
+    output  verif_update_reg_data; 
+    output  verif_update_reg_gpr_en;
+
   endclocking
 
 

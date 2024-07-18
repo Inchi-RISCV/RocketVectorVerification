@@ -20,7 +20,7 @@ class data_agent extends uvm_agent;
   data_agent_config       m_cfg;
   data_monitor            m_monitor;
 
-  uvm_analysis_port #(data_trans) analysis_port;
+  //uvm_analysis_port #(data_trans) analysis_port;
 
   `uvm_component_utils_begin(data_agent)
      `uvm_field_enum(uvm_active_passive_enum, is_active, UVM_DEFAULT)
@@ -37,7 +37,7 @@ endclass : data_agent
 
 function  data_agent::new(string name, uvm_component parent);
   super.new(name, parent);
-  analysis_port = new("analysis_port", this);
+  //analysis_port = new("analysis_port", this);
 endfunction : new
 
 
@@ -60,7 +60,7 @@ endfunction : build_phase
 function void data_agent::connect_phase(uvm_phase phase);
   super.connect_phase(phase);
 
-  m_monitor.analysis_port.connect(analysis_port);
+  //m_monitor.analysis_port.connect(analysis_port);
 endfunction : connect_phase
 
 `endif // DATA_AGENT_SV

@@ -16,17 +16,11 @@
 `ifndef _DATA_MONITOR_SV_
 `define _DATA_MONITOR_SV_
 
-
-  import "DPI-C" function void spike_init(string s);
-	import "DPI-C" function void riscv_step(input int i);
- //import "DPI-C" function void st_update_csr_regs(output bit[64*22-1:0]  arry[] );
- //import "DPI-C" function void st_update_vpr_regs(output bit[64*64-1:0]  arry[] );
- //import "DPI-C" function void st_update_fpr_regs(output bit[64*64-1:0]  arry[] );
- //import "DPI-C" function void st_update_common_regs(output bit[64*35-1:0]  arry[] );
-  import "DPI-C" function void st_update_csr_regs(output bit[63:0]  arry[22] );
-  import "DPI-C" function void st_update_vpr_regs(output bit[63:0]  arry[64] );
-  import "DPI-C" function void st_update_fpr_regs(output bit[63:0]  arry[64] );
-  import "DPI-C" function void st_update_common_regs(output bit[63:0]  arry[35] );
+	import "DPI-C" function inchi_difftest_init();
+  import "DPI-C" function inchi_difftest_memcpy(string s);
+  import "DPI-C" function inchi_difftest_exec();
+  import "DPI-C" function inchi_difftest_set_reg(input bit[63:0] arr[154]);
+  import "DPI-C" function inchi_difftest_get_reg(output bit[63:0] arr[154]);
 
 
 class data_monitor extends uvm_monitor; 
@@ -35,8 +29,9 @@ class data_monitor extends uvm_monitor;
   virtual interface  data_if vif;
 
   uvm_analysis_port #(data_trans) analysis_port;
+  uvm_analysis_port #(data_trans) analysis_port_update;
 
-  data_trans m_trans;
+  data_trans m_trans,m_trans_update;
 	bit spike_start;
 
   extern function new(string name, uvm_component parent);
@@ -44,6 +39,7 @@ class data_monitor extends uvm_monitor;
   extern virtual function void connect_phase(uvm_phase phase);
   extern task main_phase(uvm_phase phase);
   extern task do_mon();
+  extern task do_mon_update();
 
 endclass : data_monitor 
 
@@ -51,6 +47,7 @@ function data_monitor::new(string name, uvm_component parent);
 
   super.new(name, parent);
   analysis_port = new("analysis_port", this);
+  analysis_port_update = new("analysis_port_update", this);
 
 endfunction : new
 
@@ -70,39 +67,47 @@ endfunction : connect_phase
 
 task data_monitor::main_phase(uvm_phase phase);
 
- bit [63:0] common_arry[35];//35
+ bit [63:0] arry[154];
 
   `uvm_info(get_type_name(), "main_phase", UVM_HIGH)
 
   m_trans = data_trans::type_id::create("m_trans");
+  m_trans_update = data_trans::type_id::create("m_trans_update");
+	
 	m_trans.verif_reg_gpr_arr = new[31];
   m_trans.verif_reg_fpr_arr = new[32];
   m_trans.verif_reg_vpr_arr = new[32];
 
-	fork
-		#2000;
-	  while(1)begin
-	    @(posedge vif.clk);
-	    riscv_step(1);
-	    st_update_common_regs(common_arry);
-			//`uvm_info(get_type_name(),$sformatf(" spike_start=%0h,prev_pc=%0h", spike_start,common_arry[0]),UVM_NONE);
-	  	if(common_arry[0] == 'h8000_019c)begin
-	  		`uvm_info(get_type_name(),$sformatf(" spike_start=%0h,prev_pc=%0h", spike_start,common_arry[0]),UVM_NONE);
+  fork
+  	#2000;
+    while(1)begin
+      @(posedge vif.clk);
+      //riscv_step(1);
+  		inchi_difftest_exec();
+      //st_update_common_regs(common_arry);
+  		inchi_difftest_get_reg(arry);
+  		//`uvm_info(get_type_name(),$sformatf(" spike_start=%0h,prev_pc=%0h", spike_start,common_arry[0]),UVM_NONE);
+    	if(arry[7] == 'h8000_0000)begin
+    		`uvm_info(get_type_name(),$sformatf(" spike wait start,cur_pc=%0h", arry[7]),UVM_NONE);
         break;
-	  	end
-	  end
+    	end
+    end
   join_none
 
 	forever begin
-  	do_mon();			
+		fork
+  	do_mon();	
+		do_mon_update();
+	  join
 	end
 
 endtask : main_phase
 
 task data_monitor::do_mon();
 	@(posedge vif.clk);
-	if(vif.verif_commit_valid)begin
+	if(!vif.rst_n & vif.verif_commit_valid )begin
     m_trans.verif_commit_valid   =      vif.verif_commit_valid;
+		//m_trans.verif_commit_start   =      vif.verif_commit_start;
     m_trans.verif_commit_prevPc  =      vif.verif_commit_prevPc;
     m_trans.verif_commit_currPc  =      vif.verif_commit_currPc;
     m_trans.verif_commit_order   =      vif.verif_commit_order ;
@@ -192,19 +197,37 @@ task data_monitor::do_mon();
     m_trans.verif_mem_maskRd     =      vif.verif_mem_maskRd;
     m_trans.verif_mem_dataWr     =      vif.verif_mem_dataWr;
     m_trans.verif_mem_dataRd     =      vif.verif_mem_dataRd;
-
+    m_trans.verif_sfma           =      vif.verif_sfma;
 		analysis_port.write(m_trans);
 
 		//if(spike_start)begin
 		//	riscv_step(1);
 		//	`uvm_info(get_type_name(),$sformatf(" spike step 1"),UVM_NONE);
 	  //end
-  
+		//if(vif.verif_commit_prevPc == 'h8000_0000) begin
+    //    m_trans.verif_commit_start   = 1;
+		//		`uvm_info(get_type_name(),$sformatf(" commit start,cur_pc=%0h", m_trans.verif_commit_start),UVM_NONE);
+	 // end
 
 
   end
 
 endtask : do_mon
+
+task data_monitor::do_mon_update();
+	@(posedge vif.clk);
+	if(vif.verif_update_reg_valid)begin
+	  m_trans_update.verif_update_reg_valid = vif.verif_update_reg_valid;
+    m_trans_update.verif_update_reg_pc    = vif.verif_update_reg_pc; 
+    m_trans_update.verif_update_reg_rd    = vif.verif_update_reg_rd-1; // gpr 0 not use,start from 1
+    m_trans_update.verif_update_reg_rfd   = vif.verif_update_reg_rfd; 
+    m_trans_update.verif_update_reg_data  = vif.verif_update_reg_data;
+    m_trans_update.verif_update_reg_gpr_en = vif.verif_update_reg_gpr_en; 
+		analysis_port_update.write(m_trans_update);
+
+	end
+
+endtask : do_mon_update
 
 `endif // DATA_MONITOR_SV
 

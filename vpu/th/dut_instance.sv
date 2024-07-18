@@ -11,6 +11,7 @@ TestHarness testHarness(
 initial begin
 
  force `VIF_PATH.verif_commit_valid   =  `RTL_PATH.io_verif_commit_valid;
+ //force `VIF_PATH.verif_commit_start   =  `RTL_PATH.io_verif_commit_start;
  force `VIF_PATH.verif_commit_prevPc  =  `RTL_PATH.io_verif_commit_prevPc;
  force `VIF_PATH.verif_commit_currPc  =  `RTL_PATH.io_verif_commit_currPc;
  force `VIF_PATH.verif_commit_order   =  `RTL_PATH.io_verif_commit_order;
@@ -94,4 +95,12 @@ initial begin
  force `VIF_PATH.verif_mem_dataWr     =  `RTL_PATH.io_verif_mem_dataWr;
  force `VIF_PATH.verif_mem_dataRd     =  `RTL_PATH.io_verif_mem_datatRd;
 
+ force `VIF_PATH.verif_update_reg_valid = `RTL_PATH.io_verif_update_reg_valid;
+ force `VIF_PATH.verif_update_reg_pc    = `RTL_PATH.io_verif_update_reg_pc;
+ force `VIF_PATH.verif_update_reg_rd    = `RTL_PATH.io_verif_update_reg_rd;
+ force `VIF_PATH.verif_update_reg_rfd   = `RTL_PATH.io_verif_update_reg_rfd;
+ force `VIF_PATH.verif_update_reg_data  = `RTL_PATH.io_verif_update_reg_data; 
+ force `VIF_PATH.verif_update_reg_gpr_en = `RTL_PATH.io_verif_update_reg_gpr_en;
+
+ force `VIF_PATH.verif_sfma = `RTL_PATH.io_verif_sfma;
  end
