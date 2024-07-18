@@ -1013,6 +1013,7 @@ module MSHRFile(	// @[<stdin>:5714:10]
   wire              _allocateArb_io_in_5_ready;	// @[src/main/scala/grapecoveDcache/MSHR.scala:309:27]
   wire              _allocateArb_io_in_6_ready;	// @[src/main/scala/grapecoveDcache/MSHR.scala:309:27]
   wire              _allocateArb_io_in_7_ready;	// @[src/main/scala/grapecoveDcache/MSHR.scala:309:27]
+  wire              _replayReg_io_innerIO_ready;	// @[src/main/scala/grapecoveDcache/MSHR.scala:260:25]
   wire [2:0]        _replayReg_io_idxMeta;	// @[src/main/scala/grapecoveDcache/MSHR.scala:260:25]
   wire [2:0]        _replayReg_io_replayIdx;	// @[src/main/scala/grapecoveDcache/MSHR.scala:260:25]
   reg  [17:0]       metaArray_0_0;	// @[src/main/scala/grapecoveDcache/MSHR.scala:262:26]
@@ -1113,6 +1114,7 @@ module MSHRFile(	// @[<stdin>:5714:10]
     _mshr_io_probeState | _mshr_1_io_probeState | _mshr_2_io_probeState
     | _mshr_3_io_probeState | _mshr_4_io_probeState | _mshr_5_io_probeState
     | _mshr_6_io_probeState | _mshr_7_io_probeState;	// @[src/main/scala/grapecoveDcache/MSHR.scala:289:48, :338:24]
+  wire              replayReq = _replayReg_io_innerIO_ready & io_fromRefill_valid;	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/MSHR.scala:260:25]
   wire [7:0][63:0]  _GEN =
     {{maskArray_7},
      {maskArray_6},
@@ -1416,8 +1418,8 @@ module MSHRFile(	// @[<stdin>:5714:10]
        _dataArray_T_3[1] ? io_pipelineReq_bits_data[15:8] : 8'h0,
        _dataArray_T_3[0] ? io_pipelineReq_bits_data[7:0] : 8'h0};	// @[src/main/scala/grapecoveDcache/MSHR.scala:284:60, :370:31, :377:33, :380:{20,25}, :381:9, :388:7, :390:7, :392:12]
   wire              _T_7 =
-    ~io_fromProbe_valid & ~io_fromRefill_valid & io_pipelineReq_valid
-    & _io_pipelineReq_ready_T_3 & ~maskConflict;	// @[src/main/scala/grapecoveDcache/MSHR.scala:300:56, :315:42, :317:51, :384:{21,60,63}]
+    ~io_fromProbe_valid & ~replayReq & io_pipelineReq_valid & _io_pipelineReq_ready_T_3
+    & ~maskConflict;	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/MSHR.scala:300:56, :315:42, :317:51, :384:{21,60,63}]
   wire [17:0]       _metaArray_T =
     {io_pipelineReq_bits_meta_sourceId,
      io_pipelineReq_bits_meta_regIdx,
@@ -1751,7 +1753,7 @@ module MSHRFile(	// @[<stdin>:5714:10]
     .io_toReplace_bits_state       (io_toReplace_bits_state),
     .io_toReplace_bits_lineAddr    (io_toReplace_bits_lineAddr),
     .io_toReplace_bits_data        (io_toReplace_bits_data),
-    .io_innerIO_ready              (io_fromRefill_ready),
+    .io_innerIO_ready              (_replayReg_io_innerIO_ready),
     .io_idxMeta                    (_replayReg_io_idxMeta),
     .io_replayIdx                  (_replayReg_io_replayIdx)
   );
@@ -1976,11 +1978,11 @@ module MSHRFile(	// @[<stdin>:5714:10]
     .io_probeState       (_mshr_7_io_probeState)
   );
   assign io_pipelineReq_ready =
-    ~io_fromProbe_valid & ~io_fromRefill_valid & _io_pipelineReq_ready_T_3
-    & ~maskConflict;	// @[<stdin>:5714:10, src/main/scala/grapecoveDcache/MSHR.scala:300:56, :315:42, :317:51, :384:{21,63}, :401:68]
+    ~io_fromProbe_valid & ~replayReq & _io_pipelineReq_ready_T_3 & ~maskConflict;	// @[<stdin>:5714:10, src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/MSHR.scala:300:56, :315:42, :317:51, :384:{21,63}, :401:68]
   assign io_toL2Req_bits_perm = _GEN_3[_senderQueue_io_deq_bits];	// @[<stdin>:5714:10, src/main/scala/grapecoveDcache/MSHR.scala:327:30, :410:28]
   assign io_toL2Req_bits_entryId = _senderQueue_io_deq_bits;	// @[<stdin>:5714:10, src/main/scala/grapecoveDcache/MSHR.scala:327:30]
   assign io_toL2Req_bits_lineAddr = _GEN_4[_senderQueue_io_deq_bits];	// @[<stdin>:5714:10, src/main/scala/grapecoveDcache/MSHR.scala:327:30, :412:28]
+  assign io_fromRefill_ready = _replayReg_io_innerIO_ready;	// @[<stdin>:5714:10, src/main/scala/grapecoveDcache/MSHR.scala:260:25]
   assign io_fromProbe_hitGo =
     io_fromProbe_valid
     & (probeState == 2'h1 | probeState == 2'h2 & ~io_fromRefill_bits_probeMatch);	// @[<stdin>:5714:10, src/main/scala/grapecoveDcache/MSHR.scala:289:48, :295:{34,49,74,88,117,120}]
@@ -1990,9 +1992,9 @@ module MSHRFile(	// @[<stdin>:5714:10]
   assign io_probeRefill_bits_entryId = lineAddrMatchIdx;	// @[<stdin>:5714:10, src/main/scala/grapecoveDcache/MSHR.scala:284:60]
 endmodule
 
-module WritebackEntry(	// @[<stdin>:7070:10]
-  input          clock,	// @[<stdin>:7071:11]
-  input          reset,	// @[<stdin>:7072:11]
+module WritebackEntry(	// @[<stdin>:7071:10]
+  input          clock,	// @[<stdin>:7072:11]
+  input          reset,	// @[<stdin>:7073:11]
   input          io_req_valid,	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:31:14]
   input          io_req_bits_voluntary,	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:31:14]
   input  [32:0]  io_req_bits_lineAddr,	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:31:14]
@@ -2023,12 +2025,12 @@ module WritebackEntry(	// @[<stdin>:7070:10]
   wire         _io_release_valid_output = state == 2'h1;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :58:15, :120:30]
   wire         _io_grant_ready_T = state == 2'h2;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :64:17, :127:26]
   wire         _T_6 = _io_req_ready_T & io_req_valid;	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/WritebackQueue.scala:55:17]
-  always @(posedge clock) begin	// @[<stdin>:7071:11]
-    if (reset) begin	// @[<stdin>:7071:11]
+  always @(posedge clock) begin	// @[<stdin>:7072:11]
+    if (reset) begin	// @[<stdin>:7072:11]
       state <= 2'h0;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22]
       remainBeats <= 1'h0;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :50:28]
     end
-    else begin	// @[<stdin>:7071:11]
+    else begin	// @[<stdin>:7072:11]
       if (_io_req_ready_T) begin	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:55:17]
         if (_T_6)	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35]
           state <= 2'h1;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :58:15]
@@ -2052,20 +2054,20 @@ module WritebackEntry(	// @[<stdin>:7070:10]
     end
   end // always @(posedge)
   assign io_missCheck_blockMiss =
-    io_missCheck_valid & (|state) & io_missCheck_lineAddr == req_lineAddr;	// @[<stdin>:7070:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :49:30, :131:{58,73}, :132:28]
-  assign io_release_valid = _io_release_valid_output;	// @[<stdin>:7070:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:120:30]
-  assign io_release_bits_opcode = {1'h1, req_voluntary, req_hasData};	// @[<stdin>:7070:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :51:48, :121:25]
-  assign io_release_bits_param = req_perm;	// @[<stdin>:7070:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30]
-  assign io_release_bits_address = {req_lineAddr[25:0], 6'h0};	// @[<stdin>:7070:10, rocket-chip/src/main/scala/tilelink/Edges.scala:421:15, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :84:34]
+    io_missCheck_valid & (|state) & io_missCheck_lineAddr == req_lineAddr;	// @[<stdin>:7071:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :49:30, :131:{58,73}, :132:28]
+  assign io_release_valid = _io_release_valid_output;	// @[<stdin>:7071:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:120:30]
+  assign io_release_bits_opcode = {1'h1, req_voluntary, req_hasData};	// @[<stdin>:7071:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :51:48, :121:25]
+  assign io_release_bits_param = req_perm;	// @[<stdin>:7071:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30]
+  assign io_release_bits_address = {req_lineAddr[25:0], 6'h0};	// @[<stdin>:7071:10, rocket-chip/src/main/scala/tilelink/Edges.scala:421:15, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :84:34]
   assign io_release_bits_data =
-    req_hasData ? req_data >> {502'h0, 1'h1 - remainBeats, 9'h0} : 512'h0;	// @[<stdin>:7070:10, rocket-chip/src/main/scala/tilelink/Edges.scala:424:15, src/main/scala/grapecoveDcache/WritebackQueue.scala:41:{22,32}, :49:30, :50:28, :51:48, :121:25]
+    req_hasData ? req_data >> {502'h0, 1'h1 - remainBeats, 9'h0} : 512'h0;	// @[<stdin>:7071:10, rocket-chip/src/main/scala/tilelink/Edges.scala:424:15, src/main/scala/grapecoveDcache/WritebackQueue.scala:41:{22,32}, :49:30, :50:28, :51:48, :121:25]
   assign io_wbFinish =
-    _io_grant_ready_T & io_grant_valid | _io_release_valid_output & ~req_hasData;	// @[<stdin>:7070:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :120:30, :127:{26,46,64}, :128:{45,48}]
+    _io_grant_ready_T & io_grant_valid | _io_release_valid_output & ~req_hasData;	// @[<stdin>:7071:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :120:30, :127:{26,46,64}, :128:{45,48}]
 endmodule
 
-module WritebackEntry_1(	// @[<stdin>:7225:10]
-  input          clock,	// @[<stdin>:7226:11]
-  input          reset,	// @[<stdin>:7227:11]
+module WritebackEntry_1(	// @[<stdin>:7226:10]
+  input          clock,	// @[<stdin>:7227:11]
+  input          reset,	// @[<stdin>:7228:11]
   input          io_req_valid,	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:31:14]
   input          io_req_bits_voluntary,	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:31:14]
   input  [32:0]  io_req_bits_lineAddr,	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:31:14]
@@ -2096,12 +2098,12 @@ module WritebackEntry_1(	// @[<stdin>:7225:10]
   wire         _io_release_valid_output = state == 2'h1;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :58:15, :120:30]
   wire         _io_grant_ready_T = state == 2'h2;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :64:17, :127:26]
   wire         _T_6 = _io_req_ready_T & io_req_valid;	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/WritebackQueue.scala:55:17]
-  always @(posedge clock) begin	// @[<stdin>:7226:11]
-    if (reset) begin	// @[<stdin>:7226:11]
+  always @(posedge clock) begin	// @[<stdin>:7227:11]
+    if (reset) begin	// @[<stdin>:7227:11]
       state <= 2'h0;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22]
       remainBeats <= 1'h0;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :50:28]
     end
-    else begin	// @[<stdin>:7226:11]
+    else begin	// @[<stdin>:7227:11]
       if (_io_req_ready_T) begin	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:55:17]
         if (_T_6)	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35]
           state <= 2'h1;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :58:15]
@@ -2125,20 +2127,20 @@ module WritebackEntry_1(	// @[<stdin>:7225:10]
     end
   end // always @(posedge)
   assign io_missCheck_blockMiss =
-    io_missCheck_valid & (|state) & io_missCheck_lineAddr == req_lineAddr;	// @[<stdin>:7225:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :49:30, :131:{58,73}, :132:28]
-  assign io_release_valid = _io_release_valid_output;	// @[<stdin>:7225:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:120:30]
-  assign io_release_bits_opcode = {1'h1, req_voluntary, req_hasData};	// @[<stdin>:7225:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :51:48, :121:25]
-  assign io_release_bits_param = req_perm;	// @[<stdin>:7225:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30]
-  assign io_release_bits_address = {req_lineAddr[25:0], 6'h0};	// @[<stdin>:7225:10, rocket-chip/src/main/scala/tilelink/Edges.scala:421:15, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :84:34]
+    io_missCheck_valid & (|state) & io_missCheck_lineAddr == req_lineAddr;	// @[<stdin>:7226:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:47:22, :49:30, :131:{58,73}, :132:28]
+  assign io_release_valid = _io_release_valid_output;	// @[<stdin>:7226:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:120:30]
+  assign io_release_bits_opcode = {1'h1, req_voluntary, req_hasData};	// @[<stdin>:7226:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :51:48, :121:25]
+  assign io_release_bits_param = req_perm;	// @[<stdin>:7226:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30]
+  assign io_release_bits_address = {req_lineAddr[25:0], 6'h0};	// @[<stdin>:7226:10, rocket-chip/src/main/scala/tilelink/Edges.scala:421:15, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :84:34]
   assign io_release_bits_data =
-    req_hasData ? req_data >> {502'h0, 1'h1 - remainBeats, 9'h0} : 512'h0;	// @[<stdin>:7225:10, rocket-chip/src/main/scala/tilelink/Edges.scala:424:15, src/main/scala/grapecoveDcache/WritebackQueue.scala:41:{22,32}, :49:30, :50:28, :51:48, :121:25]
+    req_hasData ? req_data >> {502'h0, 1'h1 - remainBeats, 9'h0} : 512'h0;	// @[<stdin>:7226:10, rocket-chip/src/main/scala/tilelink/Edges.scala:424:15, src/main/scala/grapecoveDcache/WritebackQueue.scala:41:{22,32}, :49:30, :50:28, :51:48, :121:25]
   assign io_wbFinish =
-    _io_grant_ready_T & io_grant_valid | _io_release_valid_output & ~req_hasData;	// @[<stdin>:7225:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :120:30, :127:{26,46,64}, :128:{45,48}]
+    _io_grant_ready_T & io_grant_valid | _io_release_valid_output & ~req_hasData;	// @[<stdin>:7226:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:49:30, :120:30, :127:{26,46,64}, :128:{45,48}]
 endmodule
 
-module WritebackQueue(	// @[<stdin>:7380:10]
-  input          clock,	// @[<stdin>:7381:11]
-  input          reset,	// @[<stdin>:7382:11]
+module WritebackQueue(	// @[<stdin>:7381:10]
+  input          clock,	// @[<stdin>:7382:11]
+  input          reset,	// @[<stdin>:7383:11]
   input          io_req_valid,	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:144:14]
   input          io_req_bits_voluntary,	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:144:14]
   input  [32:0]  io_req_bits_lineAddr,	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:144:14]
@@ -2187,8 +2189,8 @@ module WritebackQueue(	// @[<stdin>:7380:10]
   wire [1:0]   _enqPtr_new_ptr_WIRE_1 = {enqPtr_flag, enqPtr_value} + 2'h1;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:151:27, utility/src/main/scala/utility/CircularQueuePtr.scala:39:46]
   wire [1:0]   _releasePtr_new_ptr_WIRE_1 = {releasePtr_flag, releasePtr_value} + 2'h1;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, utility/src/main/scala/utility/CircularQueuePtr.scala:39:46]
   wire [1:0]   _deqPtr_new_ptr_WIRE_1 = {deqPtr_flag, deqPtr_value} + 2'h1;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:153:27, utility/src/main/scala/utility/CircularQueuePtr.scala:39:46]
-  always @(posedge clock) begin	// @[<stdin>:7381:11]
-    if (reset) begin	// @[<stdin>:7381:11]
+  always @(posedge clock) begin	// @[<stdin>:7382:11]
+    if (reset) begin	// @[<stdin>:7382:11]
       enqPtr_flag <= 1'h0;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:144:14, :151:27]
       enqPtr_value <= 1'h0;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:144:14, :151:27]
       releasePtr_flag <= 1'h0;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:144:14, :152:27]
@@ -2196,7 +2198,7 @@ module WritebackQueue(	// @[<stdin>:7380:10]
       deqPtr_flag <= 1'h0;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:144:14, :153:27]
       deqPtr_value <= 1'h0;	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:144:14, :153:27]
     end
-    else begin	// @[<stdin>:7381:11]
+    else begin	// @[<stdin>:7382:11]
       if (~_io_req_ready_T_2 & io_req_valid) begin	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/WritebackQueue.scala:205:21, utility/src/main/scala/utility/CircularQueuePtr.scala:99:37]
         enqPtr_flag <= _enqPtr_new_ptr_WIRE_1[1];	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:151:27, utility/src/main/scala/utility/CircularQueuePtr.scala:39:{46,59}]
         enqPtr_value <= _enqPtr_new_ptr_WIRE_1[0];	// @[src/main/scala/grapecoveDcache/WritebackQueue.scala:151:27, utility/src/main/scala/utility/CircularQueuePtr.scala:39:{46,59}]
@@ -2253,32 +2255,32 @@ module WritebackQueue(	// @[<stdin>:7380:10]
     .io_release_bits_data    (_wbqEntries_1_io_release_bits_data),
     .io_wbFinish             (_wbqEntries_1_io_wbFinish)
   );
-  assign io_req_ready = ~_io_req_ready_T_2;	// @[<stdin>:7380:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:205:21, utility/src/main/scala/utility/CircularQueuePtr.scala:99:37]
+  assign io_req_ready = ~_io_req_ready_T_2;	// @[<stdin>:7381:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:205:21, utility/src/main/scala/utility/CircularQueuePtr.scala:99:37]
   assign io_missCheck_blockMiss =
-    _wbqEntries_0_io_missCheck_blockMiss | _wbqEntries_1_io_missCheck_blockMiss;	// @[<stdin>:7380:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:159:25, :202:51]
-  assign io_release_valid = _io_release_valid_output;	// @[<stdin>:7380:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:187:20]
+    _wbqEntries_0_io_missCheck_blockMiss | _wbqEntries_1_io_missCheck_blockMiss;	// @[<stdin>:7381:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:159:25, :202:51]
+  assign io_release_valid = _io_release_valid_output;	// @[<stdin>:7381:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:187:20]
   assign io_release_bits_opcode =
     releasePtr_value
       ? _wbqEntries_1_io_release_bits_opcode
-      : _wbqEntries_0_io_release_bits_opcode;	// @[<stdin>:7380:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :159:25, :187:20]
+      : _wbqEntries_0_io_release_bits_opcode;	// @[<stdin>:7381:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :159:25, :187:20]
   assign io_release_bits_param =
     releasePtr_value
       ? _wbqEntries_1_io_release_bits_param
-      : _wbqEntries_0_io_release_bits_param;	// @[<stdin>:7380:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :159:25, :187:20]
-  assign io_release_bits_source = {3'h4, releasePtr_value};	// @[<stdin>:7380:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :187:20]
+      : _wbqEntries_0_io_release_bits_param;	// @[<stdin>:7381:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :159:25, :187:20]
+  assign io_release_bits_source = {3'h4, releasePtr_value};	// @[<stdin>:7381:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :187:20]
   assign io_release_bits_address =
     releasePtr_value
       ? _wbqEntries_1_io_release_bits_address
-      : _wbqEntries_0_io_release_bits_address;	// @[<stdin>:7380:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :159:25, :187:20]
+      : _wbqEntries_0_io_release_bits_address;	// @[<stdin>:7381:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :159:25, :187:20]
   assign io_release_bits_data =
     releasePtr_value
       ? _wbqEntries_1_io_release_bits_data
-      : _wbqEntries_0_io_release_bits_data;	// @[<stdin>:7380:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :159:25, :187:20]
+      : _wbqEntries_0_io_release_bits_data;	// @[<stdin>:7381:10, src/main/scala/grapecoveDcache/WritebackQueue.scala:152:27, :159:25, :187:20]
 endmodule
 
-module ProbeQueue(	// @[<stdin>:7545:10]
-  input          clock,	// @[<stdin>:7546:11]
-  input          reset,	// @[<stdin>:7547:11]
+module ProbeQueue(	// @[<stdin>:7546:10]
+  input          clock,	// @[<stdin>:7547:11]
+  input          reset,	// @[<stdin>:7548:11]
   input          io_memProbe_valid,	// @[src/main/scala/grapecoveDcache/ProbeQueue.scala:20:14]
   input  [2:0]   io_memProbe_bits_opcode,	// @[src/main/scala/grapecoveDcache/ProbeQueue.scala:20:14]
   input  [1:0]   io_memProbe_bits_param,	// @[src/main/scala/grapecoveDcache/ProbeQueue.scala:20:14]
@@ -2335,10 +2337,10 @@ module ProbeQueue(	// @[<stdin>:7545:10]
         ? 2'h2
         : io_wbReq_ready & _io_wbReq_valid_output ? 2'h0 : state},
      {io_memProbe_valid ? 2'h1 : state}};	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/ProbeQueue.scala:31:22, :33:17, :35:30, :36:15, :40:33, :41:15, :42:33, :43:15, :47:{25,59}, :48:15, :49:{31,65}, :50:15, :65:38, :69:41]
-  always @(posedge clock) begin	// @[<stdin>:7546:11]
-    if (reset)	// @[<stdin>:7546:11]
+  always @(posedge clock) begin	// @[<stdin>:7547:11]
+    if (reset)	// @[<stdin>:7547:11]
       state <= 2'h0;	// @[src/main/scala/grapecoveDcache/ProbeQueue.scala:31:22]
-    else	// @[<stdin>:7546:11]
+    else	// @[<stdin>:7547:11]
       state <= _GEN_0[state];	// @[src/main/scala/grapecoveDcache/ProbeQueue.scala:31:22, :33:17, :35:30, :40:33, :47:59]
     if (io_memProbe_valid) begin	// @[src/main/scala/grapecoveDcache/ProbeQueue.scala:20:14]
       probeReq_opcode <= io_memProbe_bits_opcode;	// @[src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
@@ -2347,23 +2349,23 @@ module ProbeQueue(	// @[<stdin>:7545:10]
       probeReq_address <= io_memProbe_bits_address;	// @[src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
     end
   end // always @(posedge)
-  assign io_memProbe_ready = 1'h1;	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:20:14]
-  assign io_mainPipeReq_valid = _io_mainPipeReq_valid_output;	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:65:38]
-  assign io_mainPipeReq_bits_source = probeReq_source[1:0];	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/DataExchangeIO.scala:93:27, src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
-  assign io_mainPipeReq_bits_paddr = {7'h0, probeReq_address};	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/DataExchangeIO.scala:94:27, src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
-  assign io_mainPipeReq_bits_cmd = {2'h0, probeReq_opcode};	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/DataExchangeIO.scala:95:27, src/main/scala/grapecoveDcache/ProbeQueue.scala:31:22, :55:27]
-  assign io_mainPipeReq_bits_probePerm = probeReq_param;	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
-  assign io_wbReq_valid = _io_wbReq_valid_output;	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:69:41]
-  assign io_wbReq_bits_lineAddr = _GEN;	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:59:33]
-  assign io_wbReq_bits_perm = {1'h0, probeReq_param};	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:47:25, :55:27, :72:27]
-  assign io_probeCheck_valid = _issueValid_T;	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:58:43]
-  assign io_probeCheck_probePermission = probeReq_param;	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
-  assign io_probeCheck_lineAddr = _GEN;	// @[<stdin>:7545:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:59:33]
+  assign io_memProbe_ready = 1'h1;	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:20:14]
+  assign io_mainPipeReq_valid = _io_mainPipeReq_valid_output;	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:65:38]
+  assign io_mainPipeReq_bits_source = probeReq_source[1:0];	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/DataExchangeIO.scala:93:27, src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
+  assign io_mainPipeReq_bits_paddr = {7'h0, probeReq_address};	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/DataExchangeIO.scala:94:27, src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
+  assign io_mainPipeReq_bits_cmd = {2'h0, probeReq_opcode};	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/DataExchangeIO.scala:95:27, src/main/scala/grapecoveDcache/ProbeQueue.scala:31:22, :55:27]
+  assign io_mainPipeReq_bits_probePerm = probeReq_param;	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
+  assign io_wbReq_valid = _io_wbReq_valid_output;	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:69:41]
+  assign io_wbReq_bits_lineAddr = _GEN;	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:59:33]
+  assign io_wbReq_bits_perm = {1'h0, probeReq_param};	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:47:25, :55:27, :72:27]
+  assign io_probeCheck_valid = _issueValid_T;	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:58:43]
+  assign io_probeCheck_probePermission = probeReq_param;	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:55:27]
+  assign io_probeCheck_lineAddr = _GEN;	// @[<stdin>:7546:10, src/main/scala/grapecoveDcache/ProbeQueue.scala:59:33]
 endmodule
 
-module SearchableQueue(	// @[<stdin>:7640:10, :7779:10]
-  input        clock,	// @[<stdin>:7641:11, :7780:11]
-  input        reset,	// @[<stdin>:7642:11, :7781:11]
+module SearchableQueue(	// @[<stdin>:7641:10, :7780:10]
+  input        clock,	// @[<stdin>:7642:11, :7781:11]
+  input        reset,	// @[<stdin>:7643:11, :7782:11]
   input        io_enq_valid,	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:123:14]
   input  [2:0] io_enq_bits,	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:123:14]
   input        io_deq_ready,	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:123:14]
@@ -2399,8 +2401,8 @@ module SearchableQueue(	// @[<stdin>:7640:10, :7779:10]
      {queue_0}};	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:131:27, :155:15]
   wire            do_enq = ~full & io_enq_valid;	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/RefillQueue.scala:137:30, :153:19]
   wire            do_deq = io_deq_ready & ~empty;	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/RefillQueue.scala:136:30, :152:19]
-  always @(posedge clock) begin	// @[<stdin>:7641:11, :7780:11]
-    if (reset) begin	// @[<stdin>:7641:11, :7780:11]
+  always @(posedge clock) begin	// @[<stdin>:7642:11, :7781:11]
+    if (reset) begin	// @[<stdin>:7642:11, :7781:11]
       queue_0 <= 3'h0;	// @[src/main/scala/chisel3/util/Counter.scala:61:40, src/main/scala/grapecoveDcache/RefillQueue.scala:131:27]
       queue_1 <= 3'h0;	// @[src/main/scala/chisel3/util/Counter.scala:61:40, src/main/scala/grapecoveDcache/RefillQueue.scala:131:27]
       queue_2 <= 3'h0;	// @[src/main/scala/chisel3/util/Counter.scala:61:40, src/main/scala/grapecoveDcache/RefillQueue.scala:131:27]
@@ -2413,7 +2415,7 @@ module SearchableQueue(	// @[<stdin>:7640:10, :7779:10]
       deq_ptr_value <= 3'h0;	// @[src/main/scala/chisel3/util/Counter.scala:61:40]
       maybe_full <= 1'h0;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:131:66, :134:27]
     end
-    else begin	// @[<stdin>:7641:11, :7780:11]
+    else begin	// @[<stdin>:7642:11, :7781:11]
       if (do_enq & enq_ptr_value == 3'h0)	// @[src/main/scala/chisel3/util/Counter.scala:61:40, src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/RefillQueue.scala:131:27, :141:16, :142:26]
         queue_0 <= io_enq_bits;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:131:27]
       if (do_enq & enq_ptr_value == 3'h1)	// @[src/main/scala/chisel3/util/Counter.scala:61:40, src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/RefillQueue.scala:131:27, :141:16, :142:26]
@@ -2438,18 +2440,18 @@ module SearchableQueue(	// @[<stdin>:7640:10, :7779:10]
         maybe_full <= do_enq;	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, src/main/scala/grapecoveDcache/RefillQueue.scala:134:27]
     end
   end // always @(posedge)
-  assign io_enq_ready = ~full;	// @[<stdin>:7640:10, :7779:10, src/main/scala/grapecoveDcache/RefillQueue.scala:137:30, :153:19]
-  assign io_deq_valid = ~empty;	// @[<stdin>:7640:10, :7779:10, src/main/scala/grapecoveDcache/RefillQueue.scala:136:30, :152:19]
-  assign io_deq_bits = _GEN[deq_ptr_value];	// @[<stdin>:7640:10, :7779:10, src/main/scala/chisel3/util/Counter.scala:61:40, src/main/scala/grapecoveDcache/RefillQueue.scala:155:15]
+  assign io_enq_ready = ~full;	// @[<stdin>:7641:10, :7780:10, src/main/scala/grapecoveDcache/RefillQueue.scala:137:30, :153:19]
+  assign io_deq_valid = ~empty;	// @[<stdin>:7641:10, :7780:10, src/main/scala/grapecoveDcache/RefillQueue.scala:136:30, :152:19]
+  assign io_deq_bits = _GEN[deq_ptr_value];	// @[<stdin>:7641:10, :7780:10, src/main/scala/chisel3/util/Counter.scala:61:40, src/main/scala/grapecoveDcache/RefillQueue.scala:155:15]
   assign io_idxMatch =
     queue_0 == io_searchIdx | queue_1 == io_searchIdx | queue_2 == io_searchIdx
     | queue_3 == io_searchIdx | queue_4 == io_searchIdx | queue_5 == io_searchIdx
-    | queue_6 == io_searchIdx | queue_7 == io_searchIdx;	// @[<stdin>:7640:10, :7779:10, src/main/scala/grapecoveDcache/RefillQueue.scala:131:27, :158:{41,43}]
+    | queue_6 == io_searchIdx | queue_7 == io_searchIdx;	// @[<stdin>:7641:10, :7780:10, src/main/scala/grapecoveDcache/RefillQueue.scala:131:27, :158:{41,43}]
 endmodule
 
-module Queue_1(	// @[<stdin>:7725:10]
-  input          clock,	// @[<stdin>:7726:11]
-  input          reset,	// @[<stdin>:7727:11]
+module Queue_1(	// @[<stdin>:7726:10]
+  input          clock,	// @[<stdin>:7727:11]
+  input          reset,	// @[<stdin>:7728:11]
   input          io_enq_valid,	// @[src/main/scala/chisel3/util/Decoupled.scala:273:14]
   input  [511:0] io_enq_bits,	// @[src/main/scala/chisel3/util/Decoupled.scala:273:14]
   input          io_deq_ready,	// @[src/main/scala/chisel3/util/Decoupled.scala:273:14]
@@ -2466,13 +2468,13 @@ module Queue_1(	// @[<stdin>:7725:10]
   wire       full = ptr_match & maybe_full;	// @[src/main/scala/chisel3/util/Decoupled.scala:277:27, :278:33, :280:24]
   wire       do_enq = ~full & io_enq_valid;	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, :280:24, :304:19]
   wire       do_deq = io_deq_ready & ~empty;	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35, :279:25, :303:19]
-  always @(posedge clock) begin	// @[<stdin>:7726:11]
-    if (reset) begin	// @[<stdin>:7726:11]
+  always @(posedge clock) begin	// @[<stdin>:7727:11]
+    if (reset) begin	// @[<stdin>:7727:11]
       enq_ptr_value <= 3'h0;	// @[src/main/scala/chisel3/util/Counter.scala:61:40]
       deq_ptr_value <= 3'h0;	// @[src/main/scala/chisel3/util/Counter.scala:61:40]
-      maybe_full <= 1'h0;	// @[<stdin>:7725:10, src/main/scala/chisel3/util/Decoupled.scala:277:27]
+      maybe_full <= 1'h0;	// @[<stdin>:7726:10, src/main/scala/chisel3/util/Decoupled.scala:277:27]
     end
-    else begin	// @[<stdin>:7726:11]
+    else begin	// @[<stdin>:7727:11]
       if (do_enq)	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35]
         enq_ptr_value <= enq_ptr_value + 3'h1;	// @[src/main/scala/chisel3/util/Counter.scala:61:40, :77:24]
       if (do_deq)	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35]
@@ -2483,7 +2485,7 @@ module Queue_1(	// @[<stdin>:7725:10]
   end // always @(posedge)
   ram_combMem_0 ram_ext (	// @[src/main/scala/chisel3/util/Decoupled.scala:274:95]
     .R0_addr (deq_ptr_value),	// @[src/main/scala/chisel3/util/Counter.scala:61:40]
-    .R0_en   (1'h1),	// @[<stdin>:7725:10]
+    .R0_en   (1'h1),	// @[<stdin>:7726:10]
     .R0_clk  (clock),
     .W0_addr (enq_ptr_value),	// @[src/main/scala/chisel3/util/Counter.scala:61:40]
     .W0_en   (do_enq),	// @[src/main/scala/chisel3/util/Decoupled.scala:52:35]
@@ -2491,13 +2493,13 @@ module Queue_1(	// @[<stdin>:7725:10]
     .W0_data (io_enq_bits),
     .R0_data (io_deq_bits)
   );
-  assign io_enq_ready = ~full;	// @[<stdin>:7725:10, src/main/scala/chisel3/util/Decoupled.scala:280:24, :304:19]
-  assign io_deq_valid = ~empty;	// @[<stdin>:7725:10, src/main/scala/chisel3/util/Decoupled.scala:279:25, :303:19]
+  assign io_enq_ready = ~full;	// @[<stdin>:7726:10, src/main/scala/chisel3/util/Decoupled.scala:280:24, :304:19]
+  assign io_deq_valid = ~empty;	// @[<stdin>:7726:10, src/main/scala/chisel3/util/Decoupled.scala:279:25, :303:19]
 endmodule
 
-module RefillQueue(	// @[<stdin>:7864:10]
-  input          clock,	// @[<stdin>:7865:11]
-  input          reset,	// @[<stdin>:7866:11]
+module RefillQueue(	// @[<stdin>:7865:10]
+  input          clock,	// @[<stdin>:7866:11]
+  input          reset,	// @[<stdin>:7867:11]
   input          io_fromL2_valid,	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:47:14]
   input  [2:0]   io_fromL2_bits_entryId,	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:47:14]
   input  [511:0] io_fromL2_bits_data,	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:47:14]
@@ -2553,15 +2555,15 @@ module RefillQueue(	// @[<stdin>:7864:10]
     .io_deq_bits  (/* unused */),
     .io_idxMatch  (_noDataQueue_io_idxMatch)
   );
-  assign io_fromL2_ready = _dataQueue_io_enq_ready & _noDataQueue_io_enq_ready;	// @[<stdin>:7864:10, src/main/scala/grapecoveDcache/RefillQueue.scala:54:28, :56:27, :68:45]
-  assign io_toCore_valid = _noDataQueue_io_deq_valid | _dataQueue_io_deq_valid;	// @[<stdin>:7864:10, src/main/scala/grapecoveDcache/RefillQueue.scala:54:28, :56:27, :72:47]
+  assign io_fromL2_ready = _dataQueue_io_enq_ready & _noDataQueue_io_enq_ready;	// @[<stdin>:7865:10, src/main/scala/grapecoveDcache/RefillQueue.scala:54:28, :56:27, :68:45]
+  assign io_toCore_valid = _noDataQueue_io_deq_valid | _dataQueue_io_deq_valid;	// @[<stdin>:7865:10, src/main/scala/grapecoveDcache/RefillQueue.scala:54:28, :56:27, :72:47]
   assign io_toCore_bits_probeMatch =
-    io_fromProbe_valid & (_dataIdxQueue_io_idxMatch | _noDataQueue_io_idxMatch);	// @[<stdin>:7864:10, src/main/scala/grapecoveDcache/RefillQueue.scala:53:28, :56:27, :82:{51,80}]
+    io_fromProbe_valid & (_dataIdxQueue_io_idxMatch | _noDataQueue_io_idxMatch);	// @[<stdin>:7865:10, src/main/scala/grapecoveDcache/RefillQueue.scala:53:28, :56:27, :82:{51,80}]
 endmodule
 
-module TLDInterface(	// @[<stdin>:7921:10]
-  input          clock,	// @[<stdin>:7922:11]
-  input          reset,	// @[<stdin>:7923:11]
+module TLDInterface(	// @[<stdin>:7922:10]
+  input          clock,	// @[<stdin>:7923:11]
+  input          reset,	// @[<stdin>:7924:11]
   input          io_fromL2_valid,	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:16:14]
   input  [2:0]   io_fromL2_bits_opcode,	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:16:14]
   input  [2:0]   io_fromL2_bits_source,	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:16:14]
@@ -2580,13 +2582,13 @@ module TLDInterface(	// @[<stdin>:7921:10]
   reg  [2:0]   io_toRefill_bits_entryId_r;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:42:14]
   wire         inValid =
     io_fromL2_valid & io_toRefill_ready & ~writeFlag & io_fromL2_bits_opcode == 3'h5;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:24:26, :26:{57,68,93}]
-  always @(posedge clock) begin	// @[<stdin>:7922:11]
-    if (reset) begin	// @[<stdin>:7922:11]
+  always @(posedge clock) begin	// @[<stdin>:7923:11]
+    if (reset) begin	// @[<stdin>:7923:11]
       data_0 <= 512'h0;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:21:{21,29}]
       counter <= 1'h0;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:23:26]
       writeFlag <= 1'h0;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:23:26, :24:26]
     end
-    else begin	// @[<stdin>:7922:11]
+    else begin	// @[<stdin>:7923:11]
       if (inValid)	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:26:68]
         data_0 <= io_fromL2_bits_data;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:21:21]
       counter <= ~inValid & counter;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:23:26, :26:68, :27:17, :28:19]
@@ -2597,14 +2599,14 @@ module TLDInterface(	// @[<stdin>:7921:10]
     else	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:23:26]
       io_toRefill_bits_entryId_r <= io_fromL2_bits_source;	// @[src/main/scala/grapecoveDcache/RefillQueue.scala:42:14]
   end // always @(posedge)
-  assign io_toRefill_valid = writeFlag | _io_toRefill_bits_entryId_T & io_fromL2_valid;	// @[<stdin>:7921:10, src/main/scala/grapecoveDcache/RefillQueue.scala:24:26, :36:{44,69,90}]
+  assign io_toRefill_valid = writeFlag | _io_toRefill_bits_entryId_T & io_fromL2_valid;	// @[<stdin>:7922:10, src/main/scala/grapecoveDcache/RefillQueue.scala:24:26, :36:{44,69,90}]
   assign io_toRefill_bits_entryId =
-    _io_toRefill_bits_entryId_T ? io_fromL2_bits_source : io_toRefill_bits_entryId_r;	// @[<stdin>:7921:10, src/main/scala/grapecoveDcache/RefillQueue.scala:36:69, :39:34, :42:14]
-  assign io_toRefill_bits_data = data_0;	// @[<stdin>:7921:10, src/main/scala/grapecoveDcache/RefillQueue.scala:21:21]
-  assign io_toRefill_bits_hasData = ~_io_toRefill_bits_entryId_T;	// @[<stdin>:7921:10, src/main/scala/grapecoveDcache/RefillQueue.scala:23:26, :28:34, :36:69, :37:37]
+    _io_toRefill_bits_entryId_T ? io_fromL2_bits_source : io_toRefill_bits_entryId_r;	// @[<stdin>:7922:10, src/main/scala/grapecoveDcache/RefillQueue.scala:36:69, :39:34, :42:14]
+  assign io_toRefill_bits_data = data_0;	// @[<stdin>:7922:10, src/main/scala/grapecoveDcache/RefillQueue.scala:21:21]
+  assign io_toRefill_bits_hasData = ~_io_toRefill_bits_entryId_T;	// @[<stdin>:7922:10, src/main/scala/grapecoveDcache/RefillQueue.scala:23:26, :28:34, :36:69, :37:37]
 endmodule
 
-module Arbiter_1(	// @[<stdin>:7978:10]
+module Arbiter_1(	// @[<stdin>:7979:10]
   input          io_in_0_valid,	// @[src/main/scala/chisel3/util/Arbiter.scala:134:14]
   input  [1:0]   io_in_0_bits_source,	// @[src/main/scala/chisel3/util/Arbiter.scala:134:14]
   input  [38:0]  io_in_0_bits_paddr,	// @[src/main/scala/chisel3/util/Arbiter.scala:134:14]
@@ -2648,37 +2650,37 @@ module Arbiter_1(	// @[<stdin>:7978:10]
 
   wire _GEN = io_in_0_valid | io_in_1_valid;	// @[src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
   wire _io_out_valid_T = io_in_0_valid | io_in_1_valid;	// @[src/main/scala/chisel3/util/Arbiter.scala:45:68]
-  assign io_in_2_ready = ~_io_out_valid_T;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:45:{68,78}]
-  assign io_out_valid = _io_out_valid_T | io_in_2_valid;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:45:68, :148:31]
+  assign io_in_2_ready = ~_io_out_valid_T;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:45:{68,78}]
+  assign io_out_valid = _io_out_valid_T | io_in_2_valid;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:45:68, :148:31]
   assign io_out_bits_source =
-    io_in_0_valid ? io_in_0_bits_source : io_in_1_valid ? 2'h0 : io_in_2_bits_source;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
+    io_in_0_valid ? io_in_0_bits_source : io_in_1_valid ? 2'h0 : io_in_2_bits_source;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
   assign io_out_bits_paddr =
     io_in_0_valid
       ? io_in_0_bits_paddr
-      : io_in_1_valid ? io_in_1_bits_paddr : io_in_2_bits_paddr;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
+      : io_in_1_valid ? io_in_1_bits_paddr : io_in_2_bits_paddr;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
   assign io_out_bits_cmd =
-    io_in_0_valid ? io_in_0_bits_cmd : io_in_1_valid ? 5'h0 : io_in_2_bits_cmd;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
-  assign io_out_bits_size = _GEN ? 3'h0 : io_in_2_bits_size;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
-  assign io_out_bits_signed = ~_GEN & io_in_2_bits_signed;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
+    io_in_0_valid ? io_in_0_bits_cmd : io_in_1_valid ? 5'h0 : io_in_2_bits_cmd;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
+  assign io_out_bits_size = _GEN ? 3'h0 : io_in_2_bits_size;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
+  assign io_out_bits_signed = ~_GEN & io_in_2_bits_signed;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
   assign io_out_bits_wdata =
-    io_in_0_valid ? 512'h0 : io_in_1_valid ? io_in_1_bits_wdata : io_in_2_bits_wdata;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
-  assign io_out_bits_wmask = _GEN ? 64'h0 : io_in_2_bits_wmask;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
-  assign io_out_bits_dest = _GEN ? 5'h0 : io_in_2_bits_dest;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
-  assign io_out_bits_isFromCore = ~_GEN & io_in_2_bits_isFromCore;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
-  assign io_out_bits_isProbe = io_in_0_valid;	// @[<stdin>:7978:10]
-  assign io_out_bits_isRefill = ~io_in_0_valid & (io_in_1_valid | io_in_2_bits_isRefill);	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
-  assign io_out_bits_probePerm = io_in_0_valid ? io_in_0_bits_probePerm : 2'h0;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :139:26, :141:19]
+    io_in_0_valid ? 512'h0 : io_in_1_valid ? io_in_1_bits_wdata : io_in_2_bits_wdata;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
+  assign io_out_bits_wmask = _GEN ? 64'h0 : io_in_2_bits_wmask;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
+  assign io_out_bits_dest = _GEN ? 5'h0 : io_in_2_bits_dest;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
+  assign io_out_bits_isFromCore = ~_GEN & io_in_2_bits_isFromCore;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
+  assign io_out_bits_isProbe = io_in_0_valid;	// @[<stdin>:7979:10]
+  assign io_out_bits_isRefill = ~io_in_0_valid & (io_in_1_valid | io_in_2_bits_isRefill);	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
+  assign io_out_bits_probePerm = io_in_0_valid ? io_in_0_bits_probePerm : 2'h0;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :139:26, :141:19]
   assign io_out_bits_refillWay =
     io_in_0_valid
       ? 2'h0
-      : io_in_1_valid ? io_in_1_bits_refillWay : io_in_2_bits_refillWay;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
+      : io_in_1_valid ? io_in_1_bits_refillWay : io_in_2_bits_refillWay;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
   assign io_out_bits_refillCoh =
     io_in_0_valid
       ? 2'h0
-      : io_in_1_valid ? io_in_1_bits_refillCoh : io_in_2_bits_refillCoh;	// @[<stdin>:7978:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
+      : io_in_1_valid ? io_in_1_bits_refillCoh : io_in_2_bits_refillCoh;	// @[<stdin>:7979:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
 endmodule
 
-module AMOALU(	// @[<stdin>:8004:10]
+module AMOALU(	// @[<stdin>:8005:10]
   input  [7:0]  io_mask,	// @[src/main/scala/grapecoveDcache/AMOALU.scala:62:14]
   input  [4:0]  io_cmd,	// @[src/main/scala/grapecoveDcache/AMOALU.scala:62:14]
   input  [63:0] io_lhs,	// @[src/main/scala/grapecoveDcache/AMOALU.scala:62:14]
@@ -2717,10 +2719,10 @@ module AMOALU(	// @[<stdin>:8004:10]
                   ? io_cmd == 5'hC | io_cmd == 5'hE
                   : io_cmd == 5'hD | io_cmd == 5'hF)
                  ? io_lhs
-                 : io_rhs) | ~wmask & io_lhs;	// @[<stdin>:8004:10, src/main/scala/chisel3/util/Mux.scala:50:70, src/main/scala/grapecoveDcache/AMOALU.scala:71:{26,39,49}, :72:{26,39,49}, :73:26, :74:38, :75:39, :79:103, :80:{13,21,31}, :86:{26,37,40}, :87:{13,28,31,46,65,85}, :92:17, :94:{10,12,20,25,62}, :97:49, :100:{19,23}, :101:{19,38,53,58,77}, :102:{19,39,50}, :104:30, :105:{28,34,36,43}]
+                 : io_rhs) | ~wmask & io_lhs;	// @[<stdin>:8005:10, src/main/scala/chisel3/util/Mux.scala:50:70, src/main/scala/grapecoveDcache/AMOALU.scala:71:{26,39,49}, :72:{26,39,49}, :73:26, :74:38, :75:39, :79:103, :80:{13,21,31}, :86:{26,37,40}, :87:{13,28,31,46,65,85}, :92:17, :94:{10,12,20,25,62}, :97:49, :100:{19,23}, :101:{19,38,53,58,77}, :102:{19,39,50}, :104:30, :105:{28,34,36,43}]
 endmodule
 
-module Arbiter_2(	// @[<stdin>:8118:10]
+module Arbiter_2(	// @[<stdin>:8119:10]
   input          io_in_0_valid,	// @[src/main/scala/chisel3/util/Arbiter.scala:134:14]
   input          io_in_0_bits_voluntary,	// @[src/main/scala/chisel3/util/Arbiter.scala:134:14]
   input  [32:0]  io_in_0_bits_lineAddr,	// @[src/main/scala/chisel3/util/Arbiter.scala:134:14]
@@ -2741,20 +2743,20 @@ module Arbiter_2(	// @[<stdin>:8118:10]
   output [511:0] io_out_bits_data	// @[src/main/scala/chisel3/util/Arbiter.scala:134:14]
 );
 
-  assign io_in_0_ready = io_out_ready;	// @[<stdin>:8118:10]
-  assign io_in_1_ready = ~io_in_0_valid & io_out_ready;	// @[<stdin>:8118:10, src/main/scala/chisel3/util/Arbiter.scala:45:78, :147:19]
-  assign io_out_valid = io_in_0_valid | io_in_1_valid;	// @[<stdin>:8118:10, src/main/scala/chisel3/util/Arbiter.scala:148:31]
-  assign io_out_bits_voluntary = io_in_0_valid & io_in_0_bits_voluntary;	// @[<stdin>:8118:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
+  assign io_in_0_ready = io_out_ready;	// @[<stdin>:8119:10]
+  assign io_in_1_ready = ~io_in_0_valid & io_out_ready;	// @[<stdin>:8119:10, src/main/scala/chisel3/util/Arbiter.scala:45:78, :147:19]
+  assign io_out_valid = io_in_0_valid | io_in_1_valid;	// @[<stdin>:8119:10, src/main/scala/chisel3/util/Arbiter.scala:148:31]
+  assign io_out_bits_voluntary = io_in_0_valid & io_in_0_bits_voluntary;	// @[<stdin>:8119:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
   assign io_out_bits_lineAddr =
-    io_in_0_valid ? io_in_0_bits_lineAddr : io_in_1_bits_lineAddr;	// @[<stdin>:8118:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
-  assign io_out_bits_perm = io_in_0_valid ? io_in_0_bits_perm : io_in_1_bits_perm;	// @[<stdin>:8118:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
-  assign io_out_bits_hasData = io_in_0_valid & io_in_0_bits_hasData;	// @[<stdin>:8118:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
-  assign io_out_bits_data = io_in_0_valid ? io_in_0_bits_data : 512'h0;	// @[<stdin>:8118:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
+    io_in_0_valid ? io_in_0_bits_lineAddr : io_in_1_bits_lineAddr;	// @[<stdin>:8119:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
+  assign io_out_bits_perm = io_in_0_valid ? io_in_0_bits_perm : io_in_1_bits_perm;	// @[<stdin>:8119:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
+  assign io_out_bits_hasData = io_in_0_valid & io_in_0_bits_hasData;	// @[<stdin>:8119:10, src/main/scala/chisel3/util/Arbiter.scala:137:15, :139:26, :141:19]
+  assign io_out_bits_data = io_in_0_valid ? io_in_0_bits_data : 512'h0;	// @[<stdin>:8119:10, src/main/scala/chisel3/util/Arbiter.scala:134:14, :137:15, :139:26, :141:19]
 endmodule
 
-module GPCDCache(	// @[<stdin>:8137:10]
-  input          clock,	// @[<stdin>:8138:11]
-  input          reset,	// @[<stdin>:8139:11]
+module GPCDCache(	// @[<stdin>:8138:10]
+  input          clock,	// @[<stdin>:8139:11]
+  input          reset,	// @[<stdin>:8140:11]
   input          auto_out_a_ready,	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   input          auto_out_b_valid,	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   input  [2:0]   auto_out_b_bits_opcode,	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
@@ -3740,7 +3742,7 @@ module GPCDCache(	// @[<stdin>:8137:10]
     {touchWay != 2'h2 & (_GEN_14[5] | (&{|touchWay_hi, _touchWay_T_2})),
      touchWay == 2'h1 ? 2'h0 : _GEN_14[4:3] | state_vec_wayDec[3:2],
      touchWay == 2'h0 ? 3'h0 : _GEN_14[2:0] | state_vec_wayDec[3:1]};	// @[rocket-chip/src/main/scala/tilelink/Metadata.scala:62:10, rocket-chip/src/main/scala/util/Replacement.scala:93:36, :107:{15,20,67}, :110:112, src/main/scala/chisel3/util/OneHot.scala:30:18, :32:{10,14,28}, :65:12, src/main/scala/grapecoveDcache/DCache.scala:60:74, :66:26]
-  always @(posedge clock) begin	// @[<stdin>:8138:11]
+  always @(posedge clock) begin	// @[<stdin>:8139:11]
     s1_bypassStore_valid <=
       _T_37 | s2_valid
       & (s2_req_cmd == 5'h1 | s2_req_cmd == 5'h11 | s2_req_cmd == 5'h7
@@ -3806,7 +3808,7 @@ module GPCDCache(	// @[<stdin>:8137:10]
       REG <= _GEN_0;	// @[src/main/scala/grapecoveDcache/DCache.scala:131:29, :319:55]
     else	// @[src/main/scala/grapecoveDcache/DCache.scala:100:27]
       REG <= _s1_metaPreBypass_WIRE_2;	// @[src/main/scala/chisel3/util/Mux.scala:30:73, src/main/scala/grapecoveDcache/DCache.scala:319:55]
-    if (reset) begin	// @[<stdin>:8138:11]
+    if (reset) begin	// @[<stdin>:8139:11]
       s1_bypassReplace <= 1'h0;	// @[src/main/scala/grapecoveDcache/DCache.scala:51:33, :409:25]
       lrscCount <= 7'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:377:20, src/main/scala/grapecoveDcache/DCache.scala:185:26]
       s2_wayEn <= 4'h0;	// @[src/main/scala/grapecoveDcache/DCache.scala:86:89, :264:31]
@@ -3940,7 +3942,7 @@ module GPCDCache(	// @[<stdin>:8137:10]
       state_vec_126 <= 6'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, :374:17]
       state_vec_127 <= 6'h0;	// @[rocket-chip/src/main/scala/util/Replacement.scala:85:34, :374:17]
     end
-    else begin	// @[<stdin>:8138:11]
+    else begin	// @[<stdin>:8139:11]
       s1_bypassReplace <=
         s1_validRefill & _GEN_17 == {s1_meta_tag, s1_req_paddr[12:6]} | s2_validRefill
         & _GEN_17 == {REG, s2_req_paddr[12:6]};	// @[src/main/scala/chisel3/util/Mux.scala:141:16, src/main/scala/grapecoveDcache/AddrDecoder.scala:17:9, src/main/scala/grapecoveDcache/DCache.scala:51:33, :100:27, :105:35, :263:27, :268:31, :319:55, :323:{10,40,47}, :324:14]
@@ -4513,34 +4515,34 @@ module GPCDCache(	// @[<stdin>:8137:10]
     .io_out_bits_hasData    (_wbArbiter_io_out_bits_hasData),
     .io_out_bits_data       (_wbArbiter_io_out_bits_data)
   );
-  assign auto_out_a_valid = nodeOut_a_valid;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_a_bits_opcode = nodeOut_a_bits_opcode;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_a_bits_param = nodeOut_a_bits_param;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_a_bits_size = nodeOut_a_bits_size;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_a_bits_source = nodeOut_a_bits_source;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_a_bits_address = nodeOut_a_bits_address;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_a_bits_mask = nodeOut_a_bits_mask;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_a_bits_data = nodeOut_a_bits_data;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_a_bits_corrupt = nodeOut_a_bits_corrupt;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_b_ready = nodeOut_b_ready;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_c_valid = nodeOut_c_valid;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_c_bits_opcode = nodeOut_c_bits_opcode;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_c_bits_param = nodeOut_c_bits_param;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_c_bits_size = nodeOut_c_bits_size;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_c_bits_source = nodeOut_c_bits_source;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_c_bits_address = nodeOut_c_bits_address;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_c_bits_data = nodeOut_c_bits_data;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_c_bits_corrupt = nodeOut_c_bits_corrupt;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_d_ready = nodeOut_d_ready;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_e_valid = nodeOut_e_valid;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign auto_out_e_bits_sink = nodeOut_e_bits_sink;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
-  assign io_req_ready = _mainReqArb_io_in_2_ready & ~blockReq;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:60:33, :66:26, :71:47, :77:64]
-  assign io_resp_valid = _io_resp_valid_output;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:479:40]
+  assign auto_out_a_valid = nodeOut_a_valid;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_a_bits_opcode = nodeOut_a_bits_opcode;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_a_bits_param = nodeOut_a_bits_param;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_a_bits_size = nodeOut_a_bits_size;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_a_bits_source = nodeOut_a_bits_source;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_a_bits_address = nodeOut_a_bits_address;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_a_bits_mask = nodeOut_a_bits_mask;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_a_bits_data = nodeOut_a_bits_data;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_a_bits_corrupt = nodeOut_a_bits_corrupt;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_b_ready = nodeOut_b_ready;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_c_valid = nodeOut_c_valid;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_c_bits_opcode = nodeOut_c_bits_opcode;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_c_bits_param = nodeOut_c_bits_param;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_c_bits_size = nodeOut_c_bits_size;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_c_bits_source = nodeOut_c_bits_source;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_c_bits_address = nodeOut_c_bits_address;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_c_bits_data = nodeOut_c_bits_data;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_c_bits_corrupt = nodeOut_c_bits_corrupt;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_d_ready = nodeOut_d_ready;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_e_valid = nodeOut_e_valid;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign auto_out_e_bits_sink = nodeOut_e_bits_sink;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/diplomacy/Nodes.scala:1205:17]
+  assign io_req_ready = _mainReqArb_io_in_2_ready & ~blockReq;	// @[<stdin>:8138:10, src/main/scala/grapecoveDcache/DCache.scala:60:33, :66:26, :71:47, :77:64]
+  assign io_resp_valid = _io_resp_valid_output;	// @[<stdin>:8138:10, src/main/scala/grapecoveDcache/DCache.scala:479:40]
   assign io_resp_bits_source =
-    s1_cacheResp_valid ? s1_req_source : _mshrs_io_toPipeline_bits_sID;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:25:27, :100:27, :455:49, :480:24]
+    s1_cacheResp_valid ? s1_req_source : _mshrs_io_toPipeline_bits_sID;	// @[<stdin>:8138:10, src/main/scala/grapecoveDcache/DCache.scala:25:27, :100:27, :455:49, :480:24]
   assign io_resp_bits_dest =
-    s1_cacheResp_valid ? s1_req_dest : _mshrs_io_toPipeline_bits_regIdx;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:25:27, :100:27, :455:49, :480:24]
-  assign io_resp_bits_status = _io_resp_bits_status_output;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:480:24]
+    s1_cacheResp_valid ? s1_req_dest : _mshrs_io_toPipeline_bits_regIdx;	// @[<stdin>:8138:10, src/main/scala/grapecoveDcache/DCache.scala:25:27, :100:27, :455:49, :480:24]
+  assign io_resp_bits_status = _io_resp_bits_status_output;	// @[<stdin>:8138:10, src/main/scala/grapecoveDcache/DCache.scala:480:24]
   assign io_resp_bits_hasData =
     ~s1_cacheResp_valid | s1_req_cmd == 5'h0 | s1_req_cmd == 5'h10
     | _s1_cacheResp_bits_hasData_T_2 | _s1_cacheResp_bits_hasData_T_3
@@ -4548,7 +4550,7 @@ module GPCDCache(	// @[<stdin>:8137:10]
     | _s1_cacheResp_bits_hasData_T_10 | _s1_cacheResp_bits_hasData_T_11
     | _s1_cacheResp_bits_hasData_T_12 | _s1_cacheResp_bits_hasData_T_16
     | _s1_cacheResp_bits_hasData_T_17 | _s1_cacheResp_bits_hasData_T_18
-    | _s1_cacheResp_bits_hasData_T_19 | _s1_cacheResp_bits_hasData_T_20;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/rocket/Consts.scala:86:66, :87:71, rocket-chip/src/main/scala/tilelink/Metadata.scala:140:24, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27, :455:49, :480:24, src/main/scala/grapecoveDcache/MemConstants.scala:43:38]
+    | _s1_cacheResp_bits_hasData_T_19 | _s1_cacheResp_bits_hasData_T_20;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/rocket/Consts.scala:86:66, :87:71, rocket-chip/src/main/scala/tilelink/Metadata.scala:140:24, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/DCache.scala:66:26, :100:27, :455:49, :480:24, src/main/scala/grapecoveDcache/MemConstants.scala:43:38]
   assign io_resp_bits_data =
     s1_cacheResp_valid
       ? (s1_sc
@@ -4575,7 +4577,7 @@ module GPCDCache(	// @[<stdin>:8137:10]
                         s1_cacheResp_bits_data_shifted_3[31:16]},
                    s1_cacheResp_bits_data_shifted_4[15:8]},
               s1_cacheResp_bits_data_shifted_5})
-      : _mshrs_io_toPipeline_bits_regData;	// @[<stdin>:8137:10, rocket-chip/src/main/scala/util/Misc.scala:38:36, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AMOALU.scala:16:53, :38:{24,37}, :41:16, :42:12, :43:16, :44:{15,49,58}, :45:14, src/main/scala/grapecoveDcache/DCache.scala:25:27, :66:26, :100:27, :159:20, :177:40, :189:32, :193:32, :455:49, :458:35, :480:24]
-  assign io_nextCycleWb = _mshrs_io_toPipeline_bits_nextCycleWb;	// @[<stdin>:8137:10, src/main/scala/grapecoveDcache/DCache.scala:25:27]
+      : _mshrs_io_toPipeline_bits_regData;	// @[<stdin>:8138:10, rocket-chip/src/main/scala/util/Misc.scala:38:36, rocket-chip/src/main/scala/util/package.scala:16:47, src/main/scala/grapecoveDcache/AMOALU.scala:16:53, :38:{24,37}, :41:16, :42:12, :43:16, :44:{15,49,58}, :45:14, src/main/scala/grapecoveDcache/DCache.scala:25:27, :66:26, :100:27, :159:20, :177:40, :189:32, :193:32, :455:49, :458:35, :480:24]
+  assign io_nextCycleWb = _mshrs_io_toPipeline_bits_nextCycleWb;	// @[<stdin>:8138:10, src/main/scala/grapecoveDcache/DCache.scala:25:27]
 endmodule
 

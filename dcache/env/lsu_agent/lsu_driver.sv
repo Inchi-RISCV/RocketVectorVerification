@@ -20,7 +20,7 @@ class lsu_driver extends uvm_driver #(lsu_trans);
   `uvm_component_utils(lsu_driver)
 
   virtual interface  lsu_if vif;
-	lsu_trans lsu_q[$],rsp,req_last;
+	lsu_trans lsu_q[$];
 
   extern function new(string name, uvm_component parent);
   extern virtual function void build_phase (uvm_phase phase);
@@ -75,12 +75,10 @@ endtask : reset_phase
 
 task lsu_driver::main_phase(uvm_phase phase);
   `uvm_info(get_type_name(), "main_phase", UVM_HIGH)
-  rsp = new("rsp");
-	req_last = new("req_last");
   fork
     get_trans();
     do_drive();
-		do_resp();
+		//do_resp();
   join
 
 endtask : main_phase
@@ -101,14 +99,21 @@ endtask : get_trans
 
 
 task lsu_driver::do_drive();
-	lsu_trans req,req_last;
+	lsu_trans req,req_last,rsp;
+
+  rsp = new("rsp");
+	req_last = new("req_last");
 
 	forever begin
 		@(posedge vif.clk);
-
+		if(vif.io_resp_valid) begin
+      rsp.io_resp_bits_status   = vif.io_resp_bits_status;
+      `uvm_info(get_type_name(),$sformatf("io_resp_bits_status=%0h",rsp.io_resp_bits_status),UVM_NONE);					
+		end
 		if(rsp.io_resp_bits_status == 2) begin //replay cmd
       req = req_last;
-			`uvm_info(get_type_name(), {"replay , req item\n",req.sprint}, UVM_NONE)
+			//`uvm_info(get_type_name(), {"replay , req item\n",req.sprint}, UVM_HIGH)
+			`uvm_info(get_type_name(),$sformatf("replay req , addr=%0h",req.io_req_bits_paddr),UVM_NONE);
 			do begin
         vif.io_req_valid          <= #`DELAY 1;
         vif.io_req_bits_source    <= #`DELAY req.io_req_bits_source;
@@ -126,10 +131,11 @@ task lsu_driver::do_drive();
         vif.io_s0_kill            <= #`DELAY req.io_s0_kill;
         vif.io_s1_kill            <= #`DELAY req.io_s1_kill;
 				req_last = req;
-				@(posedge vif.clk);
+				@(posedge vif.clk);				
       end
       while (!vif.io_req_ready);
       vif.io_req_valid          <= #`DELAY 1'b0;
+
 		end
 		else if((lsu_q.size > 0)) begin
       req = lsu_q.pop_front();
@@ -155,8 +161,8 @@ task lsu_driver::do_drive();
       end
       while (!vif.io_req_ready);
 			//if($urandom_range(1)) begin
-        vif.io_req_valid          <= #`DELAY 1'b0;
-			  repeat($urandom_range(4))@(posedge vif.clk);
+      vif.io_req_valid          <= #`DELAY 1'b0;							
+			//repeat($urandom_range(4))@(posedge vif.clk);
 		  //end
 	
 
@@ -165,6 +171,7 @@ task lsu_driver::do_drive();
 	end
 endtask : do_drive
 
+/*
 task lsu_driver::do_resp();
 	forever begin
 		@(posedge vif.clk);
@@ -175,11 +182,12 @@ task lsu_driver::do_resp();
       rsp.io_resp_bits_hasData  = vif.io_resp_bits_hasData;	
       rsp.io_resp_bits_data     = vif.io_resp_bits_data;	
       rsp.io_nextCycleWb        = vif.io_nextCycleWb;
-			`uvm_info(get_type_name(), {"rps item\n",rsp.sprint}, UVM_HIGH)
+			`uvm_info(get_type_name(), {"rps item\n",rsp.sprint}, UVM_NONE)
 		end
 	end
 
 endtask : do_resp
+*/
 
 `endif // LSU_DRIVER_SV
 
