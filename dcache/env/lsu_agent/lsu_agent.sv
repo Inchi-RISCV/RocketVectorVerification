@@ -22,7 +22,8 @@ class lsu_agent extends uvm_agent;
   lsu_driver             m_driver;
   lsu_monitor            m_monitor;
 
-  uvm_analysis_port #(lsu_trans) analysis_port;
+  uvm_analysis_port #(lsu_trans) analysis_port_req;
+	uvm_analysis_port #(lsu_trans) analysis_port_rsp;
 
   `uvm_component_utils_begin(lsu_agent)
      `uvm_field_enum(uvm_active_passive_enum, is_active, UVM_DEFAULT)
@@ -39,7 +40,8 @@ endclass : lsu_agent
 
 function  lsu_agent::new(string name, uvm_component parent);
   super.new(name, parent);
-  analysis_port = new("analysis_port", this);
+  analysis_port_req = new("analysis_port_req", this);
+  analysis_port_rsp = new("analysis_port_rsp", this);	
 endfunction : new
 
 
@@ -66,7 +68,9 @@ endfunction : build_phase
 function void lsu_agent::connect_phase(uvm_phase phase);
   super.connect_phase(phase);
 
-  m_monitor.analysis_port.connect(analysis_port);
+  m_monitor.analysis_port_req.connect(analysis_port_req);
+  m_monitor.analysis_port_rsp.connect(analysis_port_rsp);
+	
   if (is_active == UVM_ACTIVE) begin
     m_driver.seq_item_port.connect(m_sequencer.seq_item_export);
   end

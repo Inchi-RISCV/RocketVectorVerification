@@ -108,7 +108,7 @@ task lsu_driver::do_drive();
 		@(posedge vif.clk);
 		if(vif.io_resp_valid) begin
       rsp.io_resp_bits_status   = vif.io_resp_bits_status;
-      `uvm_info(get_type_name(),$sformatf("io_resp_bits_status=%0h",rsp.io_resp_bits_status),UVM_NONE);					
+      `uvm_info(get_type_name(),$sformatf("io_resp_bits_status=%0h",rsp.io_resp_bits_status),UVM_HIGH);					
 		end
 		if(rsp.io_resp_bits_status == 2) begin //replay cmd
       req = req_last;
