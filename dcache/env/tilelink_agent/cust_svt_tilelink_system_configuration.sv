@@ -64,7 +64,7 @@ function void cust_svt_tilelink_system_configuration::set_tilelink_cfg();
       this.slave_cfg[i].max_a_rdy_a_rdy_assert_delay = 0;
 			this.slave_cfg[i].min_a_rdy_deassert_delay = 0;
       this.slave_cfg[i].max_a_rdy_deassert_delay = 0;
-      this.slave_cfg[i].min_a_vld_d_vld_cross_chnl_delay = 0;
+      this.slave_cfg[i].min_a_vld_d_vld_cross_chnl_delay = 60;
       this.slave_cfg[i].max_a_vld_d_vld_cross_chnl_delay = 200;
 			this.slave_cfg[i].min_d_vld_d_vld_assert_delay = 0;
       this.slave_cfg[i].max_d_vld_d_vld_assert_delay = 0;
