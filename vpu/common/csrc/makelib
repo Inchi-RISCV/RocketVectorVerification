@@ -1,0 +1,1 @@
+g++ SimDTM.cc  -I$RISCV/include -I$VCS_HOME/include -std=c++17  $RISCV/lib/libfesvr.a -fPIC -shared -o libdebug.so

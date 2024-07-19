@@ -1,0 +1,1 @@
+scp -r huangxiaogang@172.16.30.9:/home/zhangj/study/riscv-isa-sim/difftest/build/libriscv64-spike.so   ./

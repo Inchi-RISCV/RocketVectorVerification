@@ -1,0 +1,58 @@
+Magic 271485
+Revision Verdi_T-2022.06
+
+; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
+viewPort 0 25 2417 568 520 215
+
+; File list:
+; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
+openDirFile -d / -i 3 "" "/data/riscv/huangxiaogang/RocketVectorVerification/vpu/sim/base_func/wave/instr_test_64961082.fsdb"
+
+; file time scale:
+; fileTimeScale ### s|ms|us|ns|ps
+
+; signal spacing:
+signalSpacing 5
+
+; windowTimeUnit is used for zoom, cursor & marker
+; waveform viewport range
+zoom 89009653.296710 89015358.000000
+cursor 89014600.000000
+marker 89014600.000000
+
+; visible top row signal index
+top 0
+; marker line index
+markerPos 6
+
+; event list
+; addEvent event_name event_expression
+; curEvent event_name
+
+
+
+COMPLEX_EVENT_BEGIN
+
+
+COMPLEX_EVENT_END
+
+
+
+; toolbar current search type
+; curSTATUS search_type
+curSTATUS ByChange
+
+
+addGroup "G1"
+activeDirFile "" "/data/riscv/huangxiaogang/RocketVectorVerification/vpu/sim/base_func/wave/instr_test_64961082.fsdb"
+addSignal -h 15 /tb_top/testHarness/ldut/tile_prci_domain/tile_reset_domain_tile/core/io_verif_commit_valid
+addSignal -h 15 -UNSIGNED -HEX -holdScope io_verif_commit_prevPc[63:0]
+addSignal -h 15 -UNSIGNED -HEX -holdScope io_verif_commit_currPc[63:0]
+addSignal -h 15 -UNSIGNED -HEX -holdScope io_verif_commit_order[9:0]
+addSignal -h 15 -UNSIGNED -HEX -holdScope io_verif_commit_insn[31:0]
+addSignal -h 15 -holdScope io_verif_commit_fused
+addGroup "G2"
+
+; getSignalForm Scope Hierarchy Status
+; active file of getSignalForm
+
