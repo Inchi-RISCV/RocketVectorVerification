@@ -29,9 +29,21 @@ class dcache_base_sequence extends uvm_sequence;
   endfunction
 	extern task backdoor_get_data(input bit[63:0] address, input bit[`SVT_TILELINK_SIZE_WIDTH-1:0] size,output bit[`SVT_TILELINK_DATA_WIDTH-1:0] data_out);
   extern task backdoor_put_data(input bit[63:0] address, input bit[`SVT_TILELINK_SIZE_WIDTH-1:0] size,input bit[`SVT_TILELINK_DATA_WIDTH-1:0] data_in);
+  
+	extern task dcache_random_cfg(
+		output int length,
+		output bit [38:0] addr);
+
+	extern task dcache_load(
+		input bit [7:0]   req_source,
+		input bit [38:0]  req_addr,
+		input bit [2:0]   req_size = 6,
+  	input bit         req_signed = 0,
+  	input bit         req_noAlloc = 0);
 
   virtual task body();	  	
-
+		wait(!tb_top.reset) 	//wait meta array init
+		#200ns;
   endtask
 
 
@@ -64,6 +76,38 @@ task dcache_base_sequence::backdoor_put_data(input bit[63:0] address, input bit[
 	`uvm_info(get_type_name(),$sformatf("backdoor_put_data size=%0h,addr=%0h,data=%0h",size,address,data_in),UVM_NONE);
 endtask
 
-//-------------------------------------------------------------------------
+task dcache_base_sequence::dcache_random_cfg(
+	output int length,
+	output bit [38:0] addr);
+
+	length 	= 20;			//TODO
+	addr 		= 'h1000;	//TODO
+	
+	`uvm_info("RANDOM_CFG",$sformatf("length = %0d, initial addr = %0h", length, addr),UVM_NONE);
+
+endtask
+
+task dcache_base_sequence::dcache_load( 	//M_XRD
+	input bit [7:0]   req_source,
+	input bit [38:0]  req_addr,
+	input bit [2:0]   req_size = 6,
+  input bit         req_signed = 0,
+  input bit         req_noAlloc = 0);
+ 
+	lsu_seq   seq;
+
+	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
+		seq.io_req_bits_source   	== 	req_source;
+		//seq.io_req_bits_dest     	==	req_dest;
+		seq.io_req_bits_cmd      	==	'h0; 	//int load
+    seq.io_req_bits_paddr    	==	req_addr;
+    seq.io_req_bits_size     	==	req_size;	
+    seq.io_req_bits_signed   	== 	req_signed;
+    seq.io_req_bits_noAlloc  	==	req_noAlloc;
+  	seq.io_s0_kill						== 	'h0;
+  	seq.io_s1_kill						== 	'h0;	
+		})
+
+endtask
 
 `endif
