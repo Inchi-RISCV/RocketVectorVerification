@@ -68,7 +68,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 
 		
 		for(int i=0;i<20;i++)begin
-			req_bits_dest = $urandom_range(31);
+			//req_bits_dest = $urandom_range(31);
 			`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{seq.io_req_bits_source   ==0;
                                                seq.io_req_bits_paddr    =='h1000+'h40*i;
                                                seq.io_req_bits_cmd      =='h0;
@@ -77,7 +77,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
                                                seq.io_req_bits_wdata    =='ha5a5a5a5_a5a5a5a5+i;	
                                                seq.io_req_bits_wmask    ==64'hffff_ffff_ffff_ffff;
                                                seq.io_req_bits_noAlloc  ==0;
-                                               seq.io_req_bits_dest     ==req_bits_dest;
+                                               //seq.io_req_bits_dest     ==req_bits_dest;
                                                seq.io_req_bits_isRefill ==0;	
                                                seq.io_req_bits_refillWay==0;	
                                                seq.io_req_bits_refillCoh==0;	

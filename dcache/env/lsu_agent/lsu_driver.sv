@@ -21,6 +21,9 @@ class lsu_driver extends uvm_driver #(lsu_trans);
 
   virtual interface  lsu_if vif;
 	lsu_trans lsu_q[$];
+	bit destid_reuse [32];
+	rand bit [5:0] destid;
+	//bit [5:0] destid_last[32];
 
   extern function new(string name, uvm_component parent);
   extern virtual function void build_phase (uvm_phase phase);
@@ -78,7 +81,7 @@ task lsu_driver::main_phase(uvm_phase phase);
   fork
     get_trans();
     do_drive();
-		//do_resp();
+		do_resp();
   join
 
 endtask : main_phase
@@ -106,15 +109,18 @@ task lsu_driver::do_drive();
 
 	forever begin
 		@(posedge vif.clk);
+
 		if(vif.io_resp_valid) begin
       rsp.io_resp_bits_status   = vif.io_resp_bits_status;
-      `uvm_info(get_type_name(),$sformatf("io_resp_bits_status=%0h",rsp.io_resp_bits_status),UVM_HIGH);					
+      `uvm_info(get_type_name(),$sformatf("io_resp_bits_status=%0h",rsp.io_resp_bits_status),UVM_HIGH);	
 		end
+
 		if(rsp.io_resp_bits_status == 2) begin //replay cmd
       req = req_last;
 			//`uvm_info(get_type_name(), {"replay , req item\n",req.sprint}, UVM_HIGH)
 			`uvm_info(get_type_name(),$sformatf("replay req , addr=%0h",req.io_req_bits_paddr),UVM_NONE);
 			do begin
+
         vif.io_req_valid          <= #`DELAY 1;
         vif.io_req_bits_source    <= #`DELAY req.io_req_bits_source;
         vif.io_req_bits_paddr     <= #`DELAY req.io_req_bits_paddr;
@@ -124,7 +130,7 @@ task lsu_driver::do_drive();
         vif.io_req_bits_wdata     <= #`DELAY req.io_req_bits_wdata;	
         vif.io_req_bits_wmask     <= #`DELAY req.io_req_bits_wmask;	
         vif.io_req_bits_noAlloc   <= #`DELAY req.io_req_bits_noAlloc;
-        vif.io_req_bits_dest      <= #`DELAY req.io_req_bits_dest;	
+        vif.io_req_bits_dest      <= #`DELAY destid;	
         vif.io_req_bits_isRefill  <= #`DELAY req.io_req_bits_isRefill;	
         vif.io_req_bits_refillWay <= #`DELAY req.io_req_bits_refillWay;	
         vif.io_req_bits_refillCoh <= #`DELAY req.io_req_bits_refillCoh;	
@@ -140,7 +146,14 @@ task lsu_driver::do_drive();
 		else if((lsu_q.size > 0)) begin
       req = lsu_q.pop_front();
       `uvm_info(get_type_name(), {"pop req item\n",req.sprint}, UVM_HIGH)
+
+			while(1)begin
+        destid = $urandom_range(31);
+			  if(!destid_reuse[destid])
+					break;
+			end
 			do begin
+
         vif.io_req_valid          <= #`DELAY 1;
         vif.io_req_bits_source    <= #`DELAY req.io_req_bits_source;
         vif.io_req_bits_paddr     <= #`DELAY req.io_req_bits_paddr;
@@ -150,13 +163,20 @@ task lsu_driver::do_drive();
         vif.io_req_bits_wdata     <= #`DELAY req.io_req_bits_wdata;	
         vif.io_req_bits_wmask     <= #`DELAY req.io_req_bits_wmask;	
         vif.io_req_bits_noAlloc   <= #`DELAY req.io_req_bits_noAlloc;
-        vif.io_req_bits_dest      <= #`DELAY req.io_req_bits_dest;	
+        vif.io_req_bits_dest      <= #`DELAY destid;	
         vif.io_req_bits_isRefill  <= #`DELAY req.io_req_bits_isRefill;	
         vif.io_req_bits_refillWay <= #`DELAY req.io_req_bits_refillWay;	
         vif.io_req_bits_refillCoh <= #`DELAY req.io_req_bits_refillCoh;	
         vif.io_s0_kill            <= #`DELAY req.io_s0_kill;
         vif.io_s1_kill            <= #`DELAY req.io_s1_kill;
 				req_last = req;
+
+			  //when load ,set destid_reuse 1
+		    if(req.io_req_bits_cmd == 0)begin
+				  destid_reuse[destid] = 1;
+				  `uvm_info(get_type_name(),$sformatf("set destid_reuse , destid = %0h",destid),UVM_HIGH);	
+			  end
+				
 				@(posedge vif.clk);
       end
       while (!vif.io_req_ready);
@@ -164,30 +184,28 @@ task lsu_driver::do_drive();
       vif.io_req_valid          <= #`DELAY 1'b0;							
 			//repeat($urandom_range(4))@(posedge vif.clk);
 		  //end
-	
-
-		end
+	 	end
 
 	end
 endtask : do_drive
 
-/*
+
 task lsu_driver::do_resp();
 	forever begin
 		@(posedge vif.clk);
 		if(vif.io_resp_valid) begin
-			rsp.io_resp_bits_source   = vif.io_resp_bits_source;	
-      rsp.io_resp_bits_dest     = vif.io_resp_bits_dest;	
-      rsp.io_resp_bits_status   = vif.io_resp_bits_status;	
-      rsp.io_resp_bits_hasData  = vif.io_resp_bits_hasData;	
-      rsp.io_resp_bits_data     = vif.io_resp_bits_data;	
-      rsp.io_nextCycleWb        = vif.io_nextCycleWb;
-			`uvm_info(get_type_name(), {"rps item\n",rsp.sprint}, UVM_NONE)
+			//when rsp hit or hasdata,set destid_reuse 0
+      //`uvm_info(get_type_name(),$sformatf("vif.io_resp_bits_hasData=%0h",vif.io_resp_bits_hasData),UVM_NONE);
+			if(!vif.io_resp_bits_status | vif.io_resp_bits_hasData ) begin
+				destid_reuse[vif.io_resp_bits_dest] = 0;
+				`uvm_info(get_type_name(),$sformatf("clear destid_reuse , destid = %0h",vif.io_resp_bits_dest),UVM_NONE);	
+			end
+
 		end
 	end
 
 endtask : do_resp
-*/
+
 
 `endif // LSU_DRIVER_SV
 
