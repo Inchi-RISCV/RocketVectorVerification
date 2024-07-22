@@ -41,6 +41,15 @@ class dcache_base_sequence extends uvm_sequence;
   	input bit         req_signed = 0,
   	input bit         req_noAlloc = 0);
 
+	extern task dcache_store(
+		input bit [7:0]   req_source,
+		input bit [38:0]  req_addr,
+		input bit [511:0] req_wdata,
+  	input bit [63:0]  req_wmask = 'hffff_ffff_ffff_ffff,
+		input bit [2:0]   req_size = 6,
+  	input bit         req_signed = 0,
+  	input bit         req_noAlloc = 0);
+
   virtual task body();	  	
 		wait(!tb_top.reset) 	//wait meta array init
 		#200ns;
@@ -101,6 +110,33 @@ task dcache_base_sequence::dcache_load( 	//M_XRD
 		//seq.io_req_bits_dest     	==	req_dest;
 		seq.io_req_bits_cmd      	==	'h0; 	//int load
     seq.io_req_bits_paddr    	==	req_addr;
+    seq.io_req_bits_size     	==	req_size;	
+    seq.io_req_bits_signed   	== 	req_signed;
+    seq.io_req_bits_noAlloc  	==	req_noAlloc;
+  	seq.io_s0_kill						== 	'h0;
+  	seq.io_s1_kill						== 	'h0;	
+		})
+
+endtask
+
+task dcache_base_sequence::dcache_store( 	//M_XWR
+	input bit [7:0]   req_source,
+	input bit [38:0]  req_addr,
+	input bit [511:0] req_wdata,
+  input bit [63:0]  req_wmask = 'hffff_ffff_ffff_ffff,
+	input bit [2:0]   req_size = 6,
+  input bit         req_signed = 0,
+  input bit         req_noAlloc = 0);
+ 
+	lsu_seq   seq;
+
+	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
+		seq.io_req_bits_source   	== 	req_source;
+		//seq.io_req_bits_dest     	==	req_dest;
+		seq.io_req_bits_cmd      	==	'h1; 	//int store
+    seq.io_req_bits_paddr    	==	req_addr;
+    seq.io_req_bits_wdata    	==	req_wdata;
+    seq.io_req_bits_wmask    	==	req_wmask;
     seq.io_req_bits_size     	==	req_size;	
     seq.io_req_bits_signed   	== 	req_signed;
     seq.io_req_bits_noAlloc  	==	req_noAlloc;
