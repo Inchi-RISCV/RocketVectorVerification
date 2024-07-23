@@ -92,11 +92,11 @@ task dcache_base_sequence::dcache_random_cfg(
 	length 	= 20;			//TODO
 	addr 		= 'h1000;	//TODO
 	
-	`uvm_info("RANDOM_CFG",$sformatf("length = %0d, initial addr = %0h", length, addr),UVM_NONE);
+	`uvm_info("RANDOM_CFG",$sformatf("length = %0d, initial addr = %0h", length, addr),UVM_LOW);
 
 endtask
 
-task dcache_base_sequence::dcache_load( 	//M_XRD
+task dcache_base_sequence::dcache_load(
 	input bit [7:0]   req_source,
 	input bit [38:0]  req_addr,
 	input bit [2:0]   req_size = 6,
@@ -108,13 +108,13 @@ task dcache_base_sequence::dcache_load( 	//M_XRD
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
 		seq.io_req_bits_source   	== 	req_source;
 		//seq.io_req_bits_dest     	==	req_dest;
-		seq.io_req_bits_cmd      	==	'h0; 	//int load
+		seq.io_req_bits_cmd      	==	lsu_trans::M_XRD;
     seq.io_req_bits_paddr    	==	req_addr;
     seq.io_req_bits_size     	==	req_size;	
     seq.io_req_bits_signed   	== 	req_signed;
     seq.io_req_bits_noAlloc  	==	req_noAlloc;
   	seq.io_s0_kill						== 	'h0;
-  	seq.io_s1_kill						== 	'h0;	
+  	seq.io_s1_kill						== 	'h0;
 		})
 
 endtask
@@ -133,7 +133,7 @@ task dcache_base_sequence::dcache_store( 	//M_XWR
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
 		seq.io_req_bits_source   	== 	req_source;
 		//seq.io_req_bits_dest     	==	req_dest;
-		seq.io_req_bits_cmd      	==	'h1; 	//int store
+		seq.io_req_bits_cmd      	==	lsu_trans::M_XWR;
     seq.io_req_bits_paddr    	==	req_addr;
     seq.io_req_bits_wdata    	==	req_wdata;
     seq.io_req_bits_wmask    	==	req_wmask;
@@ -143,7 +143,7 @@ task dcache_base_sequence::dcache_store( 	//M_XWR
   	seq.io_s0_kill						== 	'h0;
   	seq.io_s1_kill						== 	'h0;	
 		})
-
+		
 endtask
 
 `endif

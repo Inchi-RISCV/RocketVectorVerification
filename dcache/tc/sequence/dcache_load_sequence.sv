@@ -38,7 +38,7 @@ class dcache_load_sequence extends dcache_base_sequence;
 	  end
 
 		for(int i=0;i<length;i++)begin
-			dcache_load(0,addr+'h40*i);
+			dcache_load(lsu_trans::SCALAR_INT,addr+'h40*i);
 		end
 		
   endtask

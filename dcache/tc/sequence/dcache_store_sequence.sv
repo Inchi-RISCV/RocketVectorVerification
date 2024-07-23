@@ -34,7 +34,7 @@ class dcache_store_sequence extends dcache_base_sequence;
 		dcache_random_cfg(length,addr);
 
 		for(int i=0;i<length;i++)begin
-			dcache_store(0,addr+'h40*i,{16{'h12345678}}+i);
+			dcache_store(lsu_trans::SCALAR_INT,addr+'h40*i,{16{'h12345678}}+i);
 		end
 		
   endtask
