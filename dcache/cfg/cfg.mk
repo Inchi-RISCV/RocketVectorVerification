@@ -14,7 +14,7 @@ USER_COMP_OPTS := -full64  -cc gcc-5 -LDFLAGS -Wl,--no-as-needed +v2k -sverilog 
 
 USER_COMP_OPTS += -Mdir=./${mode}/exec/csrc -o ./${mode}/exec/simv \
 	                 +define+UVM_PACKER_MAX_BYTES=1500000 +define+UVM_DISABLE_AUTO_ITEM_RECORDING \
-                   +define+SYNOPSYS_SV +define+SVT_UVM_INCLUDE_USER_DEFINES
+                   +define+SYNOPSYS_SV +define+SVT_UVM_INCLUDE_USER_DEFINES+define+SVT_TILELINK_SINK_WIDTH=3
 
 USER_RUN_OPTS := 1
 USER_VERDI_OPTS := 1
