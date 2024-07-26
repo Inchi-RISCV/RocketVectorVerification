@@ -25,20 +25,31 @@ class dcache_load_sequence extends dcache_base_sequence;
   endfunction
 
   virtual task body();
-		int length;
-		bit [38:0] addr;
+		bit [31:0] length_t;
+		bit [14:0] addr_t;
+		bit [1:0] way_idx_t;
+		bit [6:0] set_idx_t;
+		bit 			word_idx_t;
+		bit [1:0]	bank_idx_t;
+		bit [2:0]	row_offset_t;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache load sequence starting", UVM_NONE)
 
-		dcache_random_cfg(length,addr);
+		//TODO:
+		//way_idx_t 			= $urandom_range(3);
+		//set_idx_t 			= $urandom_range(127);
+		//word_idx_t 			= $urandom_range(1);
+		//bank_idx_t 			= $urandom_range(3);
 
-		for(int i=0;i<length;i++)begin
-			backdoor_put_data(addr+'h40*i,6,'ha5a5a5a5_a5a5a5a5+i);
+		dcache_random_cfg(length_t,addr_t,way_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
+		
+		for(int i=0;i<length_t;i++)begin
+			backdoor_put_data(addr_t+'h40*i,6,{16{'h76543210}}+i);
 	  end
 
-		for(int i=0;i<length;i++)begin
-			dcache_load(lsu_trans::SCALAR_INT,addr+'h40*i);
+		for(int i=0;i<length_t;i++)begin
+			dcache_load(lsu_trans::SCALAR_INT,addr_t+'h40*i);
 		end
 		
   endtask

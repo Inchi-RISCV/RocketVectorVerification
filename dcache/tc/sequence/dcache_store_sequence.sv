@@ -25,16 +25,21 @@ class dcache_store_sequence extends dcache_base_sequence;
   endfunction
 
   virtual task body();
-		int length;
-		bit [38:0] addr;
+		bit [31:0] length_t;
+		bit [14:0] addr_t;
+		bit [1:0] way_idx_t;
+		bit [6:0] set_idx_t;
+		bit 			word_idx_t;
+		bit [1:0]	bank_idx_t;
+		bit [2:0]	row_offset_t;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache store sequence starting", UVM_NONE)
 
-		dcache_random_cfg(length,addr);
+		dcache_random_cfg(length_t,addr_t,way_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
-		for(int i=0;i<length;i++)begin
-			dcache_store(lsu_trans::SCALAR_INT,addr+'h40*i,{16{'h12345678}}+i);
+		for(int i=0;i<length_t;i++)begin
+			dcache_store(lsu_trans::SCALAR_INT,addr_t+'h40*i,{16{'h76543210}}+i);
 		end
 		
   endtask

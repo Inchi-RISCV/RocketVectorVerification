@@ -137,9 +137,7 @@ task lsu_driver::do_drive();
         vif.io_s0_kill            <= #`DELAY req.io_s0_kill;
         vif.io_s1_kill            <= #`DELAY req.io_s1_kill;
 				req_last = req;
-				`uvm_info(get_type_name(),$sformatf("debug 00000000"),UVM_LOW);
 				@(posedge vif.clk);			
-				`uvm_info(get_type_name(),$sformatf("debug 11111111"),UVM_LOW);
       end
       while (!vif.io_req_ready);
       vif.io_req_valid          <= #`DELAY 1'b0;

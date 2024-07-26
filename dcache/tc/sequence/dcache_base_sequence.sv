@@ -31,24 +31,32 @@ class dcache_base_sequence extends uvm_sequence;
   extern task backdoor_put_data(input bit[63:0] address, input bit[`SVT_TILELINK_SIZE_WIDTH-1:0] size,input bit[`SVT_TILELINK_DATA_WIDTH-1:0] data_in);
   
 	extern task dcache_random_cfg(
-		output int length,
-		output bit [38:0] addr);
+		output bit [31:0] length,
+		output bit [14:0] addr,
+		input bit [1:0] way_idx,
+		input bit [6:0] set_idx,
+		input bit word_idx,
+		input bit [1:0]	bank_idx,
+		input bit [2:0]	row_offset
+		);
 
 	extern task dcache_load(
 		input bit [7:0]   req_source,
-		input bit [38:0]  req_addr,
+		input bit [14:0]  addr,
 		input bit [2:0]   req_size = 6,
   	input bit         req_signed = 0,
-  	input bit         req_noAlloc = 0);
+  	input bit         req_noAlloc = 0
+		);
 
 	extern task dcache_store(
 		input bit [7:0]   req_source,
-		input bit [38:0]  req_addr,
+		input bit [14:0]  addr,
 		input bit [511:0] req_wdata,
   	input bit [63:0]  req_wmask = 'hffff_ffff_ffff_ffff,
 		input bit [2:0]   req_size = 6,
   	input bit         req_signed = 0,
-  	input bit         req_noAlloc = 0);
+  	input bit         req_noAlloc = 0
+		);
 
   virtual task body();	  	
 		wait(!tb_top.reset) 	//wait meta array init
@@ -86,62 +94,77 @@ task dcache_base_sequence::backdoor_put_data(input bit[63:0] address, input bit[
 endtask
 
 task dcache_base_sequence::dcache_random_cfg(
-	output int length,
-	output bit [38:0] addr);
+	output bit [31:0] length,
+	output bit [14:0] addr,
+	input bit [1:0] way_idx,
+	input bit [6:0] set_idx,
+	input bit word_idx,
+	input bit [1:0]	bank_idx,
+	input bit [2:0]	row_offset
+	);
 
-	length 	= 20;			//TODO
-	addr 		= 'h1000;	//TODO
-	
-	`uvm_info("RANDOM_CFG",$sformatf("length = %0d, initial addr = %0h", length, addr),UVM_LOW);
+	length 	= 50;			//TODO
+
+	addr[14:13]		= way_idx;
+	addr[12:6]		= set_idx;
+	addr[5]				= word_idx;
+	addr[4:3]			= bank_idx;
+	addr[2:0]			= row_offset;
+
+	`uvm_info("RANDOM_CFG",$sformatf("length = %0d, initial addr = %0h, way_idx = %0d, set_idx = %0d, word_idx = %0d, bank_idx = %0d, row_offset = %0d", length, addr, way_idx, set_idx, word_idx, bank_idx, row_offset),UVM_LOW);
 
 endtask
 
 task dcache_base_sequence::dcache_load(
 	input bit [7:0]   req_source,
-	input bit [38:0]  req_addr,
+	input bit [14:0]  addr,
 	input bit [2:0]   req_size = 6,
   input bit         req_signed = 0,
-  input bit         req_noAlloc = 0);
+  input bit         req_noAlloc = 0
+	);
  
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   	== 	req_source;
-		//seq.io_req_bits_dest     	==	req_dest;
-		seq.io_req_bits_cmd      	==	lsu_trans::M_XRD;
-    seq.io_req_bits_paddr    	==	req_addr;
-    seq.io_req_bits_size     	==	req_size;	
-    seq.io_req_bits_signed   	== 	req_signed;
-    seq.io_req_bits_noAlloc  	==	req_noAlloc;
-  	seq.io_s0_kill						== 	'h0;
-  	seq.io_s1_kill						== 	'h0;
+		seq.io_req_bits_source   			== 	req_source;
+		//seq.io_req_bits_dest     		==	req_dest;
+		seq.io_req_bits_cmd      			==	lsu_trans::M_XRD;
+		seq.io_req_bits_paddr[38:15]	==	'h0;
+    seq.io_req_bits_paddr[14:0] 	==	addr;
+    seq.io_req_bits_size     			==	req_size;	
+    seq.io_req_bits_signed   			== 	req_signed;
+    seq.io_req_bits_noAlloc  			==	req_noAlloc;
+  	seq.io_s0_kill								== 	'h0;
+  	seq.io_s1_kill								== 	'h0;
 		})
 
 endtask
 
 task dcache_base_sequence::dcache_store( 	//M_XWR
 	input bit [7:0]   req_source,
-	input bit [38:0]  req_addr,
+	input bit [14:0]  addr,
 	input bit [511:0] req_wdata,
   input bit [63:0]  req_wmask = 'hffff_ffff_ffff_ffff,
 	input bit [2:0]   req_size = 6,
   input bit         req_signed = 0,
-  input bit         req_noAlloc = 0);
+  input bit         req_noAlloc = 0
+	);
  
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   	== 	req_source;
+		seq.io_req_bits_source   		== 	req_source;
 		//seq.io_req_bits_dest     	==	req_dest;
-		seq.io_req_bits_cmd      	==	lsu_trans::M_XWR;
-    seq.io_req_bits_paddr    	==	req_addr;
-    seq.io_req_bits_wdata    	==	req_wdata;
-    seq.io_req_bits_wmask    	==	req_wmask;
-    seq.io_req_bits_size     	==	req_size;	
-    seq.io_req_bits_signed   	== 	req_signed;
-    seq.io_req_bits_noAlloc  	==	req_noAlloc;
-  	seq.io_s0_kill						== 	'h0;
-  	seq.io_s1_kill						== 	'h0;	
+		seq.io_req_bits_cmd      		==	lsu_trans::M_XWR;
+		seq.io_req_bits_paddr[38:15] ==	'h0;
+		seq.io_req_bits_paddr[14:0] ==	addr;
+    seq.io_req_bits_wdata    		==	req_wdata;
+    seq.io_req_bits_wmask    		==	req_wmask;
+    seq.io_req_bits_size     		==	req_size;	
+    seq.io_req_bits_signed   		== 	req_signed;
+    seq.io_req_bits_noAlloc  		==	req_noAlloc;
+  	seq.io_s0_kill							== 	'h0;
+  	seq.io_s1_kill							== 	'h0;	
 		})
 		
 endtask
