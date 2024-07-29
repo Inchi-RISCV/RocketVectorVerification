@@ -16,9 +16,6 @@
 `ifndef _DCACHE_ENV_SV_
 `define _DCACHE_ENV_SV_
 
-import lsu_pkg::*;
-import prefetch_pkg::*;
-
 class dcache_env extends uvm_env;
 
   `uvm_component_utils(dcache_env)

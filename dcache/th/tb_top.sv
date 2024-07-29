@@ -27,9 +27,6 @@ module tb_top();
   import uvm_pkg::*;
   // Import the VIP
   import svt_tilelink_uvm_pkg::*;
-  import lsu_pkg::*;
-  import prefetch_pkg::*;
-
 
   logic clock;
 

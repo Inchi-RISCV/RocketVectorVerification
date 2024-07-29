@@ -7,9 +7,10 @@ pl := UVM_MEDIUM
 seed := 1
 mode = base_func
 tc := dcache_sanity_test
+cfg := empty
 
 USER_COMP_OPTS := -full64  -cc gcc-5 -LDFLAGS -Wl,--no-as-needed +v2k -sverilog -timescale=1ns/10ps \
-	                -debug_access+all -kdb  -CFLAGS -DVCS  +vcs+lic+wait -lca
+	                -debug_access+all -kdb  -CFLAGS -DVCS +vcs+lic+wait -lca -ntb_opts rvm +libext+.v+.V+.sv+.svh
 
 
 USER_COMP_OPTS += -Mdir=./${mode}/exec/csrc -o ./${mode}/exec/simv \
@@ -30,6 +31,7 @@ USER_RUN_OPTS += +fsdbfile+$(wave_file)/$(wave_name).fsdb -ucli -do ../tc/wave_f
 endif
 
 USER_RUN_OPTS += +UVM_TESTNAME=$(tc) +UVM_VERBOSITY=${pl} +ntb_random_seed=${seed}
+USER_RUN_OPTS += +vmm_opts_file+../tc/cfg/$(cfg).cfg
 USER_VERDI_OPTS += -dbdir ./$(mode)/exec/simv.daidir
 
 export SHELL =/bin/csh -f

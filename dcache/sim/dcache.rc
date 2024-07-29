@@ -2,11 +2,11 @@ Magic 271485
 Revision Verdi_V-2023.12
 
 ; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
-viewPort 0 25 2378 898 452 104
+viewPort 0 27 2548 972 504 104
 
 ; File list:
 ; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
-openDirFile -d / "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_sanity_test_1.fsdb"
+openDirFile -d / "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_load_test_1.fsdb"
 
 ; file time scale:
 ; fileTimeScale ### s|ms|us|ns|ps
@@ -18,16 +18,52 @@ signalSpacing 5
 windowTimeUnit 1ns
 
 ; waveform viewport range
-zoom 344.365102 367.644226 1n
-cursor 358.000000
-marker 358.000000
+zoom 0.000000 555.500000 1n
+cursor 351.010000
+marker 492.500000
 
 ; user define markers
 ; userMarker time_pos marker_name color linestyle
 ; visible top row signal index
 top 0
 ; marker line index
-markerPos 21
+markerPos 13
+
+; logical expression list
+; addExprSig expr_name expression_string
+activeDirFile "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_load_test_1.fsdb"
+
+addExprSig -b 1 -n UU logical_expression_2 "/tb_top/m_lsu_if/io_req_valid"& "/tb_top/m_lsu_if/io_req_ready"
+
+; rename signal list
+; addRenameSig new_name org_name
+
+addRenameSig "/req_hs" "/logical_expression_2" keep
+
+; rename signal list
+; addRenameSig new_name org_name
+
+addRenameSig "/tb_top/m_lsu_if/paddr_tag[38:13]" "/tb_top/m_lsu_if/io_req_bits_paddr[38:13]" keep
+
+; rename signal list
+; addRenameSig new_name org_name
+
+addRenameSig "/tb_top/m_lsu_if/paddr_set[12:6]" "/tb_top/m_lsu_if/io_req_bits_paddr[12:6]" keep
+
+; rename signal list
+; addRenameSig new_name org_name
+
+addRenameSig "/tb_top/m_lsu_if/paddr_word[5]" "/tb_top/m_lsu_if/io_req_bits_paddr[5]" keep
+
+; rename signal list
+; addRenameSig new_name org_name
+
+addRenameSig "/tb_top/m_lsu_if/paddr_bank[4:3]" "/tb_top/m_lsu_if/io_req_bits_paddr[4:3]" keep
+
+; rename signal list
+; addRenameSig new_name org_name
+
+addRenameSig "/tb_top/m_lsu_if/paddr_row_offset[2:0]" "/tb_top/m_lsu_if/io_req_bits_paddr[2:0]" keep
 
 ; event list
 ; addEvent event_name event_expression
@@ -44,18 +80,24 @@ COMPLEX_EVENT_END
 
 ; toolbar current search type
 ; curSTATUS search_type
-curSTATUS ByChange
+curSTATUS ByValue
 
 
 addGroup "G1"
-activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_sanity_test_1.fsdb"
+activeDirFile "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_load_test_1.fsdb"
 addSignal -h 22 /tb_top/m_lsu_if/clk
 addSignal -h 22 -holdScope rst_n
-addSignal -h 22 -holdScope io_req_ready
 addSignal -h 22 -holdScope io_req_valid
-addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_cmd[4:0]
+addSignal -h 22 -holdScope io_req_ready
+addSignal -c ID_ORANGE5 -ls solid -lw 1 -h 22 /req_hs
+addSignal -h 22 -UNSIGNED -HEX /tb_top/m_lsu_if/io_req_bits_cmd[4:0]
 addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_size[2:0]
-addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_paddr[38:0]
+addSignal -expanded -c ID_YELLOW5 -ls solid -lw 1 -h 22 -UNSIGNED -HEX -holdScope io_req_bits_paddr[38:0]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 -UNSIGNED -HEX -holdScope paddr_tag[38:13]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 -UNSIGNED -HEX -holdScope paddr_set[12:6]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 -holdScope paddr_word[5]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 -UNSIGNED -HEX -holdScope paddr_bank[4:3]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 -UNSIGNED -HEX -holdScope paddr_row_offset[2:0]
 addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_wmask[63:0]
 addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_wdata[511:0]
 addSignal -h 22 -UNSIGNED -HEX -holdScope io_req_bits_dest[4:0]
@@ -67,11 +109,11 @@ addSignal -h 22 -holdScope io_s1_kill
 addGroup "G2"
 addSignal -h 22 /tb_top/m_lsu_if/clk
 addSignal -h 22 -holdScope io_resp_valid
-addSignal -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_status[1:0]
-addSignal -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_data[511:0]
+addSignal -c ID_PURPLE5 -ls solid -lw 1 -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_dest[4:0]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_status[1:0]
 addSignal -h 22 -holdScope io_nextCycleWb
 addSignal -h 22 -holdScope io_resp_bits_hasData
-addSignal -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_dest[4:0]
+addSignal -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_data[511:0]
 addSignal -h 22 -UNSIGNED -HEX -holdScope io_resp_bits_source[7:0]
 addGroup "tilelink"
 addSubGroup "A"
@@ -111,39 +153,36 @@ addSignal -h 22 -UNSIGNED -HEX -holdScope c_source[15:0]
 addSignal -h 22 -holdScope c_corrupt
 endSubGroup "C"
 addSubGroup "D"
-addSignal -h 22 /tb_top/tilelink_slave_if[0]/d_ready
-addSignal -h 22 -holdScope d_valid
+addSignal -h 22 /tb_top/tilelink_slave_if[0]/d_valid
+addSignal -h 22 -holdScope d_ready
 addSignal -h 22 -UNSIGNED -HEX -holdScope d_opcode[2:0]
 addSignal -h 22 -UNSIGNED -HEX -holdScope d_size[63:0]
 addSignal -h 22 -UNSIGNED -HEX -holdScope d_data[511:0]
-addSignal -h 22 -UNSIGNED -HEX -holdScope d_sink[3:0]
 addSignal -h 22 -holdScope d_denied
 addSignal -h 22 -UNSIGNED -HEX -holdScope d_source[15:0]
 addSignal -h 22 -UNSIGNED -HEX -holdScope d_param[1:0]
 addSignal -h 22 -holdScope d_corrupt
+addSignal -h 22 -UNSIGNED -HEX -holdScope d_sink[2:0]
 endSubGroup "D"
 addSubGroup "E"
 addSignal -h 22 /tb_top/tilelink_slave_if[0]/e_ready
-addSignal -h 22 -UNSIGNED -HEX -holdScope e_sink[3:0]
 addSignal -h 22 -holdScope e_valid
+addSignal -h 22 -UNSIGNED -HEX -holdScope e_sink[2:0]
 endSubGroup "E"
 addGroup "G4"
-addGroup "G5"
-addGroup "G6"
-addGroup "G7"
-addGroup "G8"
 
 ; getSignalForm Scope Hierarchy Status
 ; active file of getSignalForm
-activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_sanity_test_1.fsdb"
+activeDirFile "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_load_test_1.fsdb"
 
 GETSIGNALFORM_SCOPE_HIERARCHY_BEGIN
 getSignalForm close
 
-"/_vcs_unit__2395267899"
+"/_vcs_unit__417921794"
 "/tb_top"
 
 SCOPE_LIST_BEGIN
+"/_vcs_unit__417921794"
 "/_vcs_unit__2395267899"
 "/_vcs_unit__517536623"
 "/_vcs_unit__930505288"
