@@ -25,18 +25,24 @@ class dcache_store_sequence extends dcache_base_sequence;
   endfunction
 
   virtual task body();
-		bit [14:0] addr_t;
+		bit [31:0] length = 20;
+		bit [38:0] addr_t;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
 		bit 			word_idx_t;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
-
+		bit load_en;
+		bit store_en;
+		
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache store sequence starting", UVM_NONE)
 
+		load_en = vmm_opts::get_int("load_en", 0, "load_en");
+		store_en = vmm_opts::get_int("store_en", 0, "store_en");
+
 		//TODO:
-		tag_idx_t 			= 10;
+		tag_idx_t 			= 'h4_0000;
 		set_idx_t 			= $urandom_range(127);
 		//word_idx_t 			= $urandom_range(1);
 		//bank_idx_t 			= $urandom_range(3);
@@ -44,18 +50,22 @@ class dcache_store_sequence extends dcache_base_sequence;
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
 		//store miss: NtoT
-		for(int i=0;i<tag_idx_t;i++)begin
+		for(int i=0;i<length;i++)begin
 			dcache_store(lsu_trans::SCALAR_INT,addr_t+'h40*i,{16{'h76543210}}+i);
 		end
 		
 		//store hit: TtoT
-		for(int i=0;i<tag_idx_t;i++)begin
-			dcache_store(lsu_trans::SCALAR_INT,addr_t+'h40*i,{16{'habababa0}}+i);
+		if(store_en) begin
+			for(int i=0;i<length;i++)begin
+				dcache_store(lsu_trans::SCALAR_INT,addr_t+'h40*i,{16{'habababa0}}+i);
+			end
 		end
 
 		//load hit: TtoT
-		for(int i=0;i<tag_idx_t;i++)begin
-			dcache_load(lsu_trans::SCALAR_INT,addr_t+'h40*i);
+		if(load_en) begin
+			for(int i=0;i<length;i++)begin
+				dcache_load(lsu_trans::SCALAR_INT,addr_t+'h40*i);
+			end
 		end
 
 		#200ns;
