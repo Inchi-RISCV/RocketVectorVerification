@@ -40,22 +40,16 @@ class dcache_addr_random_sequence extends dcache_base_sequence;
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
-		/*
-		for(int i=0;i<128;i++)begin
-			backdoor_put_data(addr_t+'h40*i,6,{16{'h76543210}}+i);
-	  end
-
-		for(int i=0;i<128;i++)begin
-			dcache_load(lsu_trans::SCALAR_INT,addr_t+'h40*i);
+		for(int j=0;j<4;j++)begin 	//4 way
+			for(int i=0;i<128;i++)begin	//128 set
+				backdoor_put_data(addr_t+'h40*i+'h2000*j,6,{16{'h76543210}}+i);
+	  	end
 		end
-		*/
 
-		//for(int i=0;i<6;i++)begin
-		//	backdoor_put_data(addr_t+'h2000*i,6,{16{'h76543210}}+i);
-	  //end
-
-		for(int i=0;i<6;i++)begin 	//NtoT
-			dcache_store(lsu_trans::SCALAR_INT,addr_t+'h2000*i,{16{'habababa0}}+i);
+		for(int j=0;j<4;j++)begin 	//4 way
+			for(int i=0;i<128;i++)begin	//128 set
+				dcache_load(lsu_trans::SCALAR_INT,addr_t+'h40*i+'h2000*j);
+			end
 		end
 
 		#200ns;
