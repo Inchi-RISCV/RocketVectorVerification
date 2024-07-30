@@ -63,6 +63,15 @@ typedef enum bit[1:0] {
 	REFILL 				= 	2'h3
 } resp_status_enum;
 
+typedef enum bit[1:0] {
+	NOTHING 		= 	2'h0,
+	BRANCH			= 	2'h1,
+	TRUNK 			= 	2'h2,
+	DIRTY 			= 	2'h3
+} cache_state ;
+
+
+
   `uvm_object_utils_begin(lsu_trans)
     `uvm_field_enum(req_source_enum,io_req_bits_source,UVM_ALL_ON)
     `uvm_field_int(io_req_bits_paddr,UVM_ALL_ON)
