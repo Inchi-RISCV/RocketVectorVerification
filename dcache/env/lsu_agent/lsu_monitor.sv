@@ -93,7 +93,7 @@ task lsu_monitor::do_mon();
       tr_rsp.io_resp_bits_data    = vif.io_resp_bits_data;	
       tr_rsp.io_nextCycleWb       = vif.io_nextCycleWb;			
 			analysis_port_rsp.write(tr_rsp);
-			`uvm_info(get_type_name(), {"monitor rsp item\n",tr_rsp.sprint}, UVM_LOW)
+			`uvm_info(get_type_name(), {"monitor rsp item\n",tr_rsp.sprint}, UVM_HIGH)
 		end
 		
 
