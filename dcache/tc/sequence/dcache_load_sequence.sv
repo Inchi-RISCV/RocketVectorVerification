@@ -50,7 +50,7 @@ class dcache_load_sequence extends dcache_base_sequence;
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 		
 		for(int i=0;i<length;i++)begin
-			backdoor_put_data(addr_t+40*i,6,{16{'h76543210}}+i);
+			backdoor_put_data(addr_t+'h40*i,6,{16{'h76543210}}+i);
 	  end
 
 		//load miss: NtoB
@@ -71,8 +71,6 @@ class dcache_load_sequence extends dcache_base_sequence;
 				dcache_store(lsu_trans::SCALAR_INT,addr_t+'h40*i,{16{'habababa0}}+i);
 			end
 		end
-
-		#200ns;
 
   endtask
 
