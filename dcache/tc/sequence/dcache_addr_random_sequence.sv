@@ -32,11 +32,14 @@ class dcache_addr_random_sequence extends dcache_base_sequence;
 		bit 			word_idx_t;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
+		bit [7:0] req_source;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache load sequence starting", UVM_NONE)
 
-		tag_idx_t = 'h4_0000; 	//TODO
+		//TODO:
+		req_source 	= $urandom_range(3);
+		tag_idx_t = 'h4_0000;
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
@@ -48,11 +51,9 @@ class dcache_addr_random_sequence extends dcache_base_sequence;
 
 		for(int j=0;j<4;j++)begin 	//4 way
 			for(int i=0;i<128;i++)begin	//128 set
-				dcache_load(lsu_trans::SCALAR_INT,addr_t+'h40*i+'h2000*j);
+				dcache_load(req_source,addr_t+'h40*i+'h2000*j);
 			end
 		end
-
-		#200ns;
 
   endtask
 
