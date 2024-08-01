@@ -32,15 +32,10 @@ class dcache_store_release_sequence extends dcache_base_sequence;
 		bit 			word_idx_t;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
-		bit load_en;
-		bit store_en;
 		bit [7:0] req_source;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache store sequence starting", UVM_NONE)
-
-		load_en = vmm_opts::get_int("load_en", 0, "load_en");
-		store_en = vmm_opts::get_int("store_en", 0, "store_en");
 
 		//TODO:
 		length			= 20;

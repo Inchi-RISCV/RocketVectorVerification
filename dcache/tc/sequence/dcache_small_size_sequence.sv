@@ -33,14 +33,12 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 		bit 			word_idx_t;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
-		bit load_en;
 		bit store_en;
 		bit [7:0] req_source;
 		
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache store sequence starting", UVM_NONE)
 
-		load_en = vmm_opts::get_int("load_en", 0, "load_en");
 		store_en = vmm_opts::get_int("store_en", 0, "store_en");
 
 		//TODO:
@@ -49,20 +47,32 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
-		for(int j=0;j<6;j++) begin
-			//store miss: NtoT
-			for(int i=0;i<(64/2**j);i++)begin
-				wdata = $urandom_range(255);
-				wdata_t = wdata << (8*(2**j*i));
-				dcache_store(req_source,addr_t+2**j*i,wdata_t,j);
-				`uvm_info("yrhu debug",$sformatf("current addr = %0h", addr_t+2**j*i),UVM_LOW);
-				`uvm_info("yrhu debug",$sformatf("wdata = %0h", wdata),UVM_LOW);
-				`uvm_info("yrhu debug",$sformatf("wdata_t = %0h", wdata_t),UVM_LOW);
-			end
+		if(store_en) begin
+			for(int j=0;j<6;j++) begin
+				//store miss: NtoT
+				for(int i=0;i<(64/2**j);i++)begin
+					wdata = $urandom_range(255);
+					wdata_t = wdata << (8*(2**j*i));
+					dcache_store(req_source,addr_t+2**j*i,wdata_t,j);
+					`uvm_info("yrhu debug",$sformatf("current addr = %0h", addr_t+2**j*i),UVM_LOW);
+					`uvm_info("yrhu debug",$sformatf("wdata = %0h", wdata),UVM_LOW);
+					`uvm_info("yrhu debug",$sformatf("wdata_t = %0h", wdata_t),UVM_LOW);
+				end
 
-			//load hit: TtoT
-			for(int i=0;i<(64/2**j);i++)begin
-				dcache_load(req_source,addr_t+2**j*i,j);
+				//load hit: TtoT
+				for(int i=0;i<(64/2**j);i++)begin
+					dcache_load(req_source,addr_t+2**j*i,j);
+				end
+			end
+		end
+		else begin
+			backdoor_put_data(addr_t,6,{16{'h76543210}});
+
+			for(int j=0;j<6;j++) begin
+				//load miss -> hit: NtoB
+				for(int i=0;i<(64/2**j);i++)begin
+					dcache_load(req_source,addr_t+2**j*i,j);
+				end
 			end
 		end
 		
