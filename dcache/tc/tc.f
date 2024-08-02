@@ -8,7 +8,7 @@
 ./sequence/dcache_store_release_sequence.sv
 ./sequence/dcache_small_size_sequence.sv
 ./sequence/dcache_signed_sequence.sv
-
+./sequence/dcache_partial_mask_store_sequence.sv
 
 
 
@@ -20,4 +20,5 @@
 ./dcache_store_release_test.sv
 ./dcache_small_size_test.sv
 ./dcache_signed_test.sv
+./dcache_partial_mask_store_test.sv
 
