@@ -7,6 +7,11 @@
 ./sequence/dcache_addr_random_sequence.sv
 ./sequence/dcache_store_release_sequence.sv
 ./sequence/dcache_small_size_sequence.sv
+./sequence/dcache_signed_sequence.sv
+
+
+
+
 ./dcache_base_test.sv
 ./dcache_sanity_test.sv
 ./dcache_load_test.sv
@@ -14,4 +19,5 @@
 ./dcache_addr_random_test.sv
 ./dcache_store_release_test.sv
 ./dcache_small_size_test.sv
+./dcache_signed_test.sv
 

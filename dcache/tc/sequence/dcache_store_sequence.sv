@@ -37,7 +37,7 @@ class dcache_store_sequence extends dcache_base_sequence;
 		bit [7:0] req_source;
 		
 	 	super.body(); 
-    `uvm_info(get_type_name(), "dcache store sequence starting", UVM_NONE)
+    `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
 		load_en = vmm_opts::get_int("load_en", 0, "load_en");
 		store_en = vmm_opts::get_int("store_en", 0, "store_en");

@@ -52,7 +52,6 @@ class dcache_base_sequence extends uvm_sequence;
 		input bit [38:0]  addr,
 		input bit [511:0] req_wdata,
 		input bit [2:0]   req_size = 6,
-  	input bit         req_signed = 0,
   	input bit         req_noAlloc = 0
 		);
 
@@ -139,7 +138,6 @@ task dcache_base_sequence::dcache_store( 	//M_XWR
 	input bit [38:0]  addr,
 	input bit [511:0] req_wdata,
 	input bit [2:0]   req_size = 6,
-  input bit         req_signed = 0,
   input bit         req_noAlloc = 0
 	);
  
@@ -153,7 +151,7 @@ task dcache_base_sequence::dcache_store( 	//M_XWR
     seq.io_req_bits_wdata    		==	req_wdata;
     //seq.io_req_bits_wmask    	==	req_wmask;
     seq.io_req_bits_size     		==	req_size;	
-    seq.io_req_bits_signed   		== 	req_signed;
+    //seq.io_req_bits_signed   	== 	req_signed;
     seq.io_req_bits_noAlloc  		==	req_noAlloc;
   	seq.io_s0_kill							== 	'h0;
   	seq.io_s1_kill							== 	'h0;	

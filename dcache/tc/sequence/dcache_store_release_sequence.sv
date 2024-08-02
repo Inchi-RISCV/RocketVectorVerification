@@ -35,7 +35,7 @@ class dcache_store_release_sequence extends dcache_base_sequence;
 		bit [7:0] req_source;
 
 	 	super.body(); 
-    `uvm_info(get_type_name(), "dcache store sequence starting", UVM_NONE)
+    `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
 		//TODO:
 		length			= 20;
