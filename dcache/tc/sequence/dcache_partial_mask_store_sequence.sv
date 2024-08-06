@@ -61,6 +61,10 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 			`uvm_info("yrhu debug",$sformatf("exp_data = %0h", exp_data),UVM_LOW);
 
 			dcache_partial_mask_store(req_source,addr_t+'h40*i,wdata,req_wmask);
+		end
+
+		for(int i=0;i<length;i++)begin
+			req_source 	= $urandom_range(3);
 			dcache_load(req_source,addr_t+'h40*i);
 		end
 

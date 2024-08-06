@@ -34,6 +34,7 @@ class dcache_load_sequence extends dcache_base_sequence;
 		bit [2:0]	row_offset_t;
 		bit load_en;
 		bit store_en;
+		bit is_mmio_range;
 		bit [7:0] req_source;
 
 	 	super.body(); 
@@ -41,11 +42,17 @@ class dcache_load_sequence extends dcache_base_sequence;
 		
 		load_en = vmm_opts::get_int("load_en", 0, "load_en");
 		store_en = vmm_opts::get_int("store_en", 0, "store_en");
+		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
 
 		//TODO:
 		length 			= 20;
 		req_source	= $urandom_range(3);
-		tag_idx_t 	= 'h4_0000;
+		if(is_mmio_range) begin
+			tag_idx_t 	= 'h3_0000;
+		end
+		else begin
+			tag_idx_t 	= 'h4_0000;
+		end
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 		
