@@ -20,8 +20,7 @@ class dcache_env extends uvm_env;
 
   `uvm_component_utils(dcache_env)
    uvm_tlm_analysis_fifo  #(lsu_trans) lsu2rm_fifo;
-	 uvm_tlm_analysis_fifo  #(svt_tilelink_slave_transaction) rm2sb_tla_fifo;
-	 uvm_tlm_analysis_fifo  #(svt_tilelink_slave_transaction) tl2sb_tla_fifo;
+	 uvm_tlm_analysis_fifo  #(svt_tilelink_master_transaction) rm2sb_tltx_fifo;
 
   
 	lsu_agent m_lsu_agent; 
@@ -41,6 +40,7 @@ class dcache_env extends uvm_env;
   extern function void connect_phase(uvm_phase phase);
   extern function void end_of_elaboration_phase(uvm_phase phase);
   extern virtual task main_phase(uvm_phase phase);
+  extern function void report_phase(uvm_phase phase);
 
 endclass : dcache_env 
 
@@ -64,9 +64,7 @@ function void dcache_env::build_phase(uvm_phase phase);
 	m_scb =  dcache_scb::type_id::create("m_scb", this);
 
 	lsu2rm_fifo = new("lsu2rm_fifo",this);
-	rm2sb_tla_fifo = new("rm2sb_tla_fifo",this);
-	tl2sb_tla_fifo = new("tl2sb_tla_fifo",this);
-	
+	rm2sb_tltx_fifo = new("rm2sb_tltx_fifo",this);
 
 
 endfunction : build_phase
@@ -78,8 +76,21 @@ function void dcache_env::connect_phase(uvm_phase phase);
   m_lsu_agent.analysis_port_req.connect(lsu2rm_fifo.analysis_export);
 	m_refm.lsu_port.connect(lsu2rm_fifo.blocking_get_export);
 
-	tl_env.sys_env.slave[0].slave_mon.rx_xact_observed_port.connect(tl2sb_tla_fifo.analysis_export);
-	m_scb.tl2sb_tla_port.connect(tl2sb_tla_fifo.blocking_get_export);
+
+	m_refm.rm2sb_tltx_port.connect(rm2sb_tltx_fifo.analysis_export);
+	m_scb.rm2sb_tltx_port.connect(rm2sb_tltx_fifo.blocking_get_export);
+
+
+  //tl_env.sys_env.slave[0].slave_mon.status_xact_observed_port.connect(m_scb.tl2sb_tlsta_port);
+  tl_env.sys_env.master[0].master_mon.tx_xact_observed_port.connect(m_scb.tl2sb_tltx_port);
+  tl_env.sys_env.master[0].master_mon.rx_xact_observed_port.connect(m_scb.tl2sb_tlrx_port);
+  tl_env.sys_env.master[0].master_mon.status_xact_observed_port.connect(m_scb.tl2sb_tlsta_port);
+
+
+	tl_env.sys_env.slave[0].slave_mon.rx_xact_observed_port.connect(m_refm.tl2rm_tlrx_port);
+ // tl_env.sys_env.slave[0].slave_mon.status_xact_observed_port.connect(tl2rm_tltx_fifo.analysis_export);
+ //m_refm.tl2rm_tltx_port.connect(tl2rm_tltx_fifo.blocking_get_export);
+
 
 endfunction : connect_phase
 
@@ -95,6 +106,40 @@ task dcache_env::main_phase(uvm_phase phase);
 	super.main_phase(phase);
 
 endtask : main_phase
+
+function void dcache_env::report_phase(uvm_phase phase);
+	uvm_report_server srv;
+	int err_cnt;
+
+  srv= uvm_report_server::get_server();
+	err_cnt = srv.get_severity_count(UVM_FATAL)+srv.get_severity_count(UVM_ERROR);
+
+	if(err_cnt!=0)begin
+    $display("~~~~~~~~~~~~~~~~ Simulation_FAIL ~~~~~~~~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~######    ##       #    #     ~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~#        #  #      #    #     ~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~#####   #    #     #    #     ~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~#       ######     #    #     ~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~#       #    #     #    #     ~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~#       #    #     #    ######~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	end
+	else begin
+    $display("~~~~~~~~~~~~~~~~ Simulation_PASS ~~~~~~~~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~ #####     ##     ####    #### ~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~ #    #   #  #   #       #     ~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~ #    #  #    #   ####    #### ~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~ #####   ######       #       #~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~ #       #    #  #    #  #    #~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~ #       #    #   ####    #### ~~~~~~~~~~~~~~~~");
+    $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	end
+
+
+endfunction 
+
 
 `endif // DCACHE_ENV_SV
 

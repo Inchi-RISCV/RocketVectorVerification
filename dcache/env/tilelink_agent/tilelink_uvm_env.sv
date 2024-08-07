@@ -1,6 +1,6 @@
 
 `ifndef WAIT_FOR_DRAIN_TIME
-`define WAIT_FOR_DRAIN_TIME 100000
+`define WAIT_FOR_DRAIN_TIME 1000
 `endif
 
 
@@ -109,7 +109,7 @@ class tilelink_uvm_env extends uvm_env;
     if(disable_vip == 1'b0) begin
       super.connect_phase(phase);
 
-      //sequencer.master_sequencer[0] = sys_env.sequencer.master_sequencer[0];
+      sequencer.master_sequencer[0] = sys_env.sequencer.master_sequencer[0];
       sequencer.slave_sequencer[0]  = sys_env.sequencer.slave_sequencer[0];
     end
   endfunction : connect_phase
