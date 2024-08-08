@@ -281,6 +281,7 @@ task dcache_refm::assemble_cmd();
   bit         req_signed;
 	bit [15:0]  a_source;
   bit [2:0]   a_param;
+	bit same_addr_inprocess;
     
 	lsu_trans   req;
 	lsu_trans::req_cmd_enum 		req_cmd;
@@ -330,13 +331,21 @@ task dcache_refm::assemble_cmd();
 						end  
 					end
 
-					///a_source = 0;//todo
-					do_acquire(req_addr,a_source,a_param);
+					foreach (tl_addr[j])begin
+						if(tl_addr[j][31:6] == req_addr[31:6])
+							same_addr_inprocess = 1;
+						 `uvm_info(get_type_name(),$sformatf("same addr exist , addr=%0h, same_addr_inprocess=%0h,source=%0h",req_addr,tl_addr[j],j),UVM_NONE);
+						  break;
+					end
+          
+					if(!same_addr_inprocess)begin
+					  do_acquire(req_addr,a_source,a_param);
+					  tl_addr[a_source]    = req_addr;
+					  tl_unfinsh[a_source] = 1 ;
+					  `uvm_info(get_type_name(),$sformatf("rm tilelink unfinish , addr=%0h,source=%0h",tl_addr[a_source],a_source),UVM_NONE);
+						same_addr_inprocess = 0;
+				  end
 					
-					tl_addr[a_source]    = req_addr;
-					tl_unfinsh[a_source] = 1 ;
-					`uvm_info(get_type_name(),$sformatf("rm tilelink unfinish , addr=%0h,source=%0h",tl_addr[a_source],a_source),UVM_NONE);
-         
 				end
 				//hit
 				else begin

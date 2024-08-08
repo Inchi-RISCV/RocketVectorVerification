@@ -135,7 +135,7 @@ task dcache_scb::comp_a_channel();
 		
     while(1)begin
 			rm2sb_tltx_port.get(tr);
-			`uvm_info(get_type_name(), {"get tl_cha_exp_tr\n",tr.sprint}, UVM_NONE)
+			`uvm_info(get_type_name(), {"get tl_cha_exp_tr\n",tr.sprint}, UVM_HIGH)
 			tl_cha_exp_q.push_back(tr);	
     end
 
@@ -144,11 +144,11 @@ task dcache_scb::comp_a_channel();
     	if(tl_cha_act_q.size()>0)begin
     		tla_act_tr = tl_cha_act_q.pop_front();
 				tla_exp_tr = tl_cha_exp_q.pop_front();
-    	 `uvm_info(get_type_name(), {"get tl_cha_act_tr\n",tla_act_tr.sprint}, UVM_NONE)
+    	 `uvm_info(get_type_name(), {"get tl_cha_act_tr\n",tla_act_tr.sprint}, UVM_HIGH)
 
 			 if(tla_exp_tr.a_address != tla_act_tr.a_address || tla_exp_tr.a_size != tla_act_tr.a_size || tla_exp_tr.a_source != tla_act_tr.a_source || tla_exp_tr.ch_a_msg_type  != tla_act_tr.ch_a_msg_type  || tla_exp_tr.a_param != tla_act_tr.a_param)begin
 
-				 `uvm_error(get_type_name(),$sformatf(" tl cha compare fail!\nexpect addr=%0h,size=%0h,opcede=%0h,source=%0h,param=%0h,\nactual addr=%0h,size=%0h,opcede=%0h,source=%0h,param=%0h",tla_exp_tr.a_address,tla_exp_tr.a_size,tla_exp_tr.ch_a_msg_type,tla_exp_tr.a_source,tla_exp_tr.a_param,tla_act_tr.a_address,tla_act_tr.a_size,tla_act_tr.ch_a_msg_type,tla_act_tr.a_source,tla_act_tr.a_param));
+				 `uvm_error(get_type_name(),$sformatf(" tl cha compare fail!\nExpect addr=%0h,size=%0h,opcede=%0h,source=%0h,param=%0h\nActual addr=%0h,size=%0h,opcede=%0h,source=%0h,param=%0h",tla_exp_tr.a_address,tla_exp_tr.a_size,tla_exp_tr.ch_a_msg_type,tla_exp_tr.a_source,tla_exp_tr.a_param,tla_act_tr.a_address,tla_act_tr.a_size,tla_act_tr.ch_a_msg_type,tla_act_tr.a_source,tla_act_tr.a_param));
 
 			 end
 			 else begin
