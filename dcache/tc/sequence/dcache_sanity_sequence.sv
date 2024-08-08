@@ -20,28 +20,6 @@ class dcache_sanity_sequence extends dcache_base_sequence;
   `uvm_object_utils(dcache_sanity_sequence)
 	`uvm_declare_p_sequencer(dcache_vsqr)
 
-	lsu_seq   seq;  
-
-  bit [7:0]   req_bits_source;
-  bit [38:0]  req_bits_paddr;
-  bit [4:0]   req_bits_cmd;  
-	bit [2:0]   req_bits_size;	
-  bit         req_bits_signed;
-	bit [511:0] req_bits_wdata;	
-  bit [63:0]  req_bits_wmask;	
-  bit         req_bits_noAlloc;
-  bit [4:0]   req_bits_dest;	
-  bit         req_bits_isRefill;	
-  bit [1:0]   req_bits_refillWay;	
-  bit         req_bits_refillCoh;	
-  bit         s0_kill;
-  bit         s1_kill;	
-  bit [7:0]   resp_bits_source;	
-  bit [4:0]   resp_bits_dest;	
-  bit [1:0]   resp_bits_status;	
-  bit         resp_bits_hasData;	
-  bit [511:0] resp_bits_data;	
-  bit         nextCycleWb;
 
   function new(string name = "dcache_sanity_sequence");
     super.new(name);
@@ -50,50 +28,42 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 
   virtual task body();
 	  
-	bit [38:0] addr;
+	  bit [31:0] addr,addr_1;
+		bit [7:0] data_byte;
+    bit [511:0] data;
 
     `uvm_info(get_type_name(), "dcache sanity sequence starting", UVM_NONE)
-		wait(!tb_top.reset)
-		//wait meta array init
-		#200ns;
+		super.body(); 
+    addr = 'h8000_0000;
+	 	addr_1 = 'h8000_0800;
 
-		for(int i=0;i<20;i++)begin
-			backdoor_put_data('h1000+'h40*i,6,'ha5a5a5a5_a5a5a5a5+i);
+	  for(int i=0;i<10;i++)begin
+			backdoor_put_data(addr+'h40*i,6,{16{'h76543210}}+i);
 	  end
 
-	 //for(int i=0;i<20;i++)begin
-	 //	backdoor_get_data('h1000+'h40*i,6,resp_bits_data);
-	 //	`uvm_info(get_type_name(),$sformatf("backdoor_get_data  %0h",resp_bits_data),UVM_NONE);
-	 //end
-
-		
-		for(int i=0;i<20;i++)begin
-			//req_bits_dest = $urandom_range(31);
-			`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{seq.io_req_bits_source   ==0;
-                                               seq.io_req_bits_paddr    =='h1000+'h40*i;
-                                               seq.io_req_bits_cmd      =='h0;
-                                               seq.io_req_bits_size     =='h6;	
-                                               seq.io_req_bits_signed   ==0;
-                                               seq.io_req_bits_wdata    =='ha5a5a5a5_a5a5a5a5+i;	
-                                               seq.io_req_bits_wmask    ==64'hffff_ffff_ffff_ffff;
-                                               seq.io_req_bits_noAlloc  ==0;
-                                               //seq.io_req_bits_dest     ==req_bits_dest;
-                                               seq.io_req_bits_isRefill ==0;	
-                                               seq.io_req_bits_refillWay==0;	
-                                               seq.io_req_bits_refillCoh==0;	
-                                               seq.io_s0_kill           ==0;
-                                               seq.io_s1_kill           ==0;
-                                               //seq.io_resp_bits_source  ==0;	
-                                               //seq.io_resp_bits_dest    ==0;
-                                               //seq.io_resp_bits_status  ==0;	
-                                               //seq.io_resp_bits_hasData ==0;	
-                                               //seq.io_resp_bits_data    ==0;	
-                                               //seq.io_nextCycleWb       ==0;
-																							 })
+	  for(int i=0;i<10;i++)begin
+			backdoor_put_data(addr_1+'h40*i,6,{16{'h76543210}}+i);
+	  end
 
 
+		//load hit: BtoB
+
+	  for(int i=0;i<10;i++)begin
+			dcache_load(lsu_trans::SCALAR_INT,addr+'h40*i);
+	  end
+
+		//store miss: BtoT
+
+		for(int i=0;i<10;i++)begin 
+      for(int i=0;i<256;i++)begin
+				data_byte = $urandom_range(0,8'hff);
+        data[i*8+:8] = data_byte;
+			end
+
+			dcache_store(lsu_trans::SCALAR_INT,addr_1+'h40*i,data);
 		end
-		
+
+				
 
   endtask
 

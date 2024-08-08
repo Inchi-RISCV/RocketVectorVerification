@@ -54,8 +54,8 @@ module tb_top();
   svt_tilelink_master_if  tilelink_master_if[1] (clock);
   svt_tilelink_slave_if   tilelink_slave_if[1] (clock);
 
+	assign tilelink_master_if[0].tl_reset = reset;
 	assign tilelink_slave_if[0].tl_reset = reset;
-
   ///////////////////////// 
   `include "dut_instance.sv"
   ///////////////////////// 
@@ -81,6 +81,51 @@ module tb_top();
 		$timeformat(-9,3,"ns",10);
     run_test();
   end
+
+
+
+always @(tilelink_slave_if[0].a_opcode   )  tilelink_master_if[0].a_opcode   =  tilelink_slave_if[0].a_opcode;
+always @(tilelink_slave_if[0].a_param    )  tilelink_master_if[0].a_param    =  tilelink_slave_if[0].a_param;
+always @(tilelink_slave_if[0].a_size     )  tilelink_master_if[0].a_size     =  tilelink_slave_if[0].a_size; 
+always @(tilelink_slave_if[0].a_source   )  tilelink_master_if[0].a_source   =  tilelink_slave_if[0].a_source;
+always @(tilelink_slave_if[0].a_address  )  tilelink_master_if[0].a_address  =  tilelink_slave_if[0].a_address;
+always @(tilelink_slave_if[0].a_mask     )  tilelink_master_if[0].a_mask     =  tilelink_slave_if[0].a_mask;
+always @(tilelink_slave_if[0].a_data     )  tilelink_master_if[0].a_data     =  tilelink_slave_if[0].a_data;
+always @(tilelink_slave_if[0].a_corrupt  )  tilelink_master_if[0].a_corrupt  =  tilelink_slave_if[0].a_corrupt;
+always @(tilelink_slave_if[0].a_valid    )  tilelink_master_if[0].a_valid    =  tilelink_slave_if[0].a_valid;
+always @(tilelink_slave_if[0].c_opcode   )  tilelink_master_if[0].c_opcode   =  tilelink_slave_if[0].c_opcode;
+always @(tilelink_slave_if[0].c_param    )  tilelink_master_if[0].c_param    =  tilelink_slave_if[0].c_param;
+always @(tilelink_slave_if[0].c_size     )  tilelink_master_if[0].c_size     =  tilelink_slave_if[0].c_size;
+always @(tilelink_slave_if[0].c_source   )  tilelink_master_if[0].c_source   =  tilelink_slave_if[0].c_source;
+always @(tilelink_slave_if[0].c_address  )  tilelink_master_if[0].c_address  =  tilelink_slave_if[0].c_address;
+always @(tilelink_slave_if[0].c_data     )  tilelink_master_if[0].c_data     =  tilelink_slave_if[0].c_data;
+always @(tilelink_slave_if[0].c_corrupt  )  tilelink_master_if[0].c_corrupt  =  tilelink_slave_if[0].c_corrupt; 
+always @(tilelink_slave_if[0].c_valid    )  tilelink_master_if[0].c_valid    =  tilelink_slave_if[0].c_valid;
+always @(tilelink_slave_if[0].e_sink     )  tilelink_master_if[0].e_sink     =  tilelink_slave_if[0].e_sink; 
+always @(tilelink_slave_if[0].e_valid    )  tilelink_master_if[0].e_valid    =  tilelink_slave_if[0].e_valid;
+always @(tilelink_slave_if[0].b_ready    )  tilelink_master_if[0].b_ready    =  tilelink_slave_if[0].b_ready;
+always @(tilelink_slave_if[0].d_ready    )  tilelink_master_if[0].d_ready    =  tilelink_slave_if[0].d_ready;
+always @(tilelink_slave_if[0].b_opcode   )  tilelink_master_if[0].b_opcode   =  tilelink_slave_if[0].b_opcode;
+always @(tilelink_slave_if[0].b_param    )  tilelink_master_if[0].b_param    =  tilelink_slave_if[0].b_param;
+always @(tilelink_slave_if[0].b_size     )  tilelink_master_if[0].b_size     =  tilelink_slave_if[0].b_size;
+always @(tilelink_slave_if[0].b_source   )  tilelink_master_if[0].b_source   =  tilelink_slave_if[0].b_source;
+always @(tilelink_slave_if[0].b_address  )  tilelink_master_if[0].b_address  =  tilelink_slave_if[0].b_address;
+always @(tilelink_slave_if[0].b_mask     )  tilelink_master_if[0].b_mask     =  tilelink_slave_if[0].b_mask;
+always @(tilelink_slave_if[0].b_data     )  tilelink_master_if[0].b_data     =  tilelink_slave_if[0].b_data;
+always @(tilelink_slave_if[0].b_corrupt  )  tilelink_master_if[0].b_corrupt  =  tilelink_slave_if[0].b_corrupt;
+always @(tilelink_slave_if[0].b_valid    )  tilelink_master_if[0].b_valid    =  tilelink_slave_if[0].b_valid;
+always @(tilelink_slave_if[0].d_opcode   )  tilelink_master_if[0].d_opcode   =  tilelink_slave_if[0].d_opcode;
+always @(tilelink_slave_if[0].d_param    )  tilelink_master_if[0].d_param    =  tilelink_slave_if[0].d_param;
+always @(tilelink_slave_if[0].d_size     )  tilelink_master_if[0].d_size     =  tilelink_slave_if[0].d_size;
+always @(tilelink_slave_if[0].d_source   )  tilelink_master_if[0].d_source   =  tilelink_slave_if[0].d_source;
+always @(tilelink_slave_if[0].d_sink     )  tilelink_master_if[0].d_sink     =  tilelink_slave_if[0].d_sink;
+always @(tilelink_slave_if[0].d_denied   )  tilelink_master_if[0].d_denied   =  tilelink_slave_if[0].d_denied;
+always @(tilelink_slave_if[0].d_data     )  tilelink_master_if[0].d_data     =  tilelink_slave_if[0].d_data;
+always @(tilelink_slave_if[0].d_corrupt  )  tilelink_master_if[0].d_corrupt  =  tilelink_slave_if[0].d_corrupt; 
+always @(tilelink_slave_if[0].d_valid    )  tilelink_master_if[0].d_valid    =  tilelink_slave_if[0].d_valid;
+always @(tilelink_slave_if[0].a_ready    )  tilelink_master_if[0].a_ready    =  tilelink_slave_if[0].a_ready;
+always @(tilelink_slave_if[0].c_ready    )  tilelink_master_if[0].c_ready    =  tilelink_slave_if[0].c_ready;
+always @(tilelink_slave_if[0].e_ready    )  tilelink_master_if[0].e_ready    =  tilelink_slave_if[0].e_ready;
 
 endmodule
 
