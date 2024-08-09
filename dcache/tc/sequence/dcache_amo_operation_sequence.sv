@@ -61,8 +61,8 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
 		for(int i=0;i<length;i++)begin
-			backdoor_put_data(addr_t+(2**size_t)*i,size_t,{16{'h76543210}}+i);
-			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'ha0a0a0a0}}+i,size_t);
+			backdoor_put_data(addr_t+(2**size_t)*i,size_t,{16{'hf000_1111}}+i);
+			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hf000_2222}}+i,size_t);
 		end
 		
 		for(int i=0;i<length;i++)begin
