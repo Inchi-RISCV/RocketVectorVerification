@@ -10,6 +10,7 @@
 ./sequence/dcache_signed_sequence.sv
 ./sequence/dcache_partial_mask_store_sequence.sv
 ./sequence/dcache_lr_sc_sequence.sv
+./sequence/dcache_amo_operation_sequence.sv
 
 
 
@@ -23,4 +24,5 @@
 ./dcache_signed_test.sv
 ./dcache_partial_mask_store_test.sv
 ./dcache_lr_sc_test.sv
+./dcache_amo_operation_test.sv
 
