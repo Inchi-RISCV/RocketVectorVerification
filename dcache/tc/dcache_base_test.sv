@@ -70,8 +70,8 @@ function void dcache_base_test::end_of_elaboration_phase(uvm_phase phase);
   factory = cs.get_factory();
 
   uvm_top.print_topology();
-  `uvm_info(get_type_name(), $sformatf("Verbosity level is set to: %d", get_report_verbosity_level()), UVM_MEDIUM)
-  `uvm_info(get_type_name(), "Print all Factory overrides", UVM_MEDIUM)
+  `uvm_info(get_type_name(), $sformatf("Verbosity level is set to: %d", get_report_verbosity_level()), UVM_NONE)
+  `uvm_info(get_type_name(), "Print all Factory overrides", UVM_NONE)
   factory.print();
 
 endfunction : end_of_elaboration_phase

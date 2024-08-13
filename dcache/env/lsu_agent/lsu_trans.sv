@@ -93,6 +93,8 @@ typedef enum bit[1:0] {
     `uvm_field_int(io_resp_bits_hasData,UVM_ALL_ON)	
     `uvm_field_int(io_resp_bits_data,UVM_ALL_ON)	
     `uvm_field_int(io_nextCycleWb,UVM_ALL_ON)
+		//`uvm_field_int(replay_req,UVM_ALL_ON)
+
 	`uvm_object_utils_end
 
   rand req_source_enum 		io_req_bits_source;
@@ -115,14 +117,43 @@ typedef enum bit[1:0] {
   rand bit         				io_resp_bits_hasData;	
   rand bit [511:0] 				io_resp_bits_data;	
   rand bit         				io_nextCycleWb;
+  //rand bit         				replay_req;
 
   extern function new(string name = "lsu_trans");
+
+  function copy (lsu_trans p);
+    this.io_req_bits_source    = p.io_req_bits_source;
+    this.io_req_bits_paddr     = p.io_req_bits_paddr;
+    this.io_req_bits_cmd       = p.io_req_bits_cmd;  
+    this.io_req_bits_size      = p.io_req_bits_size;	
+    this.io_req_bits_signed    = p.io_req_bits_signed;
+    this.io_req_bits_wdata     = p.io_req_bits_wdata;	
+    this.io_req_bits_wmask     = p.io_req_bits_wmask;	
+    this.io_req_bits_noAlloc   = p.io_req_bits_noAlloc;
+    this.io_req_bits_dest      = p.io_req_bits_dest;	
+    this.io_req_bits_isRefill  = p.io_req_bits_isRefill;	
+    this.io_req_bits_refillWay = p.io_req_bits_refillWay;	
+    this.io_req_bits_refillCoh = p.io_req_bits_refillCoh;	
+    this.io_s0_kill            = p.io_s0_kill;
+    this.io_s1_kill            = p.io_s1_kill;	
+    this.io_resp_bits_source   = p.io_resp_bits_source;	
+    this.io_resp_bits_dest     = p.io_resp_bits_dest;	
+    this.io_resp_bits_status   = p.io_resp_bits_status;	
+    this.io_resp_bits_hasData  = p.io_resp_bits_hasData;	
+    this.io_resp_bits_data     = p.io_resp_bits_data;	
+    this.io_nextCycleWb        = p.io_nextCycleWb;
+    //this.replay_req            = p.replay_req;
+  endfunction
+
 
 endclass : lsu_trans
 
 function lsu_trans::new(string name = "lsu_trans");
   super.new(name);
 endfunction : new
+
+
+
 
 `endif // LSU_TRANS_SV
 

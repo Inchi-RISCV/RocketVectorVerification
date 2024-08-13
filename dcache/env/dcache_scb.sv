@@ -26,6 +26,8 @@ class dcache_scb extends uvm_scoreboard;
   `uvm_component_utils(dcache_scb)
 
   uvm_blocking_get_port #(svt_tilelink_master_transaction) rm2sb_tltx_port;
+  uvm_blocking_get_port #(lsu_trans) lsu2sb_rsp_port;
+	uvm_blocking_get_port #(lsu_trans) rm2sb_rsp_port;
 	`SVT_XVM(analysis_imp_master_trans_tx)     #(svt_tilelink_master_transaction, dcache_scb) tl2sb_tltx_port;
   `SVT_XVM(analysis_imp_master_trans_rx)     #(svt_tilelink_master_transaction, dcache_scb) tl2sb_tlrx_port;
   `SVT_XVM(analysis_imp_master_trans_status) #(svt_tilelink_master_status, dcache_scb) tl2sb_tlsta_port;
@@ -35,6 +37,9 @@ class dcache_scb extends uvm_scoreboard;
 
   svt_tilelink_master_transaction  tl_cha_act_q[$];
 	svt_tilelink_master_transaction  tl_cha_exp_q[$];
+	lsu_trans rsp_exp_q[$],rsp_act_q[$];
+	lsu_trans rsp_refill_exp_q[$],rsp_refill_act_q[$];
+
   static event time_out_refresh;
   extern function new(string name, uvm_component parent); 
   extern task main_phase(uvm_phase phase);
@@ -76,6 +81,9 @@ function dcache_scb::new(string name, uvm_component parent);
   tl2sb_tltx_port = new("tl2sb_tltx_port",this);
 	
 	rm2sb_tltx_port = new("rm2sb_tltx_port",this);
+	lsu2sb_rsp_port = new("lsu2sb_rsp_port",this);
+	rm2sb_rsp_port= new("rm2sb_rsp_port",this);
+
 
 endfunction : new
 
@@ -84,6 +92,7 @@ task dcache_scb::main_phase(uvm_phase phase);
 	fork
 		comp_a_channel();
 		end_sim_check();
+		comp_lsu_rsp();
 	join_any
 
 	`uvm_info(get_type_name(),$sformatf(" scb finish! "),UVM_NONE);
@@ -100,7 +109,7 @@ task dcache_scb::end_sim_check();
     while(1) begin
     	@time_out_refresh;
     	time_cnt=0;
-    	`uvm_info(get_type_name(),$sformatf("Get Tilelink A data"),UVM_DEBUG);
+    	`uvm_info(get_type_name(),$sformatf("Get DUT data"),UVM_DEBUG);
     end
     while(1) begin
     	@(posedge tb_top.clock);
@@ -110,9 +119,8 @@ task dcache_scb::end_sim_check();
 
     while(1) begin
     	@(posedge tb_top.clock);
-    	if(time_cnt>=2000)begin
-    	  //`uvm_error(get_type_name(),$sformatf("No Tilelink A data, timeout ! "));
-				`uvm_info(get_type_name(),$sformatf("No Tilelink A data, timeout !"),UVM_NONE);
+    	if(time_cnt>=1000)begin
+				`uvm_info(get_type_name(),$sformatf(" DUT  donot has data for 10000 cycle , finish!"),UVM_NONE);
     	break;
       end
     end
@@ -144,7 +152,8 @@ task dcache_scb::comp_a_channel();
     	if(tl_cha_act_q.size()>0)begin
     		tla_act_tr = tl_cha_act_q.pop_front();
 				tla_exp_tr = tl_cha_exp_q.pop_front();
-    	 `uvm_info(get_type_name(), {"get tl_cha_act_tr\n",tla_act_tr.sprint}, UVM_HIGH)
+				->time_out_refresh;
+    	  `uvm_info(get_type_name(), {"get tl_cha_act_tr\n",tla_act_tr.sprint}, UVM_HIGH)
 
 			 if(tla_exp_tr.a_address != tla_act_tr.a_address || tla_exp_tr.a_size != tla_act_tr.a_size || tla_exp_tr.a_source != tla_act_tr.a_source || tla_exp_tr.ch_a_msg_type  != tla_act_tr.ch_a_msg_type  || tla_exp_tr.a_param != tla_act_tr.a_param)begin
 
@@ -162,7 +171,79 @@ task dcache_scb::comp_a_channel();
 endtask
 
 task dcache_scb::comp_lsu_rsp();
+	lsu_trans exp_tr,act_tr,rsp_act_tr,rsp_refill_act_tr,rsp_exp_tr,refill_exp_tr,act_tr_tmp,exp_tr_tmp;
 
+  exp_tr =  new();
+  rsp_act_tr = new();
+	rsp_exp_tr = new();
+	refill_exp_tr = new();
+  rsp_refill_act_tr = new();
+  act_tr = new();
+
+
+	fork 
+
+    while(1)begin
+		  exp_tr_tmp =new();	 
+		  rm2sb_rsp_port.get(exp_tr);
+		  exp_tr_tmp.copy(exp_tr);
+		  `uvm_info(get_type_name(), {"get exp_tr\n",exp_tr_tmp.sprint}, UVM_HIGH)
+		  if(exp_tr_tmp.io_resp_bits_status == lsu_trans::REFILL  )begin
+				rsp_refill_exp_q.push_back(exp_tr_tmp);
+		   end
+			else begin
+        rsp_exp_q.push_back(exp_tr_tmp);
+			end
+		end
+
+    while(1)begin
+			act_tr_tmp =new();
+			lsu2sb_rsp_port.get(act_tr);
+			->time_out_refresh;
+      act_tr_tmp.copy(act_tr);
+			`uvm_info(get_type_name(), {"get rsp_act_tr\n",act_tr_tmp.sprint}, UVM_HIGH)	
+			if(act_tr_tmp.io_resp_bits_status == lsu_trans::REFILL)begin
+        rsp_refill_act_q.push_back(act_tr_tmp);     
+				//`uvm_info(get_type_name(),$sformatf("put rsp_refill_act_q tr ,dest=%0h,status=%0h",act_tr_tmp.io_resp_bits_dest,act_tr_tmp.io_resp_bits_status),UVM_NONE)
+				//foreach(rsp_refill_act_q[i]) begin
+        //  $display(rsp_refill_act_q[i].io_resp_bits_dest);
+				//end
+		  end
+			else begin
+        rsp_act_q.push_back(act_tr_tmp);
+			end 
+		 end
+
+     // comp refill rsp
+	   while(1)begin
+       wait (rsp_refill_act_q.size()>0 && rsp_refill_exp_q.size()>0);
+			 //`uvm_info(get_type_name(),$sformatf("rsp_refill_act_q size=%0h",rsp_refill_act_q.size()),UVM_NONE) 
+       rsp_refill_act_tr = rsp_refill_act_q.pop_front();
+			 //`uvm_info(get_type_name(),$sformatf("get rsp_refill_act_q tr ,dest=%0h,status=%0h",rsp_refill_act_tr.io_resp_bits_dest,rsp_refill_act_tr.io_resp_bits_status),UVM_NONE)   
+			 refill_exp_tr = rsp_refill_exp_q.pop_front();
+       if(rsp_refill_act_tr.io_resp_bits_source != refill_exp_tr.io_resp_bits_source || rsp_refill_act_tr.io_resp_bits_dest != refill_exp_tr.io_resp_bits_dest || rsp_refill_act_tr.io_resp_bits_status != refill_exp_tr.io_resp_bits_status || rsp_refill_act_tr.io_resp_bits_hasData != refill_exp_tr.io_resp_bits_hasData  || rsp_refill_act_tr.io_resp_bits_data != refill_exp_tr.io_resp_bits_data )begin
+			   `uvm_error(get_type_name(),$sformatf(" refill rsp compare fail!\nExpect dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h\nActual dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h",refill_exp_tr.io_resp_bits_dest,refill_exp_tr.io_resp_bits_source,refill_exp_tr.io_resp_bits_status,refill_exp_tr.io_resp_bits_hasData,refill_exp_tr.io_resp_bits_data,rsp_refill_act_tr.io_resp_bits_dest,rsp_refill_act_tr.io_resp_bits_source,rsp_refill_act_tr.io_resp_bits_status,rsp_refill_act_tr.io_resp_bits_hasData,rsp_refill_act_tr.io_resp_bits_data));
+			 end
+			 else begin
+         `uvm_info(get_type_name(),$sformatf("refill rsp compare pass,dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h",rsp_refill_act_tr.io_resp_bits_dest,rsp_refill_act_tr.io_resp_bits_source,rsp_refill_act_tr.io_resp_bits_status,rsp_refill_act_tr.io_resp_bits_hasData,rsp_refill_act_tr.io_resp_bits_data),UVM_NONE)
+			 end
+     end
+
+     //comp hit&miss rsp
+	   while(1) begin
+			 wait (rsp_act_q.size()>0 & rsp_exp_q.size()>0);
+       rsp_act_tr = rsp_act_q.pop_front();
+       rsp_exp_tr = rsp_exp_q.pop_front();
+			 if(rsp_act_tr.io_resp_bits_source != rsp_exp_tr.io_resp_bits_source || rsp_act_tr.io_resp_bits_dest != rsp_exp_tr.io_resp_bits_dest || rsp_act_tr.io_resp_bits_status != rsp_exp_tr.io_resp_bits_status || rsp_act_tr.io_resp_bits_hasData != rsp_exp_tr.io_resp_bits_hasData  || rsp_act_tr.io_resp_bits_data != rsp_exp_tr.io_resp_bits_data )begin
+				 `uvm_error(get_type_name(),$sformatf("rsp compare fail!\nExpect dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h\nActual dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h",rsp_exp_tr.io_resp_bits_dest,rsp_exp_tr.io_resp_bits_source,rsp_exp_tr.io_resp_bits_status,rsp_exp_tr.io_resp_bits_hasData,rsp_exp_tr.io_resp_bits_data,rsp_act_tr.io_resp_bits_dest,rsp_act_tr.io_resp_bits_source,rsp_act_tr.io_resp_bits_status,rsp_act_tr.io_resp_bits_hasData,rsp_act_tr.io_resp_bits_data));
+			 end
+			 else begin
+         `uvm_info(get_type_name(),$sformatf("rsp compare pass,dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h",rsp_act_tr.io_resp_bits_dest,rsp_act_tr.io_resp_bits_source,rsp_act_tr.io_resp_bits_status,rsp_act_tr.io_resp_bits_hasData,rsp_act_tr.io_resp_bits_data),UVM_NONE)
+			 end			 
+	   end
+
+
+	join
 
 endtask
 `endif // DCACHE_SCB_SV

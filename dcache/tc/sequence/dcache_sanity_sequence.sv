@@ -31,37 +31,71 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 	  bit [31:0] addr,addr_1;
 		bit [7:0] data_byte;
     bit [511:0] data;
+    bit [6:0] set_idx;
+    bit [18:0] tag;
 
     `uvm_info(get_type_name(), "dcache sanity sequence starting", UVM_NONE)
 		super.body(); 
-    addr = 'h8000_0000;
-	 	addr_1 = 'h8000_0800;
 
-	  for(int i=0;i<10;i++)begin
-			backdoor_put_data(addr+'h40*i,6,{16{'h76543210}}+i);
+
+    
+    // load miss
+		tag = 'h4_0000;
+	  for(int i=0;i<20;i++)begin
+      set_idx = i;
+		  addr = {tag,set_idx,6'h0}; 
+			backdoor_put_data(addr,6,{16{'h12340000}}+i);
 	  end
 
-	  for(int i=0;i<10;i++)begin
-			backdoor_put_data(addr_1+'h40*i,6,{16{'h76543210}}+i);
+   	for(int i=0;i<20;i++)begin
+			set_idx = i;
+		  addr = {tag,set_idx,6'h0}; 
+			dcache_load(lsu_trans::SCALAR_INT,addr);
 	  end
 
 
-		//load hit: BtoB
+    #400ns;
+		//same addr load
+		tag = 'h4_0000;
+		set_idx = 21;
 
-	  for(int i=0;i<10;i++)begin
-			dcache_load(lsu_trans::SCALAR_INT,addr+'h40*i);
+ 		addr = {tag,set_idx,6'h0}; 
+	  backdoor_put_data(addr,6,{16{'ha5a5a5a5a}});
+
+   	for(int i=0;i<20;i++)begin
+		  addr = {tag,set_idx,6'h0}; 
+			dcache_load(lsu_trans::SCALAR_INT,addr);
 	  end
+
+    #400ns;
+		//same index load
+    tag = 'h4_0000;
+		set_idx = 30;
+
+		for(int i=0;i<20;i++)begin
+			tag = 'h4_0000+i; 		
+			addr = {tag,set_idx,6'h0};
+	    backdoor_put_data(addr,6,{16{'ha5a54321}});
+	  end
+			
+	  for(int i=0;i<20;i++)begin
+	  	tag = 'h4_0000+i; 		
+	  	addr = {tag,set_idx,6'h0};
+	  	dcache_load(lsu_trans::SCALAR_INT,addr);
+
+	  end
+
 
 		//store miss: BtoT
 
-		for(int i=0;i<10;i++)begin 
-      for(int i=0;i<256;i++)begin
-				data_byte = $urandom_range(0,8'hff);
-        data[i*8+:8] = data_byte;
-			end
+	//for(int i=0;i<10;i++)begin 
+  //  for(int i=0;i<256;i++)begin
+	//		data_byte = $urandom_range(0,8'hff);
+  //    data[i*8+:8] = data_byte;
+	//	end
 
-			dcache_store(lsu_trans::SCALAR_INT,addr_1+'h40*i,data);
-		end
+	//	dcache_store(lsu_trans::SCALAR_INT,addr_1+'h40*i,data);
+	//end
 
 				
 

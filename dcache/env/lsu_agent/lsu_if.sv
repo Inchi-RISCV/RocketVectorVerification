@@ -42,6 +42,7 @@ interface lsu_if(input clk, input rst_n);
   logic         io_resp_bits_hasData;	
   logic [511:0] io_resp_bits_data;	
   logic         io_nextCycleWb;
+  logic         replay_req;
 
   clocking drv_cb@(posedge clk);
 

@@ -117,6 +117,7 @@ task lsu_driver::do_drive();
 
 		if(rsp.io_resp_bits_status == 2) begin //replay cmd
       req = req_last;
+      //req.replay_req =1;
 			//`uvm_info(get_type_name(), {"replay , req item\n",req.sprint}, UVM_HIGH)
 			`uvm_info(get_type_name(),$sformatf("replay req , addr=%0h",req.io_req_bits_paddr),UVM_NONE);
 			do begin
@@ -136,6 +137,7 @@ task lsu_driver::do_drive();
         vif.io_req_bits_refillCoh <= #`DELAY req.io_req_bits_refillCoh;	
         vif.io_s0_kill            <= #`DELAY req.io_s0_kill;
         vif.io_s1_kill            <= #`DELAY req.io_s1_kill;
+        //vif.replay_req            <= #`DELAY req.replay_req;
 				req_last = req;
 				@(posedge vif.clk);			
       end
@@ -169,6 +171,7 @@ task lsu_driver::do_drive();
         vif.io_req_bits_refillCoh <= #`DELAY req.io_req_bits_refillCoh;	
         vif.io_s0_kill            <= #`DELAY req.io_s0_kill;
         vif.io_s1_kill            <= #`DELAY req.io_s1_kill;
+				//vif.replay_req            <= #`DELAY 0;
 				req_last = req;
 
 			  //when load ,set destid_reuse 1

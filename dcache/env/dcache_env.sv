@@ -21,8 +21,8 @@ class dcache_env extends uvm_env;
   `uvm_component_utils(dcache_env)
    uvm_tlm_analysis_fifo  #(lsu_trans) lsu2rm_fifo;
 	 uvm_tlm_analysis_fifo  #(svt_tilelink_master_transaction) rm2sb_tltx_fifo;
-
-  
+	 uvm_tlm_analysis_fifo  #(lsu_trans) lsu2sb_rsp_fifo;
+	 uvm_tlm_analysis_fifo  #(lsu_trans) rm2sb_rsp_fifo;  
 	lsu_agent m_lsu_agent; 
 
   prefetch_agent m_prefetch_agent; 
@@ -41,6 +41,7 @@ class dcache_env extends uvm_env;
   extern function void end_of_elaboration_phase(uvm_phase phase);
   extern virtual task main_phase(uvm_phase phase);
   extern function void report_phase(uvm_phase phase);
+  extern virtual task shutdown_phase(uvm_phase phase);
 
 endclass : dcache_env 
 
@@ -65,7 +66,8 @@ function void dcache_env::build_phase(uvm_phase phase);
 
 	lsu2rm_fifo = new("lsu2rm_fifo",this);
 	rm2sb_tltx_fifo = new("rm2sb_tltx_fifo",this);
-
+  lsu2sb_rsp_fifo = new("lsu2sb_rsp_fifo",this);
+  rm2sb_rsp_fifo = new("rm2sb_rsp_fifo",this);
 
 endfunction : build_phase
 
@@ -79,6 +81,13 @@ function void dcache_env::connect_phase(uvm_phase phase);
 
 	m_refm.rm2sb_tltx_port.connect(rm2sb_tltx_fifo.analysis_export);
 	m_scb.rm2sb_tltx_port.connect(rm2sb_tltx_fifo.blocking_get_export);
+
+  m_lsu_agent.analysis_port_rsp.connect(lsu2sb_rsp_fifo.analysis_export);
+	m_scb.lsu2sb_rsp_port.connect(lsu2sb_rsp_fifo.blocking_get_export);
+
+	m_refm.rm2sb_rsp_port.connect(rm2sb_rsp_fifo.analysis_export);
+	m_scb.rm2sb_rsp_port.connect(rm2sb_rsp_fifo.blocking_get_export);
+
 
 
   //tl_env.sys_env.slave[0].slave_mon.status_xact_observed_port.connect(m_scb.tl2sb_tlsta_port);
@@ -106,6 +115,28 @@ task dcache_env::main_phase(uvm_phase phase);
 	super.main_phase(phase);
 
 endtask : main_phase
+
+
+task dcache_env::shutdown_phase(uvm_phase phase);
+
+  if(!lsu2rm_fifo.is_empty())begin
+    `uvm_error(get_type_name(), "lsu2rm_fifo is not empty!")
+	end
+  if(!rm2sb_tltx_fifo.is_empty())begin
+    `uvm_error(get_type_name(), "rm2sb_tltx_fifo is not empty!")
+	end
+  if(!lsu2sb_rsp_fifo.is_empty())begin
+    `uvm_error(get_type_name(), "lsu2sb_rsp_fifo is not empty!")
+	end
+  if(!rm2sb_rsp_fifo.is_empty())begin
+    `uvm_error(get_type_name(), "rm2sb_rsp_fifo is not empty!")
+	end
+
+
+
+endtask : shutdown_phase
+
+
 
 function void dcache_env::report_phase(uvm_phase phase);
 	uvm_report_server srv;
@@ -139,6 +170,7 @@ function void dcache_env::report_phase(uvm_phase phase);
 
 
 endfunction 
+
 
 
 `endif // DCACHE_ENV_SV
