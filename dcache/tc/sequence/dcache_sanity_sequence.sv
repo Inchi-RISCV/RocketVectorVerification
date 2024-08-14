@@ -33,6 +33,8 @@ class dcache_sanity_sequence extends dcache_base_sequence;
     bit [511:0] data;
     bit [6:0] set_idx;
     bit [18:0] tag;
+    bit [2:0] size;
+		bit [5:0] addr_align;
 
     `uvm_info(get_type_name(), "dcache sanity sequence starting", UVM_NONE)
 		super.body(); 
@@ -49,12 +51,22 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 
    	for(int i=0;i<20;i++)begin
 			set_idx = i;
-		  addr = {tag,set_idx,6'h0}; 
-			dcache_load(lsu_trans::SCALAR_INT,addr);
+			size = $urandom_range(6);
+			addr_align = $urandom_range(64);
+
+      case (size)
+        3'h1 : addr_align[0:0] = 0;
+        3'h2 : addr_align[1:0] = 0;
+        3'h3 : addr_align[2:0] = 0;
+        3'h4 : addr_align[3:0] = 0;
+        3'h5 : addr_align[4:0] = 0;
+        3'h6 : addr_align[5:0] = 0;
+      endcase	
+			addr = {tag,set_idx,addr_align}; 
+			dcache_load(lsu_trans::SCALAR_INT,addr,size);
 	  end
-
-
     #400ns;
+
 		//same addr load
 		tag = 'h4_0000;
 		set_idx = 21;
@@ -66,8 +78,9 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 		  addr = {tag,set_idx,6'h0}; 
 			dcache_load(lsu_trans::SCALAR_INT,addr);
 	  end
-
     #400ns;
+
+
 		//same index load
     tag = 'h4_0000;
 		set_idx = 30;
@@ -82,8 +95,14 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 	  	tag = 'h4_0000+i; 		
 	  	addr = {tag,set_idx,6'h0};
 	  	dcache_load(lsu_trans::SCALAR_INT,addr);
-
 	  end
+   //#200ns;
+	 //for(int i=0;i<20;i++)begin
+	 //	tag = 'h4_0000+i; 		
+	 //	addr = {tag,set_idx,6'h0};
+	 //	dcache_load(lsu_trans::SCALAR_INT,addr);
+	 //end
+
 
 
 		//store miss: BtoT
