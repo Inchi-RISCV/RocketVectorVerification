@@ -20,6 +20,7 @@ class vpu_scb extends uvm_component;
   `uvm_component_utils(vpu_scb)
 	uvm_blocking_get_port #(data_trans) data_agent_port;
 	uvm_blocking_get_port #(data_trans) data_agent_port_update;
+	uvm_blocking_get_port #(data_trans) data_agent_port_trap;
   extern function new(string name, uvm_component parent);
   extern task main_phase(uvm_phase phase);
 	extern task end_sim_check();
@@ -30,7 +31,7 @@ class vpu_scb extends uvm_component;
 	bit     instr_finish;
 	static event time_out_refresh;
 
-	data_trans  data_act_tr,data_act_tr_1,data_exp_tr;
+	data_trans  data_act_tr,data_act_tr_1,data_exp_tr,data_act_tr_trap;
 	bit comp_pass;
   bit comp_fail;
 
@@ -41,6 +42,7 @@ function vpu_scb::new(string name, uvm_component parent);
   super.new(name, parent);
 	data_agent_port = new("data_agent_port",this);
 	data_agent_port_update = new("data_agent_port_update",this);
+	data_agent_port_trap = new("data_agent_port_trap",this);
 	
 endfunction : new
 
@@ -122,6 +124,7 @@ task vpu_scb::commit_check();
   data_act_tr = new();
 	data_act_tr_1 = new();
   data_exp_tr = new();
+  data_act_tr_trap = new();
   act_ooo_gpr_reg_info = new[31];
   act_ooo_fpr_reg_info = new[32];
   exp_ooo_gpr_reg_info = new[31];
@@ -133,12 +136,25 @@ task vpu_scb::commit_check();
 
 
   fork
+		
+		while(1) begin
 
+			data_agent_port_trap.get(data_act_tr_trap);
+			
+			if(data_act_tr_trap.verif_trap_valid == 1)begin
+		     inchi_difftest_exec();
+			end
+		end
 
 		while(1) begin
 
-
 			data_agent_port.get(data_act_tr);
+			
+			//fork
+			//if(data_act_tr.verif_trap_valid == 1)begin
+		  //   inchi_difftest_exec();
+			//end
+
 
 			if(data_act_tr.verif_commit_valid) begin
 
@@ -194,7 +210,7 @@ task vpu_scb::commit_check();
 
 		    
           if(!data_act_tr.verif_sfma)begin
-		     	  comp_pass = data_act_tr.compare(data_exp_tr);
+		     	  comp_pass = data_act_tr.my_compare(data_exp_tr);
 				  end
 		     	commit_num ++;
 
@@ -203,13 +219,13 @@ task vpu_scb::commit_check();
 		     	end
 		     	else begin
 
-         	  `uvm_info(get_type_name(),{" scb get act data : ",data_act_tr.sprint},UVM_NONE);
-		     		`uvm_info(get_type_name(),{" scb get exp data : ",data_exp_tr.sprint},UVM_NONE);
-		     		`uvm_error(get_type_name(),$sformatf(" dut and spike compare fail,prevPc=%0h,commit_num=%0h ",data_act_tr.verif_commit_prevPc,commit_num));
+         	  //`uvm_info(get_type_name(),{" scb get act data : ",data_act_tr.sprint},UVM_NONE);
+		     		//`uvm_info(get_type_name(),{" scb get exp data : ",data_exp_tr.sprint},UVM_NONE);
+		     		//`uvm_error(get_type_name(),$sformatf(" dut and spike compare fail,prevPc=%0h,commit_num=%0h ",data_act_tr.verif_commit_prevPc,commit_num));
 
 
 
-						/*
+						
 		     		// out of order commit check
 						`uvm_info(get_type_name(),{" scb get act data : ",data_act_tr.sprint},UVM_NONE);
 		     	  `uvm_info(get_type_name(),{" scb get exp data : ",data_exp_tr.sprint},UVM_NONE)
@@ -278,12 +294,12 @@ task vpu_scb::commit_check();
 		     		  `uvm_info(get_type_name(),{" scb get exp data : ",data_exp_tr.sprint},UVM_NONE);
 
 		     		end   
-						*/
+					
 		     	end// end else if comp pass
 
 		    end //end if dut_start_cp
 			end//end if valid
-			  		
+		//join		
 		end //end while 1
 
 		
@@ -539,3 +555,4 @@ task vpu_scb::init_spike_info(data_trans data_act_tr);
 endtask
 
 `endif // VPU_SCB_SV
+

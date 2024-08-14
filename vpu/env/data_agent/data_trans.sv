@@ -219,6 +219,99 @@ class data_trans extends uvm_sequence_item;
 
   extern function new(string name = "data_trans");
 
+	function bit my_compare(data_trans exp_trans);
+  	return (this.verif_commit_valid == exp_trans.verif_commit_valid)&&
+					 (this.verif_commit_prevPc[39:0] == exp_trans.verif_commit_prevPc[39:0])&&
+					 (this.verif_commit_currPc[39:0] == exp_trans.verif_commit_currPc[39:0])&&
+   				 (this.verif_commit_order == exp_trans.verif_commit_order)&&
+   				 (this.verif_commit_insn == exp_trans.verif_commit_insn)&&
+   				 (this.verif_commit_fused == exp_trans.verif_commit_fused)&&
+   				 (this.verif_sim_halt == exp_trans.verif_sim_halt)&&
+   				 (this.verif_trap_valid == exp_trans.verif_trap_valid)&&
+   				 (this.verif_trap_pc == exp_trans.verif_trap_pc)&&
+   				 (this.verif_trap_firstInsn == exp_trans.verif_trap_firstInsn)&&
+   				 (this.verif_reg_gpr_arr == exp_trans.verif_reg_gpr_arr)&&
+   				 (this.verif_reg_fpr_arr == exp_trans.verif_reg_fpr_arr)&&
+   				 (this.verif_reg_vpr_arr == exp_trans.verif_reg_vpr_arr)&&
+   				 (this.verif_dest_gprWr == exp_trans.verif_dest_gprWr)&&
+   				 (this.verif_dest_fprWr == exp_trans.verif_dest_fprWr)&&
+   				 (this.verif_dest_vprWr == exp_trans.verif_dest_vprWr)&&
+   				 (this.verif_dest_idx == exp_trans.verif_dest_idx)&&
+					 (this.verif_src_vmaskRd == exp_trans.verif_src_vmaskRd) &&
+					 (this.verif_src1_gprRd == exp_trans.verif_src1_gprRd) &&
+					 (this.verif_src1_fprRd == exp_trans.verif_src1_fprRd) &&
+					 (this.verif_src1_vprRd == exp_trans.verif_src1_vprRd) &&
+					 (this.verif_src1_idx == exp_trans.verif_src1_idx) &&
+					 (this.verif_src2_gprRd == exp_trans.verif_src2_gprRd) &&
+					 (this.verif_src2_fprRd == exp_trans.verif_src2_fprRd) &&
+					 (this.verif_src2_vprRd == exp_trans.verif_src2_vprRd) &&
+					 (this.verif_src2_idx == exp_trans.verif_src2_idx) &&
+					 (this.verif_src3_gprRd == exp_trans.verif_src3_gprRd) &&
+					 (this.verif_src3_fprRd == exp_trans.verif_src3_fprRd) &&
+					 (this.verif_src3_vprRd == exp_trans.verif_src3_vprRd) &&
+					 (this.verif_src3_idx == exp_trans.verif_src3_idx) &&
+					 (this.verif_csr_mstatusWr == exp_trans.verif_csr_mstatusWr) &&
+					 (this.verif_csr_mepcWr == exp_trans.verif_csr_mepcWr) &&
+					 (this.verif_csr_mtvalWr == exp_trans.verif_csr_mtvalWr) &&
+					 (this.verif_csr_mtvecWr == exp_trans.verif_csr_mtvecWr) &&
+					 (this.verif_csr_mcauseWr == exp_trans.verif_csr_mcauseWr) &&
+					 (this.verif_csr_mipWr == exp_trans.verif_csr_mipWr) &&
+					 (this.verif_csr_mieWr == exp_trans.verif_csr_mieWr) &&
+					 (this.verif_csr_mscratchWr == exp_trans.verif_csr_mscratchWr) &&
+					 (this.verif_csr_midelegWr == exp_trans.verif_csr_midelegWr) &&
+					 (this.verif_csr_medelegWr == exp_trans.verif_csr_medelegWr) &&
+					 (this.verif_csr_minstretWr == exp_trans.verif_csr_minstretWr) &&
+					 (this.verif_csr_sstatusWr == exp_trans.verif_csr_sstatusWr) &&
+					 (this.verif_csr_sepcWr == exp_trans.verif_csr_sepcWr) &&
+					 (this.verif_csr_stvalWr == exp_trans.verif_csr_stvalWr) &&
+					 (this.verif_csr_stvecWr == exp_trans.verif_csr_stvecWr) &&
+					 (this.verif_csr_scauseWr == exp_trans.verif_csr_scauseWr) &&
+					 (this.verif_csr_satpWr == exp_trans.verif_csr_satpWr) &&
+					 (this.verif_csr_sscratchWr == exp_trans.verif_csr_sscratchWr) &&
+					 (this.verif_csr_vtypeWr == exp_trans.verif_csr_vtypeWr) &&
+					 (this.verif_csr_vcsrWr == exp_trans.verif_csr_vcsrWr) &&
+					 (this.verif_csr_vlWr == exp_trans.verif_csr_vlWr) &&
+					 (this.verif_csr_vstartWr == exp_trans.verif_csr_vstartWr) &&
+					 (this.verif_csr_mstatusRd == exp_trans.verif_csr_mstatusRd) &&
+					 (this.verif_csr_mepcRd == exp_trans.verif_csr_mepcRd) &&
+					 (this.verif_csr_mtvalRd == exp_trans.verif_csr_mtvalRd) &&
+					 (this.verif_csr_mtvecRd == exp_trans.verif_csr_mtvecRd) &&
+					 (this.verif_csr_mcauseRd == exp_trans.verif_csr_mcauseRd) &&
+					 (this.verif_csr_mipRd == exp_trans.verif_csr_mipRd) &&
+					 (this.verif_csr_mieRd == exp_trans.verif_csr_mieRd) &&
+					 (this.verif_csr_mscratchRd == exp_trans.verif_csr_mscratchRd) &&
+					 (this.verif_csr_midelegRd == exp_trans.verif_csr_midelegRd) &&
+					 (this.verif_csr_medelegRd == exp_trans.verif_csr_medelegRd) &&
+					 (this.verif_csr_minstretRd == exp_trans.verif_csr_minstretRd) &&
+					 (this.verif_csr_sstatusRd == exp_trans.verif_csr_sstatusRd) &&
+					 (this.verif_csr_sepcRd == exp_trans.verif_csr_sepcRd) &&
+					 (this.verif_csr_stvalRd == exp_trans.verif_csr_stvalRd) &&
+					 (this.verif_csr_stvecRd == exp_trans.verif_csr_stvecRd) &&
+					 (this.verif_csr_scauseRd == exp_trans.verif_csr_scauseRd) &&
+					 (this.verif_csr_satpRd == exp_trans.verif_csr_satpRd) &&
+					 (this.verif_csr_scratchRd == exp_trans.verif_csr_scratchRd) &&
+					 (this.verif_csr_vtypeRd == exp_trans.verif_csr_vtypeRd) &&
+					 (this.verif_csr_vcsrRd == exp_trans.verif_csr_vcsrRd) &&
+					 (this.verif_csr_vlRd == exp_trans.verif_csr_vlRd) &&
+					 (this.verif_csr_vstartRd == exp_trans.verif_csr_vstartRd) &&
+					 (this.verif_mem_valid == exp_trans.verif_mem_valid) &&
+					 (this.verif_mem_addr == exp_trans.verif_mem_addr) &&
+					 (this.verif_mem_isStore == exp_trans.verif_mem_isStore) &&
+					 (this.verif_mem_isLoad == exp_trans.verif_mem_isLoad) &&
+					 (this.verif_mem_isVector == exp_trans.verif_mem_isVector) &&
+					 (this.verif_mem_maskWr == exp_trans.verif_mem_maskWr) &&
+					 (this.verif_mem_maskRd == exp_trans.verif_mem_maskRd) &&
+					 (this.verif_mem_dataWr == exp_trans.verif_mem_dataWr) &&
+					 (this.verif_mem_dataRd == exp_trans.verif_mem_dataRd)&&
+					 (this.verif_update_reg_pc == exp_trans.verif_update_reg_pc) &&
+					 (this.verif_update_reg_rd == exp_trans.verif_update_reg_rd) &&
+					 (this.verif_update_reg_rfd == exp_trans.verif_update_reg_rfd) &&
+					 (this.verif_update_reg_data == exp_trans.verif_update_reg_data) &&
+					 (this.verif_update_reg_gpr_en == exp_trans.verif_update_reg_gpr_en)&&
+					 (this.verif_sfma == exp_trans.verif_sfma);
+
+
+	endfunction
 endclass : data_trans
 
 function data_trans::new(string name = "data_trans");
@@ -226,4 +319,5 @@ function data_trans::new(string name = "data_trans");
 endfunction : new
 
 `endif // DATA_TRANS_SV
+
 

@@ -1,2 +1,2 @@
 rm -rf generated-src;
-scp -r sunjiawen@172.16.30.13:/tmpdata/project/riscv/wuzw/rocketchip_firstV_c/rocket-chip/vsim/generated-src ./
+scp -r sunjiawen@172.16.30.13:/tmpdata/project/riscv/zhangxiran/rocketchip_verification/rocket_vpu/rocket-chip/vsim/generated-src ./

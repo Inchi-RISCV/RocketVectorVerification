@@ -1,3 +1,4 @@
+
 //============================================================================
 // Copyright(c) 2022 , Inchi Technology Inc, All right reserved
 // Company           : Inchi Technology .Inc
@@ -30,8 +31,9 @@ class data_monitor extends uvm_monitor;
 
   uvm_analysis_port #(data_trans) analysis_port;
   uvm_analysis_port #(data_trans) analysis_port_update;
+  uvm_analysis_port #(data_trans) analysis_port_trap;
 
-  data_trans m_trans,m_trans_update;
+  data_trans m_trans,m_trans_update,m_trans_trap;
 	bit spike_start;
 
   extern function new(string name, uvm_component parent);
@@ -40,6 +42,7 @@ class data_monitor extends uvm_monitor;
   extern task main_phase(uvm_phase phase);
   extern task do_mon();
   extern task do_mon_update();
+  extern task do_mon_trap();
 
 endclass : data_monitor 
 
@@ -48,6 +51,7 @@ function data_monitor::new(string name, uvm_component parent);
   super.new(name, parent);
   analysis_port = new("analysis_port", this);
   analysis_port_update = new("analysis_port_update", this);
+  analysis_port_trap = new("analysis_port_trap", this);
 
 endfunction : new
 
@@ -73,6 +77,7 @@ task data_monitor::main_phase(uvm_phase phase);
 
   m_trans = data_trans::type_id::create("m_trans");
   m_trans_update = data_trans::type_id::create("m_trans_update");
+  m_trans_trap = data_trans::type_id::create("m_trans_trap");
 	
 	m_trans.verif_reg_gpr_arr = new[31];
   m_trans.verif_reg_fpr_arr = new[32];
@@ -98,6 +103,7 @@ task data_monitor::main_phase(uvm_phase phase);
 		fork
   	do_mon();	
 		do_mon_update();
+		do_mon_trap();
 	  join
 	end
 
@@ -114,7 +120,7 @@ task data_monitor::do_mon();
     m_trans.verif_commit_insn    =      vif.verif_commit_insn;
     m_trans.verif_commit_fused   =      vif.verif_commit_fused;
     m_trans.verif_sim_halt       =      vif.verif_sim_halt;
-    m_trans.verif_trap_valid     =      vif.verif_trap_valid;
+    //m_trans.verif_trap_valid     =      vif.verif_trap_valid;
     m_trans.verif_trap_pc        =      vif.verif_trap_pc;
     m_trans.verif_trap_firstInsn =      vif.verif_trap_firstInsn;
 
@@ -208,7 +214,7 @@ task data_monitor::do_mon();
     //    m_trans.verif_commit_start   = 1;
 		//		`uvm_info(get_type_name(),$sformatf(" commit start,cur_pc=%0h", m_trans.verif_commit_start),UVM_NONE);
 	 // end
-
+  
 
   end
 
@@ -229,6 +235,15 @@ task data_monitor::do_mon_update();
 
 endtask : do_mon_update
 
+task data_monitor::do_mon_trap();
+	@(posedge vif.clk);
+	if(!vif.rst_n & vif.verif_trap_valid)begin
+    m_trans_trap.verif_trap_valid     =      vif.verif_trap_valid;
+		analysis_port_trap.write(m_trans_trap);
+
+	end
+
+endtask : do_mon_trap
 `endif // DATA_MONITOR_SV
 
 

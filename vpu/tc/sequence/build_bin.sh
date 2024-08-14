@@ -24,7 +24,7 @@ for file in "$directory"/*; do
         # ����������������������
         base_name=$(basename "$file" .elf)
         # ���� .bin ����
-        riscv64-unknown-elf-objcopy -O binary "$file" "${directory}/${base_name}.bin"
+        riscv64-unknown-elf-objcopy -S --set-section-flags .bss=alloc,contents -O binary "$file" "${directory}/${base_name}.bin"
         
         echo "Created ${directory}/${base_name}.bin"
     fi
