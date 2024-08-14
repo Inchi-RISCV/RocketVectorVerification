@@ -64,9 +64,10 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 			backdoor_put_data(addr_t+(2**size_t)*i,size_t,{16{'hf000_1111}}+i);
 			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hf000_2222}}+i,size_t);
 		end
-		
+	
 		for(int i=0;i<length;i++)begin
 			dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
+			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hf000_3333}}+i,size_t);
 		end
 
   endtask

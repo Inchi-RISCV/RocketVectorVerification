@@ -59,9 +59,10 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
 		for(int i=0;i<length;i++)begin
-			backdoor_put_data(addr_t+(2**size_t)*i,size_t,'h12345678_76543210+i);
+			dcache_amo_sc(req_source,addr_t+(2**size_t)*i,{16{'h11111111}}+i,size_t); 	//sc miss fail
 			dcache_amo_lr(req_source,addr_t+(2**size_t)*i,size_t);
-			dcache_amo_sc(req_source,addr_t+(2**size_t)*i,'habababab_a0a0a0a0+i,size_t);
+			dcache_amo_sc(req_source,addr_t+(2**size_t)*i,{16{'h22222222}}+i,size_t);	//sc hit success
+			dcache_amo_sc(req_source,addr_t+(2**size_t)*i,{16{'h33333333}}+i,size_t);	//sc hit fail
 		end
 		
   endtask

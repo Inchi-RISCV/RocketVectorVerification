@@ -35,6 +35,7 @@ class dcache_load_sequence extends dcache_base_sequence;
 		bit load_en;
 		bit store_en;
 		bit is_mmio_range;
+		bit noAlloc;
 		bit [7:0] req_source;
 
 	 	super.body(); 
@@ -43,6 +44,7 @@ class dcache_load_sequence extends dcache_base_sequence;
 		load_en = vmm_opts::get_int("load_en", 0, "load_en");
 		store_en = vmm_opts::get_int("store_en", 0, "store_en");
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
+		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 
 		//TODO:
 		length 			= 20;
@@ -62,7 +64,7 @@ class dcache_load_sequence extends dcache_base_sequence;
 
 		//load miss: NtoB
 		for(int i=0;i<length;i++)begin
-			dcache_load(req_source,addr_t+'h40*i);
+			dcache_load(req_source,addr_t+'h40*i,,,noAlloc);
 		end
 
 		//load hit: BtoB
