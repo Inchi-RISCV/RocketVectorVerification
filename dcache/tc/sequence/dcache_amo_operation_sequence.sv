@@ -63,7 +63,7 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 			dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
 			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_3333}}+i,size_t); 	//init state: B
 
-			dcache_store(req_source,addr_t+(2**size_t)*i,size_t,{16{'hffff_4444}}+i);
+			dcache_store(req_source,addr_t+(2**size_t)*i,{16{'hffff_4444}}+i,size_t);
 			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_5555}}+i,size_t);		//init state: Dirty
 		end
 
