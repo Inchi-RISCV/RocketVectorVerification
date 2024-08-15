@@ -46,7 +46,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 	  for(int i=0;i<20;i++)begin
       set_idx = i;
 		  addr = {tag,set_idx,6'h0}; 
-			backdoor_put_data(addr,6,{16{'h12340000}}+i);
+			backdoor_put_data(addr,6,{16{'hf0f0f0f0}}+i);
 	  end
 
    	for(int i=0;i<20;i++)begin
@@ -63,7 +63,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
         3'h6 : addr_align[5:0] = 0;
       endcase	
 			addr = {tag,set_idx,addr_align}; 
-			dcache_load(lsu_trans::SCALAR_INT,addr,size);
+			dcache_load(lsu_trans::SCALAR_INT,addr,size,1);
 	  end
     #400ns;
 

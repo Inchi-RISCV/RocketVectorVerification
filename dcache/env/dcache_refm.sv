@@ -42,16 +42,17 @@ class dcache_refm extends uvm_component;
   bit        tl_source_id_valid[8] = {1,1,1,1,1,1,1,1};
 	bit [31:0] req_addr_arry[8];
   //bit [38:0]  req_source_q[$]; //addr+dest
-  bit [50:0] same_addr_info_q[$];   //cmd+addr+source+dest  5+32+8+6
+  bit [51:0] same_addr_info_q[$];   //sign+cmd+addr+source+dest  1+5+32+8+6
 	bit [5:0]  req_dest_arry[8];      
 	bit [7:0]  req_source_arry[8];
 	bit [2:0]  req_size_arry[32];
+	bit        req_signed_arry[32];
 
 	lsu_trans::req_cmd_enum 		req_cmd_arry[8];
 
   extern function new(string name, uvm_component parent);
   extern task main_phase(uvm_phase phase);
-	extern task addr_align_check(input bit [2:0] size, input bit [31:0] addr,input bit [511:0] data,output [511:0] align_data);
+	extern task addr_data_align(input bit [2:0] size, input bit [31:0] addr,input bit [511:0] data,output [511:0] align_data);
   extern task get_lsu_port();
 	extern task assemble_cmd();
 	extern task query_block(input bit [6:0] set_index, input bit [18:0] tag, output bit[1:0] coh, output bit [1:0] way, output bit [511:0] data );
@@ -62,6 +63,7 @@ class dcache_refm extends uvm_component;
 	extern task replace_plru(input bit [6:0] set_index,input bit[1:0] coh, input bit [1:0] exist_way ,output bit [1:0] victim_way);
 	extern task update_cache(input bit [6:0] set_index,input bit [18:0] tag,input bit[1:0] coh, input bit [1:0] way ,input bit [511:0] data);
  	extern task release_source_id(input bit [15:0] source_id);
+  extern task sign_extension(input bit [2:0] size,input bit [511:0] data,output bit [511:0] sign_data);
 
   /**  write for tilelink monitor */
   virtual function void write_slave_trans_rx(svt_tilelink_slave_transaction slave_trans);
@@ -112,7 +114,7 @@ endtask
 task dcache_refm::do_refill();
   svt_tilelink_slave_transaction tr;
   bit [2:0]    d_opcode;
-	bit [511:0]  d_data,align_data;
+	bit [511:0]  d_data,align_data,refill_data;
 	bit [15:0]   d_source;
 	bit [1:0]    d_param;
 	bit [31:0]   a_addr;
@@ -129,9 +131,10 @@ task dcache_refm::do_refill();
   bit [5:0]    req_dest,req_dest_tmp;
 	bit [4:0]    req_cmd;
 	bit [2:0]    req_size;
+  bit          req_signed;
 	bit [511:0]  d_data_arry[];
 	bit [31:0]   same_addr_refill_num;
-	bit [50:0]   same_addr_info;
+	bit [51:0]   same_addr_info;
 
 	forever begin
 		wait(tl_chd_q.size()>0);
@@ -174,28 +177,28 @@ task dcache_refm::do_refill();
      	// refill rsp sent to scb
 			req_dest_tmp = req_dest_arry[d_source];
 			req_size = req_size_arry[req_dest_tmp];
-			addr_align_check(req_size,a_addr,d_data,align_data);
+			addr_data_align(req_size,a_addr,d_data,align_data);
 			if(req_cmd_arry[d_source] == lsu_trans::M_XRD)begin
-			  send_rsp(req_source_arry[d_source] ,req_dest_arry[d_source] , lsu_trans::REFILL,1,align_data);
-			  `uvm_info(get_type_name(),$sformatf("rm send refill resp,req_dest=%0h,req_addr=%0h,req_source=%0h,data=%0h",req_dest_arry[d_source],a_addr,req_source_arry[d_source],align_data),UVM_NONE);
+				sign_extension(req_size,align_data,refill_data);
+			  send_rsp(req_source_arry[d_source] ,req_dest_arry[d_source] , lsu_trans::REFILL,1,refill_data);
+			  `uvm_info(get_type_name(),$sformatf("rm send refill resp,req_dest=%0h,req_addr=%0h,req_source=%0h,data=%0h",req_dest_arry[d_source],a_addr,req_source_arry[d_source],refill_data),UVM_NONE);
 		  end
 		  same_addr_refill_num = same_addr_info_q.size();
 			if(same_addr_refill_num>0)begin
 		    for(int i=0 ;i<same_addr_refill_num;i++)begin
-		      //req_source = req_source_q.pop_front();
           same_addr_info = same_addr_info_q.pop_front();
 
 					if(same_addr_info[45:20] == a_addr[31:6])begin 
             req_dest = same_addr_info[5:0];
             req_source = same_addr_info[13:6];
 						req_cmd = same_addr_info[50:46];
-            //d_data = (d_data >>  )& valid_bits_arry[req_dest];
-
-						addr_align_check(req_size_arry[req_dest],same_addr_info[45:14],d_data,align_data);
+						req_signed = same_addr_info[51:51];
+  					addr_data_align(req_size_arry[req_dest],same_addr_info[45:14],d_data,align_data);
+						sign_extension(req_size,align_data,refill_data);
 
 						if(req_cmd_arry[d_source] == lsu_trans::M_XRD)begin
-		          send_rsp(req_source ,req_dest , lsu_trans::REFILL,1,align_data);
-		    	    `uvm_info(get_type_name(),$sformatf("rm send same addr refill resp ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,align_data,same_addr_refill_num),UVM_NONE);
+		          send_rsp(req_source ,req_dest , lsu_trans::REFILL,1,refill_data);
+		    	    `uvm_info(get_type_name(),$sformatf("rm send same addr refill resp ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_refill_num),UVM_NONE);
 					  end
 				  end
 					else begin
@@ -270,7 +273,7 @@ task dcache_refm::update_cache(input bit [6:0] set_index,input bit [18:0] tag,in
 
 endtask
 
-task dcache_refm::addr_align_check(input bit [2:0] size, input bit [31:0] addr,input bit [511:0] data,output [511:0] align_data);
+task dcache_refm::addr_data_align(input bit [2:0] size, input bit [31:0] addr,input bit [511:0] data,output [511:0] align_data);
 
   bit [5:0]   addr_align;
   bit [511:0] valid_bits;
@@ -302,23 +305,33 @@ task dcache_refm::addr_align_check(input bit [2:0] size, input bit [31:0] addr,i
     3'h6 : valid_bits  = {64{8'hff}};
   endcase
 
-	case (size)
-		3'h0 : data_tmp  =  data >> (addr[5:0]*8);
-		3'h1 : data_tmp  =  data >> (addr[5:0]*8);
-    3'h2 : data_tmp  =  data >> (addr[5:0]*8);
-    3'h3 : data_tmp  =  data >> (addr[5:0]*8);
-    3'h4 : data_tmp  =  data >> (addr[5:0]*8);
-    3'h5 : data_tmp  =  data >> (addr[5:0]*8);
-    3'h6 : data_tmp  =  data;
-  endcase
-
-
-
+	if(size == 6)begin
+		data_tmp  =  data;
+	end
+	else begin
+    data_tmp  =  data >> (addr[5:0]*8);
+	end
   align_data = valid_bits & data_tmp;
 
 
 endtask
 
+task dcache_refm::sign_extension(input bit [2:0] size,input bit [511:0] data,output bit [511:0] sign_data);
+
+  case (size)
+		3'h0 : sign_data = data[7:7]     ? {{504{1'b1}},data[7:0]}   : data;
+		3'h1 : sign_data = data[15:15]   ? {{496{1'b1}},data[15:0]}  : data;
+    3'h2 : sign_data = data[31:31]   ? {{480{1'b1}},data[31:0]}  : data;
+    3'h3 : sign_data = data[63:63]   ? {{448{1'b1}},data[63:0]}  : data;
+    3'h4 : sign_data = data[127:127] ? {{384{1'b1}},data[127:0]} : data;
+    3'h5 : sign_data = data[255:255] ? {{256{1'b1}},data[255:0]} : data;
+    3'h6 : sign_data = data;
+  endcase
+
+  `uvm_info(get_type_name(),$sformatf("sign_extension ,size=%0h,origin_data=%0h,sign_data=%0h",size,data,sign_data),UVM_NONE)
+
+
+endtask
 
 task dcache_refm::send_rsp(input bit [7:0] source ,input bit [4:0] dest , input bit [2:0] status, input bit hasdata,input bit [511:0] data);
 
@@ -394,9 +407,9 @@ task dcache_refm::assemble_cmd();
   bit         req_signed;
 	bit [15:0]  a_source;
   bit [2:0]   a_param;
-  bit [50:0]  same_addr_info;
+  bit [51:0]  same_addr_info;
 	bit         same_addr_exist;
-	bit [511:0] align_data;
+	bit [511:0] align_data,refill_data;
 
     
 	lsu_trans   req;
@@ -429,10 +442,11 @@ task dcache_refm::assemble_cmd();
 			`uvm_info(get_type_name(),$sformatf("processing addr=%p", req_addr_arry),UVM_NONE);
       `uvm_info(get_type_name(),$sformatf("tl_source_id_valid=%p", tl_source_id_valid),UVM_NONE);
      	req_size_arry[req_dest] = req_size;
+			req_signed_arry[req_dest] = req_signed;
 
 			query_block(nset,tag,coh,way,data);
 
-			addr_align_check(req_size,req_addr,data,align_data);
+			addr_data_align(req_size,req_addr,data,align_data);
 
 
 	    same_addr_exist= 0;
@@ -451,7 +465,7 @@ task dcache_refm::assemble_cmd();
 		      	if(req_addr_arry[j][31:6] == req_addr[31:6])begin
 				   	//load miss need refill resp
 					  //req_source_q.push_back(req_source);
-            same_addr_info = {req_cmd,req_addr,req_source,req_dest};
+            same_addr_info = {req_signed,req_cmd,req_addr,req_source,req_dest};
             same_addr_info_q.push_back(same_addr_info);
 					  `uvm_info(get_type_name(),$sformatf("load same addr,waiting for refill resp,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,rsp_num=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,same_addr_info_q.size(),j),UVM_NONE);
 						same_addr_exist = 1;;
@@ -485,7 +499,8 @@ task dcache_refm::assemble_cmd();
 				//hit
 				else begin
 					rsp_status = lsu_trans::HIT;
-					send_rsp(req_source ,req_dest ,rsp_status,1,align_data);
+					sign_extension(req_size,align_data,refill_data);
+					send_rsp(req_source ,req_dest ,rsp_status,1,refill_data);
 				end                 
 			end
 
