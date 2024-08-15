@@ -33,16 +33,12 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
 		bit [2:0]	size_t;
-		bit load_en;
-		bit store_en;
 		bit is_mmio_range;
 		bit [7:0] req_source;
 		
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
-		load_en = vmm_opts::get_int("load_en", 0, "load_en");
-		store_en = vmm_opts::get_int("store_en", 0, "store_en");
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
 		
 		//TODO:
@@ -59,11 +55,11 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
 		for(int i=0;i<length;i++)begin
-			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'h11111111}}+i,size_t); 	//sc miss fail
+			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'hffff_1111}}+i,size_t); 	//sc miss fail
 			dcache_lr(req_source,addr_t+(2**size_t)*i+'h2000,size_t);
 			dcache_lr(req_source,addr_t+(2**size_t)*i,size_t);
-			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'h22222222}}+i,size_t);	//sc hit success
-			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'h33333333}}+i,size_t);	//sc hit fail
+			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'hffff_2222}}+i,size_t);	//sc hit success
+			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'hffff_3333}}+i,size_t);	//sc hit fail
 		end
 		
   endtask
