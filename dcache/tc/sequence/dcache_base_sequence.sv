@@ -63,15 +63,14 @@ class dcache_base_sequence extends uvm_sequence;
   	input bit         req_noAlloc = 0
 		);
 
-	extern task dcache_amo_lr(
+	extern task dcache_lr(
 		input bit [7:0]   req_source,
 		input bit [38:0]  addr,
 		input bit [2:0]   req_size,
-		input bit         req_signed = 0,
   	input bit         req_noAlloc = 0
 		);
 
-	extern task dcache_amo_sc(
+	extern task dcache_sc(
 		input bit [7:0]   req_source,
 		input bit [38:0]  addr,
 		input bit [511:0] req_wdata,
@@ -216,11 +215,10 @@ task dcache_base_sequence::dcache_partial_mask_store(
 
 endtask
 
-task dcache_base_sequence::dcache_amo_lr(
+task dcache_base_sequence::dcache_lr(
 	input bit [7:0]   req_source,
 	input bit [38:0]  addr,
 	input bit [2:0]   req_size,
-	input bit         req_signed = 0,
   input bit         req_noAlloc = 0
 	);
 	
@@ -231,7 +229,7 @@ task dcache_base_sequence::dcache_amo_lr(
 		seq.io_req_bits_cmd      		==	lsu_trans::M_XLR;
 		seq.io_req_bits_paddr			 	==	addr;
     seq.io_req_bits_size     		==	req_size;
-		seq.io_req_bits_signed   		== 	req_signed;
+		seq.io_req_bits_signed   		== 	1;
     seq.io_req_bits_noAlloc  		==	req_noAlloc;
   	seq.io_s0_kill							== 	'h0;
   	seq.io_s1_kill							== 	'h0;	
@@ -239,7 +237,7 @@ task dcache_base_sequence::dcache_amo_lr(
 
 endtask
 
-task dcache_base_sequence::dcache_amo_sc(
+task dcache_base_sequence::dcache_sc(
 	input bit [7:0]   req_source,
 	input bit [38:0]  addr,
 	input bit [511:0] req_wdata,
@@ -279,6 +277,7 @@ task dcache_base_sequence::dcache_amo_operation(
 		seq.io_req_bits_paddr			 	==	addr;
     seq.io_req_bits_wdata    		==	req_wdata;
     seq.io_req_bits_size     		==	req_size;
+		seq.io_req_bits_signed   		== 	1;
     seq.io_req_bits_noAlloc  		==	req_noAlloc;
   	seq.io_s0_kill							== 	'h0;
   	seq.io_s1_kill							== 	'h0;	
