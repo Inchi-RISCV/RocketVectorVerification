@@ -33,14 +33,12 @@ class dcache_release_sequence extends dcache_base_sequence;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
 		bit [7:0] req_source;
-		bit load_en;
-		bit store_en;
+		string init_state;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
-		load_en = vmm_opts::get_int("load_en", 0, "load_en");
-		store_en = vmm_opts::get_int("store_en", 0, "store_en");
+		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 		//TODO:
 		length			= 20;
@@ -49,20 +47,18 @@ class dcache_release_sequence extends dcache_base_sequence;
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
-		/*release: same set*/	
-		//B release to N
-		if(load_en) begin
-			for(int i=0;i<length;i++)begin
+		for(int i=0;i<length;i++)begin
+			if(init_state == "B") begin
 				dcache_load(req_source,addr_t+'h2000*i);
+			end
+			else if(init_state == "Trunk") begin
+				dcache_lr(req_source,addr_t+'h2000*i,2);
+			end
+			else if(init_state == "Dirty") begin
+				dcache_store(req_source,addr_t+'h2000*i,{16{'habababa0}}+i);
 			end
 		end
 
-		//Dirty release to N
-		if(store_en) begin
-			for(int i=0;i<length;i++)begin
-				dcache_store(req_source,addr_t+'h2000*i,{16{'h76543210}}+i);
-			end
-		end
   endtask
 
 endclass : dcache_release_sequence

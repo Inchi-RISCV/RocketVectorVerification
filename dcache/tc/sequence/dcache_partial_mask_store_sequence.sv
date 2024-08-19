@@ -46,17 +46,16 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 		//TODO:
 		length 			= 20;
 		tag_idx_t 	= 'h4_0000;
+		req_source 	= $urandom_range(3);
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
 		for(int i=0;i<length;i++)begin
-			req_source 	= $urandom_range(3);
-
 			if(init_state == "B") begin
 				dcache_load(req_source,addr_t+'h40*i);
 			end
 			else if(init_state == "Trunk") begin
-				//TODO
+				dcache_lr(req_source,addr_t+'h40*i,2);
 			end
 			else if(init_state == "Dirty") begin
 				dcache_store(req_source,addr_t+'h40*i,{16{'habababa0}}+i);
@@ -64,7 +63,6 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 		end
 
 		for(int i=0;i<length;i++)begin
-			req_source 	= $urandom_range(3);
 			wdata = {16{'h76543210}}+i;
 			success = std::randomize (req_wmask) with {req_wmask <= (2**(2**6))-1;};
 			
@@ -78,7 +76,6 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 		end
 
 		for(int i=0;i<length;i++)begin
-			req_source 	= $urandom_range(3);
 			dcache_load(req_source,addr_t+'h40*i);
 		end
 

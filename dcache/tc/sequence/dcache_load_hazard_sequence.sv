@@ -32,8 +32,6 @@ class dcache_load_hazard_sequence extends dcache_base_sequence;
 		bit 			word_idx_t;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
-		bit load_en;
-		bit store_en;
 		bit is_mmio_range;
 		bit noAlloc;
 		bit [7:0] req_source;
@@ -41,8 +39,6 @@ class dcache_load_hazard_sequence extends dcache_base_sequence;
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 		
-		load_en = vmm_opts::get_int("load_en", 0, "load_en");
-		store_en = vmm_opts::get_int("store_en", 0, "store_en");
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
 		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 

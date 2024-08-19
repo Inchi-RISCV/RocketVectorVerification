@@ -32,19 +32,17 @@ class dcache_load_sequence extends dcache_base_sequence;
 		bit 			word_idx_t;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
-		bit load_en;
-		bit store_en;
 		bit is_mmio_range;
 		bit noAlloc;
 		bit [7:0] req_source;
+		string init_state;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 		
-		load_en = vmm_opts::get_int("load_en", 0, "load_en");
-		store_en = vmm_opts::get_int("store_en", 0, "store_en");
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
 		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
+		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 		//TODO:
 		length 			= 20;
@@ -62,23 +60,20 @@ class dcache_load_sequence extends dcache_base_sequence;
 			backdoor_put_data(addr_t+'h40*i,6,{16{'h76543210}}+i);
 	  end
 
-		//load miss: NtoB
 		for(int i=0;i<length;i++)begin
-			dcache_load(req_source,addr_t+'h40*i,,,noAlloc);
-		end
-
-		//load hit: BtoB
-		if(load_en) begin
-			for(int i=0;i<length;i++)begin
+			if(init_state == "B") begin
 				dcache_load(req_source,addr_t+'h40*i);
 			end
-		end
-
-		//store miss: BtoT
-		if(store_en) begin
-			for(int i=0;i<length;i++)begin
+			else if(init_state == "Trunk") begin
+				dcache_lr(req_source,addr_t+'h40*i,2);
+			end
+			else if(init_state == "Dirty") begin
 				dcache_store(req_source,addr_t+'h40*i,{16{'habababa0}}+i);
 			end
+		end
+
+		for(int i=0;i<length;i++)begin
+			dcache_load(req_source,addr_t+'h40*i,,,noAlloc);
 		end
 
   endtask
