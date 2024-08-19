@@ -126,7 +126,7 @@ task lsu_monitor::do_mon_rsp();
 				if(tr_rsp.io_resp_bits_status == lsu_trans::HIT || tr_rsp.io_resp_bits_status == lsu_trans::MISS)begin
 					tr_req = req_mon_q.pop_front();
 				  analysis_port_req.write(tr_req);
-				  `uvm_info(get_type_name(), {"send monitor req item\n",tr_req.sprint}, UVM_NONE)
+				  `uvm_info(get_type_name(), {"send monitor req item\n",tr_req.sprint}, UVM_HIGH)
 			  end
 			end		
 		end	

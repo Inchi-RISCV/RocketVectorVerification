@@ -23,7 +23,7 @@ class dcache_refm extends uvm_component;
 	uvm_blocking_get_port #(lsu_trans) lsu_port;
   uvm_analysis_port  #(svt_tilelink_master_transaction) rm2sb_tltx_port;
 	uvm_analysis_port  #(lsu_trans) rm2sb_rsp_port;
-
+  uvm_analysis_port  #(svt_tilelink_slave_transaction) rm2sb_tlc_port;
 
 	`SVT_XVM(analysis_imp_slave_trans_rx)      #(svt_tilelink_slave_transaction,  dcache_refm) tl2rm_tlrx_port;
 
@@ -58,7 +58,7 @@ class dcache_refm extends uvm_component;
 	extern task query_block(input bit [6:0] set_index, input bit [18:0] tag, output bit[1:0] coh, output bit [1:0] way, output bit [511:0] data );
   extern task send_rsp(input bit [7:0] source ,input bit [4:0] dest , input bit [2:0] status, input bit hasdata,input bit [511:0] data);
   extern task do_acquire(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
-	//extern task do_release(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param,input bit [511:0] a_data);
+	extern task do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data);
 	extern task do_refill();
 	extern task replace_plru(input bit [6:0] set_index,input bit[1:0] coh, input bit [1:0] exist_way ,output bit [1:0] victim_way);
 	extern task update_cache(input bit [6:0] set_index,input bit [18:0] tag,input bit[1:0] coh, input bit [1:0] way ,input bit [511:0] data);
@@ -69,7 +69,7 @@ class dcache_refm extends uvm_component;
   virtual function void write_slave_trans_rx(svt_tilelink_slave_transaction slave_trans);
     if(slave_trans.status.drive_chnl_A_or_C)begin
    	  tl_chd_q.push_back(slave_trans);
-			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port\n",slave_trans.sprint}, UVM_HIGH)
+			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port\n",slave_trans.sprint}, UVM_NONE)
 	  end
 
   endfunction : write_slave_trans_rx
@@ -85,7 +85,7 @@ function dcache_refm::new(string name, uvm_component parent);
 	rm2sb_tltx_port = new("rm2sb_tltx_port",this);
   tl2rm_tlrx_port = new("tl2rm_tlrx_port",this);
 	rm2sb_rsp_port = new("rm2sb_rsp_port",this);
-
+  rm2sb_tlc_port = new("rm2sb_tlc_port",this);
 
 
 endfunction : new
@@ -114,12 +114,12 @@ endtask
 task dcache_refm::do_refill();
   svt_tilelink_slave_transaction tr;
   bit [2:0]    d_opcode;
-	bit [511:0]  d_data,align_data,refill_data;
+	bit [511:0]  d_data,align_data,refill_data,data_vic;
 	bit [15:0]   d_source;
 	bit [1:0]    d_param;
 	bit [31:0]   a_addr;
 
-	bit [1:0]    coh,coh_tmp;
+	bit [1:0]    coh,coh_tmp,coh_vic;
 	bit [1:0]    exist_way,victim_way;
 	bit [511:0]  data;
 	bit [127:0]  meta_data;
@@ -217,9 +217,17 @@ task dcache_refm::do_refill();
 		    `uvm_info(get_type_name(),$sformatf("refresh cache , addr=%0h,set=%0h,tag=%0h,way=%0h,coh=%0h",a_addr,nset,ntag,exist_way,coh_tmp),UVM_NONE);
 			end
 
-			//do_rerease();//todo
+			//do_release
+			query_block(nset,ntag, coh_vic ,victim_way,data_vic);
 
-
+			if(coh_vic == lsu_trans::DIRTY)begin  //release_data  TtoN
+        do_release(a_addr,7,8,1,data_vic);
+        
+			end
+			else begin//release BtoN
+				do_release(a_addr,6,8,2,data_vic);
+        
+			end
 
        
 			//clear info
@@ -355,8 +363,8 @@ endtask
 task dcache_refm::do_acquire(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
 
   svt_tilelink_master_transaction   tr_a;
-  tr_a = new();
 
+  tr_a = new();
   tr_a.a_size    = 'h6;
   tr_a.a_source  = a_source;
   tr_a.a_address = {a_addr[31:6],6'h0};
@@ -367,6 +375,33 @@ task dcache_refm::do_acquire(input bit [31:0] a_addr ,input bit [15:0] a_source,
 	`uvm_info(get_type_name(),$sformatf("rm send acquire to sb , a_addr=%0h,a_source=%0h,a_param=%0h",tr_a.a_address,tr_a.a_source,tr_a.a_param),UVM_NONE);
 
 endtask
+
+
+task dcache_refm::do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data);
+   
+	svt_tilelink_slave_transaction   tr_c;
+
+  tr_c = new();
+	tr_c.status = new();
+
+  tr_c.status.c_size         = 'h6;
+  tr_c.status.c_source       = c_source;
+  tr_c.status.c_address      = {c_addr[31:6],6'h0};
+  tr_c.status.ch_c_msg_type  = c_opcode;
+  tr_c.status.c_param        = c_param;
+
+	for(int i=0;i<256;i++)begin
+		tr_c.status.c_data[i] = c_data[i*8+:8];
+  end
+
+	rm2sb_tlc_port.write(tr_c);
+	`uvm_info(get_type_name(),$sformatf("rm send release to sb,c_addr=%0h,c_opcode=%0h,c_source=%0h,c_param=%0h",tr_c.status.c_address,tr_c.status.ch_c_msg_type,tr_c.status.c_source,tr_c.status.c_param),UVM_NONE);
+
+
+
+endtask
+
+
 
 task dcache_refm::release_source_id(input bit [15:0] source_id); 
   

@@ -18,20 +18,21 @@
 
 //`uvm_analysis_imp_decl(_slave_trans_status)
 `uvm_analysis_imp_decl(_master_trans_tx) // for master mon write for tx
-
 `uvm_analysis_imp_decl(_master_trans_rx) // for master mon write for rx
 `uvm_analysis_imp_decl(_master_trans_status) // for master mon write for status
+ `uvm_analysis_imp_decl(_slave_trans_tx)  // for slave mon tx
 
 class dcache_scb extends uvm_scoreboard;
   `uvm_component_utils(dcache_scb)
 
   uvm_blocking_get_port #(svt_tilelink_master_transaction) rm2sb_tltx_port;
+	uvm_blocking_get_port #(svt_tilelink_slave_transaction)  rm2sb_tlc_port;
   uvm_blocking_get_port #(lsu_trans) lsu2sb_rsp_port;
 	uvm_blocking_get_port #(lsu_trans) rm2sb_rsp_port;
 	`SVT_XVM(analysis_imp_master_trans_tx)     #(svt_tilelink_master_transaction, dcache_scb) tl2sb_tltx_port;
   `SVT_XVM(analysis_imp_master_trans_rx)     #(svt_tilelink_master_transaction, dcache_scb) tl2sb_tlrx_port;
   `SVT_XVM(analysis_imp_master_trans_status) #(svt_tilelink_master_status, dcache_scb) tl2sb_tlsta_port;
- 
+  `SVT_XVM(analysis_imp_slave_trans_tx)      #(svt_tilelink_slave_transaction,  dcache_scb) tl2sb_tlc_port;
 	//svt_tilelink_slave_transaction tlrx_act_q[$];
   //svt_tilelink_slave_status  tl_cha_act_q[$];
 
@@ -39,12 +40,16 @@ class dcache_scb extends uvm_scoreboard;
 	svt_tilelink_master_transaction  tl_cha_exp_q[$];
 	lsu_trans rsp_exp_q[$],rsp_act_q[$];
 	lsu_trans rsp_refill_exp_q[$],rsp_refill_act_q[$];
+	svt_tilelink_slave_transaction  tl_chc_exp_q[$];
+	svt_tilelink_slave_transaction  tl_chc_act_q[$];
+
 
   static event time_out_refresh;
   extern function new(string name, uvm_component parent); 
   extern task main_phase(uvm_phase phase);
   extern task end_sim_check();
   extern task comp_a_channel();
+	extern task comp_c_channel();
 	extern task comp_lsu_rsp();
 
   /**  write for master driver */
@@ -64,11 +69,14 @@ class dcache_scb extends uvm_scoreboard;
   /**  write for master Monitor */
   virtual function void write_master_trans_status(svt_tilelink_master_status master_trans);
 	 //`uvm_info(get_type_name(), {"get tl2sb_tlsta_port\n",master_trans.sprint}, UVM_HIGH)
-
-
   endfunction : write_master_trans_status
 
-
+  //  write for slave monitor 
+  virtual function void write_slave_trans_tx(svt_tilelink_slave_transaction slave_trans);
+    `uvm_info(get_type_name(), {"get tl2sb_tlc_port\n",slave_trans.sprint}, UVM_NONE)
+		tl_chc_act_q.push_back(slave_trans);
+		`uvm_info(get_type_name(), $sformatf("tl2sb_tlc_port addr=%0h",slave_trans.status.c_address), UVM_NONE)
+  endfunction : write_slave_trans_tx
 
 
 endclass : dcache_scb 
@@ -83,14 +91,16 @@ function dcache_scb::new(string name, uvm_component parent);
 	rm2sb_tltx_port = new("rm2sb_tltx_port",this);
 	lsu2sb_rsp_port = new("lsu2sb_rsp_port",this);
 	rm2sb_rsp_port= new("rm2sb_rsp_port",this);
-
-
+  tl2sb_tlc_port = new("tl2sb_tlc_port",this);
+  rm2sb_tlc_port = new("rm2sb_tlc_port",this);
+	
 endfunction : new
 
 task dcache_scb::main_phase(uvm_phase phase);
 	phase.raise_objection(this);
 	fork
 		comp_a_channel();
+		comp_c_channel();
 		end_sim_check();
 		comp_lsu_rsp();
 	join_any
@@ -168,6 +178,44 @@ task dcache_scb::comp_a_channel();
     end
 
   join
+endtask
+
+task dcache_scb::comp_c_channel();
+	svt_tilelink_slave_transaction  tr,tlc_act_tr,tlc_exp_tr;
+
+	fork
+
+    while(1)begin
+      rm2sb_tlc_port.get(tr);
+    	`uvm_info(get_type_name(), {"get tl_chc_exp_tr\n",tr.sprint}, UVM_HIGH)
+    	tl_chc_exp_q.push_back(tr);	
+    end
+
+	  while(1)begin
+			wait(tl_chc_act_q.size()>0);
+    	if(tl_chc_act_q.size()>0)begin
+    		tlc_act_tr = tl_chc_act_q.pop_front();
+				tlc_exp_tr = tl_chc_exp_q.pop_front();
+				->time_out_refresh;
+    	  `uvm_info(get_type_name(), {"get tl_chc_act_tr\n",tlc_act_tr.sprint}, UVM_HIGH)
+
+				if(tlc_act_tr.status.c_address != tlc_exp_tr.status.c_address || tlc_act_tr.status.c_size != tlc_exp_tr.status.c_size ||
+				   tlc_act_tr.status.ch_c_msg_type!=  tlc_exp_tr.status.ch_c_msg_type  || tlc_act_tr.status.c_param != tlc_exp_tr.status.c_param ||
+					 tlc_act_tr.status.c_data != tlc_exp_tr.status.c_data )begin
+					 `uvm_error(get_type_name(),$sformatf(" tl chc compare fail!\nExpect addr=%0h,size=%0h,opcede=%0h,param=%0h\nActual addr=%0h,size=%0h,opcede=%0h,param=%0h\nExpect data=%p\nActual data=%p",tlc_exp_tr.status.c_address,tlc_exp_tr.status.c_size,tlc_exp_tr.status.ch_c_msg_type,tlc_exp_tr.status.c_param,tlc_act_tr.status.c_address,tlc_act_tr.status.c_size,tlc_act_tr.status.ch_c_msg_type,tlc_act_tr.status.c_param,tlc_exp_tr.status.c_data,tlc_act_tr.status.c_data));
+
+				end
+				else begin
+           `uvm_info(get_type_name(), $sformatf("tl chc compare pass! addr=%0h,opcode=%0h,param=%0h",tlc_act_tr.status.c_address,tlc_act_tr.status.ch_c_msg_type,tlc_act_tr.status.c_param), UVM_NONE)
+				end
+
+			end
+
+	  end
+  
+
+  join
+
 endtask
 
 task dcache_scb::comp_lsu_rsp();

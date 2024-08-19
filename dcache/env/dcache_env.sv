@@ -22,7 +22,8 @@ class dcache_env extends uvm_env;
    uvm_tlm_analysis_fifo  #(lsu_trans) lsu2rm_fifo;
 	 uvm_tlm_analysis_fifo  #(svt_tilelink_master_transaction) rm2sb_tltx_fifo;
 	 uvm_tlm_analysis_fifo  #(lsu_trans) lsu2sb_rsp_fifo;
-	 uvm_tlm_analysis_fifo  #(lsu_trans) rm2sb_rsp_fifo;  
+	 uvm_tlm_analysis_fifo  #(lsu_trans) rm2sb_rsp_fifo; 
+	 uvm_tlm_analysis_fifo  #(svt_tilelink_slave_transaction) rm2sb_tlc_fifo;  
 	lsu_agent m_lsu_agent; 
 
   prefetch_agent m_prefetch_agent; 
@@ -68,6 +69,7 @@ function void dcache_env::build_phase(uvm_phase phase);
 	rm2sb_tltx_fifo = new("rm2sb_tltx_fifo",this);
   lsu2sb_rsp_fifo = new("lsu2sb_rsp_fifo",this);
   rm2sb_rsp_fifo = new("rm2sb_rsp_fifo",this);
+	rm2sb_tlc_fifo = new("rm2sb_tlc_fifo",this);
 
 endfunction : build_phase
 
@@ -88,6 +90,8 @@ function void dcache_env::connect_phase(uvm_phase phase);
 	m_refm.rm2sb_rsp_port.connect(rm2sb_rsp_fifo.analysis_export);
 	m_scb.rm2sb_rsp_port.connect(rm2sb_rsp_fifo.blocking_get_export);
 
+	m_refm.rm2sb_tlc_port.connect(rm2sb_tlc_fifo.analysis_export);
+	m_scb.rm2sb_tlc_port.connect(rm2sb_tlc_fifo.blocking_get_export);
 
 
   //tl_env.sys_env.slave[0].slave_mon.status_xact_observed_port.connect(m_scb.tl2sb_tlsta_port);
@@ -97,6 +101,7 @@ function void dcache_env::connect_phase(uvm_phase phase);
 
 
 	tl_env.sys_env.slave[0].slave_mon.rx_xact_observed_port.connect(m_refm.tl2rm_tlrx_port);
+	tl_env.sys_env.slave[0].slave_mon.tx_xact_observed_port.connect(m_scb.tl2sb_tlc_port);
  // tl_env.sys_env.slave[0].slave_mon.status_xact_observed_port.connect(tl2rm_tltx_fifo.analysis_export);
  //m_refm.tl2rm_tltx_port.connect(tl2rm_tltx_fifo.blocking_get_export);
 
