@@ -3,7 +3,7 @@
 // Company           : Inchi Technology .Inc
 //============================================================================
 // Project           :dcache
-// File Name         :dcache_store_release_sequence.sv
+// File Name         :dcache_release_sequence.sv
 // Author            :huangxiaogang
 // Email             :huangxiaogang@inchitech.com
 // Called by         :
@@ -13,14 +13,14 @@
 // Description       :
 //============================================================================
 
-`ifndef _dcache_store_release_sequence_SV_
-`define _dcache_store_release_sequence_SV_
+`ifndef _dcache_release_sequence_SV_
+`define _dcache_release_sequence_SV_
 
-class dcache_store_release_sequence extends dcache_base_sequence;
-  `uvm_object_utils(dcache_store_release_sequence)
+class dcache_release_sequence extends dcache_base_sequence;
+  `uvm_object_utils(dcache_release_sequence)
 	`uvm_declare_p_sequencer(dcache_vsqr)
 
-	function new(string name = "dcache_store_release_sequence");
+	function new(string name = "dcache_release_sequence");
     super.new(name);
   endfunction
 
@@ -33,9 +33,14 @@ class dcache_store_release_sequence extends dcache_base_sequence;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
 		bit [7:0] req_source;
+		bit load_en;
+		bit store_en;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
+
+		load_en = vmm_opts::get_int("load_en", 0, "load_en");
+		store_en = vmm_opts::get_int("store_en", 0, "store_en");
 
 		//TODO:
 		length			= 20;
@@ -44,13 +49,22 @@ class dcache_store_release_sequence extends dcache_base_sequence;
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
-		//release: same set
-		for(int i=0;i<length;i++)begin 	//NtoT
-			dcache_store(req_source,addr_t+'h2000*i,{16{'h76543210}}+i);
+		/*release: same set*/	
+		//B release to N
+		if(load_en) begin
+			for(int i=0;i<length;i++)begin
+				dcache_load(req_source,addr_t+'h2000*i);
+			end
 		end
 
+		//Dirty release to N
+		if(store_en) begin
+			for(int i=0;i<length;i++)begin
+				dcache_store(req_source,addr_t+'h2000*i,{16{'h76543210}}+i);
+			end
+		end
   endtask
 
-endclass : dcache_store_release_sequence
+endclass : dcache_release_sequence
 
 `endif
