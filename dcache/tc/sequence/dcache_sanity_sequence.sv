@@ -39,7 +39,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
     `uvm_info(get_type_name(), "dcache sanity sequence starting", UVM_NONE)
 		super.body(); 
 
-
+    
     
     // load miss
 		tag = 'h4_0000;
@@ -80,6 +80,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 	  end
     #400ns;
 
+    
 
 		//same index load
     tag = 'h4_0000;
@@ -96,12 +97,51 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 	  	addr = {tag,set_idx,6'h0};
 	  	dcache_load(lsu_trans::SCALAR_INT,addr);
 	  end
-   //#200ns;
-	 //for(int i=0;i<20;i++)begin
-	 //	tag = 'h4_0000+i; 		
-	 //	addr = {tag,set_idx,6'h0};
-	 //	dcache_load(lsu_trans::SCALAR_INT,addr);
-	 //end
+   #400ns;
+
+
+
+
+	 //way evict
+    tag = 'h4_0000;
+
+		for(int i=0;i<10;i++)begin
+			set_idx = 40;
+			tag = 'h4_0000+i;
+			addr = {tag,set_idx,6'h0};
+	    backdoor_put_data(addr,6,{16{'ha5a54321}});
+	  end
+
+	 for(int i=0;i<4;i++)begin
+		 set_idx = 40;
+		 tag = 'h4_0000+i;		 
+	 	 addr = {tag,set_idx,6'h0};
+	 	 dcache_load(lsu_trans::SCALAR_INT,addr);
+	 end
+
+	 #50ns;
+
+	 for(int i=0;i<2;i++)begin
+		 set_idx = 40;
+		 tag = 'h4_0000+i;			 
+	 	 addr = {tag,set_idx,6'h0};
+	 	 dcache_load(lsu_trans::SCALAR_INT,addr);
+	 end
+
+	 for(int i=0;i<1;i++)begin
+		 set_idx = 40;
+		 tag = 'h4_0000+i;			 
+	 	 addr = {tag,set_idx,6'h0};
+	 	 dcache_load(lsu_trans::SCALAR_INT,addr);
+	 end
+
+	 for(int i=0;i<4;i++)begin
+		 set_idx = 40;
+		 tag = 'h4_0010+i;	
+	 	 addr = {tag,set_idx,6'h0};
+	 	 dcache_load(lsu_trans::SCALAR_INT,addr);
+	 end
+	 #400ns;
 
 
 
