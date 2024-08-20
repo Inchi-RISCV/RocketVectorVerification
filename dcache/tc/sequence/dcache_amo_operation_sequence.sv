@@ -59,12 +59,14 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		for(int i=0;i<length;i++)begin
 			backdoor_put_data(addr_t+(2**size_t)*i,size_t,{16{'hffff_1111}}+i);
 			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_2222}}+i,size_t); 	//init state: N
-				
-			dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
-			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_3333}}+i,size_t); 	//init state: B
+			
+			if(!is_mmio_range) begin
+				dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
+				dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_3333}}+i,size_t); 	//init state: B
 
-			dcache_store(req_source,addr_t+(2**size_t)*i,{16{'hffff_4444}}+i,size_t);
-			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_5555}}+i,size_t);		//init state: Dirty
+				dcache_store(req_source,addr_t+(2**size_t)*i,{16{'hffff_4444}}+i,size_t);
+				dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_5555}}+i,size_t);		//init state: Dirty
+			end
 		end
 
   endtask
