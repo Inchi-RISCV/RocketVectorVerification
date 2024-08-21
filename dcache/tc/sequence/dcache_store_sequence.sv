@@ -33,6 +33,7 @@ class dcache_store_sequence extends dcache_base_sequence;
 		bit [1:0]	bank_idx_t;
 		bit [2:0]	row_offset_t;
 		bit is_mmio_range;
+		bit noAlloc;
 		bit [7:0] req_source;
 		string init_state;
 		
@@ -40,6 +41,7 @@ class dcache_store_sequence extends dcache_base_sequence;
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
+		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 		//TODO:
@@ -67,7 +69,7 @@ class dcache_store_sequence extends dcache_base_sequence;
 		end
 
 		for(int i=0;i<length;i++)begin
-			dcache_store(req_source,addr_t+'h40*i,{16{'h76543210}}+i);
+			dcache_store(req_source,addr_t+'h40*i,{16{'h76543210}}+i,,noAlloc);
 		end
 		
   endtask

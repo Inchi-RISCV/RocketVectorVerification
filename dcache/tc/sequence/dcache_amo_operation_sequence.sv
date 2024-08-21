@@ -34,6 +34,7 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		bit [2:0]	row_offset_t;
 		bit [2:0]	size_t;
 		bit is_mmio_range;
+		bit noAlloc;
 		bit [7:0] req_source;
 		bit [4:0] req_cmd;
 		
@@ -42,7 +43,8 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
 		req_cmd = vmm_opts::get_int("req_cmd", 0, "req_cmd");
-		
+		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
+
 		//TODO:
 		length 			= 20;
 		size_t 			= $urandom_range(2,3);
@@ -58,9 +60,9 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 
 		for(int i=0;i<length;i++)begin
 			backdoor_put_data(addr_t+(2**size_t)*i,size_t,{16{'hffff_1111}}+i);
-			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_2222}}+i,size_t); 	//init state: N
+			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_2222}}+i,size_t,noAlloc); 	//init state: N
 			
-			if(!is_mmio_range) begin
+			if((!is_mmio_range)&&(!noAlloc)) begin
 				dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
 				dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_3333}}+i,size_t); 	//init state: B
 
