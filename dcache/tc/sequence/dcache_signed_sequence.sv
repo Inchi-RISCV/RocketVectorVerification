@@ -59,10 +59,10 @@ class dcache_signed_sequence extends dcache_base_sequence;
 			req_source 	= $urandom_range(3);
 
 			if(store_en) begin
-				dcache_store(req_source,addr_t+'h40*i,'hffff_ff00+i,,noAlloc); 	//extend bits
+				dcache_store(req_source,addr_t+'h40*i,'h7fff_ff00+i,,noAlloc); 	//not extend bits
 			end
 			else begin
-				backdoor_put_data(addr_t+'h40*i,6,'h7fff_ff00+i);		//not extend bits
+				backdoor_put_data(addr_t+'h40*i,6,'hffff_ff00+i);		//extend bits
 			end
 			
 			dcache_load(req_source,addr_t+'h40*i,2,1,noAlloc);

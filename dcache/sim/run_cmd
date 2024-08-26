@@ -1,13 +1,13 @@
 make run tc=dcache_load_test											
 make run tc=dcache_load_test cfg=init_state_B 															//load+load
-make run tc=dcache_load_test cfg=init_state_Trunk 													
+make run tc=dcache_load_test cfg=init_state_Trunk 													//lr+load
 make run tc=dcache_load_test cfg=init_state_Dirty 													//store+load
 make run tc=dcache_load_test cfg=mmio_range  					
 make run tc=dcache_load_test cfg=noAlloc  							
 make run tc=dcache_load_hazard_test  							
 make run tc=dcache_store_test											
 make run tc=dcache_store_test cfg=init_state_B 															//load+store
-make run tc=dcache_store_test cfg=init_state_Trunk 													//load+store
+make run tc=dcache_store_test cfg=init_state_Trunk 													//lr+store
 make run tc=dcache_store_test cfg=init_state_Dirty 													//store+store
 make run tc=dcache_store_test cfg=mmio_range
 make run tc=dcache_store_test cfg=noAlloc
