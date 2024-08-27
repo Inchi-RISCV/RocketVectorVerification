@@ -58,31 +58,35 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 
 		//backdoor_put_data(addr_t,6,{16{'hffff_ffff}});
 		//dcache_store(req_source,addr_t,'h1234,1);
-		//dcache_store(req_source,addr_t+2,'h5678_0000,1);
+		//dcache_store(req_source,addr_t+2,'h5678,1);
 		//dcache_load(req_source,addr_t);
 
 		if(store_en) begin
 			for(int j=0;j<6;j++) begin
 				for(int i=0;i<(64/2**j);i++)begin
 					wdata = $urandom_range(255);
-					wdata_t = wdata << (8*(2**j*i));
-					dcache_store(req_source,addr_t+2**j*i,wdata_t,j,noAlloc);
+					//wdata_t = wdata << (8*(2**j*i));
+					dcache_store(req_source,addr_t+2**j*i,wdata,j,noAlloc);
 					`uvm_info("yrhu debug",$sformatf("current addr = %0h", addr_t+2**j*i),UVM_LOW);
 					`uvm_info("yrhu debug",$sformatf("wdata = %0h", wdata),UVM_LOW);
-					`uvm_info("yrhu debug",$sformatf("wdata_t = %0h", wdata_t),UVM_LOW);
+					//`uvm_info("yrhu debug",$sformatf("wdata_t = %0h", wdata_t),UVM_LOW);
+				end
+
+				for(int i=0;i<(64/2**j);i++)begin
+					dcache_load(req_source,addr_t+2**j*i,j,,noAlloc);
 				end
 			end
 		end
 		else begin
 			backdoor_put_data(addr_t,6,{16{'h76543210}});
-		end
-
-		for(int j=0;j<6;j++) begin
-			for(int i=0;i<(64/2**j);i++)begin
-				dcache_load(req_source,addr_t+2**j*i,j,,noAlloc);
+			
+			for(int j=0;j<6;j++) begin
+				for(int i=0;i<(64/2**j);i++)begin
+					dcache_load(req_source,addr_t+2**j*i,j,,noAlloc);
+				end
 			end
 		end
-	
+
 	endtask
 
 endclass : dcache_small_size_sequence

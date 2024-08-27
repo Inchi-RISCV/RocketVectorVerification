@@ -76,6 +76,10 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'hffff_3333}}+i,size_t);	//sc hit fail
 		end
   
+		for(int i=0;i<length;i++)begin
+			dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
+		end
+
 	endtask
 
 endclass : dcache_lr_sc_sequence

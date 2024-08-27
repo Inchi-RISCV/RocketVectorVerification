@@ -71,6 +71,10 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 			end
 		end
 
+		for(int i=0;i<length;i++)begin
+			dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
+		end
+
   endtask
 
 endclass : dcache_amo_operation_sequence
