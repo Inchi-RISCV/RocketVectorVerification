@@ -56,12 +56,10 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
-
 		//backdoor_put_data(addr_t,6,{16{'hffff_ffff}});
 		//dcache_store(req_source,addr_t,'h1234,1);
-		//dcache_store(req_source,addr_t+2,'h5678,1);
+		//dcache_store(req_source,addr_t+2,'h5678_0000,1);
 		//dcache_load(req_source,addr_t);
-
 
 		if(store_en) begin
 			for(int j=0;j<6;j++) begin
@@ -84,7 +82,7 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 				dcache_load(req_source,addr_t+2**j*i,j,,noAlloc);
 			end
 		end
-  
+	
 	endtask
 
 endclass : dcache_small_size_sequence
