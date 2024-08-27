@@ -92,7 +92,7 @@ task lsu_monitor::do_mon_req();
       tr_req.io_s0_kill            = vif.io_s0_kill;
       tr_req.io_s1_kill            = vif.io_s1_kill;
 			//tr_req.replay_req            = vif.replay_req;
-			`uvm_info(get_type_name(),$sformatf("monitor req ,addr=%0h,dest=%0h",tr_req.io_req_bits_paddr,tr_req.io_req_bits_dest),UVM_NONE)
+			`uvm_info(get_type_name(),$sformatf("monitor req ,addr=%0h,dest=%0h,cmd=%0h",tr_req.io_req_bits_paddr,tr_req.io_req_bits_dest,tr_req.io_req_bits_cmd),UVM_NONE)
 			req_mon_q.push_back(tr_req);
 		end			
 	end

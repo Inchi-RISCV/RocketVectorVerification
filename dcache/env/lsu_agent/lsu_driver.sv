@@ -32,7 +32,7 @@ class lsu_driver extends uvm_driver #(lsu_trans);
   extern task main_phase(uvm_phase phase);
   extern task do_drive();
   extern task get_trans();
-	extern task do_resp();
+	extern task release_destid();
 
 
 endclass : lsu_driver
@@ -81,7 +81,7 @@ task lsu_driver::main_phase(uvm_phase phase);
   fork
     get_trans();
     do_drive();
-		do_resp();
+		release_destid();
   join
 
 endtask : main_phase
@@ -175,7 +175,7 @@ task lsu_driver::do_drive();
 				req_last = req;
 
 			  //when load ,set destid_reuse 1
-		    if(req.io_req_bits_cmd == 0)begin
+		    if(req.io_req_bits_cmd == lsu_trans::M_XRD)begin
 				  destid_reuse[destid] = 1;
 				  `uvm_info(get_type_name(),$sformatf("set destid_reuse , destid = %0h",destid),UVM_HIGH);	
 			  end
@@ -192,7 +192,7 @@ task lsu_driver::do_drive();
 endtask : do_drive
 
 
-task lsu_driver::do_resp();
+task lsu_driver::release_destid();
 	forever begin
 		@(posedge vif.clk);
 		if(vif.io_resp_valid) begin
@@ -206,7 +206,7 @@ task lsu_driver::do_resp();
 		end
 	end
 
-endtask : do_resp
+endtask : release_destid
 
 
 `endif // LSU_DRIVER_SV
