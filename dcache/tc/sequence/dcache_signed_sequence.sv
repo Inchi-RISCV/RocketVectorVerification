@@ -34,15 +34,24 @@ class dcache_signed_sequence extends dcache_base_sequence;
 		bit [2:0]	row_offset_t;
 		bit store_en;
 		bit [7:0] req_source;
-		
+		bit is_mmio_range;
+		bit noAlloc;
+
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
 		store_en = vmm_opts::get_int("store_en", 0, "store_en");
+		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
+		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 
 		//TODO:
 		length 			= 20;
-		tag_idx_t 	= 'h4_0000;
+		if(is_mmio_range) begin
+			tag_idx_t 	= 'h3_0000;
+		end
+		else begin
+			tag_idx_t 	= 'h4_0000;
+		end
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
@@ -50,13 +59,13 @@ class dcache_signed_sequence extends dcache_base_sequence;
 			req_source 	= $urandom_range(3);
 
 			if(store_en) begin
-				dcache_store(req_source,addr_t+'h40*i,'hffff_ff00+i); 	//extend bits
+				dcache_store(req_source,addr_t+'h40*i,'h7fff_ff00+i,,noAlloc); 	//not extend bits
 			end
 			else begin
-				backdoor_put_data(addr_t+'h40*i,6,'h7fff_ff00+i);		//not extend bits
+				backdoor_put_data(addr_t+'h40*i,6,'hffff_ff00+i);		//extend bits
 			end
 			
-			dcache_load(req_source,addr_t+'h40*i,2,1);
+			dcache_load(req_source,addr_t+'h40*i,2,1,noAlloc);
 		end
 
   endtask

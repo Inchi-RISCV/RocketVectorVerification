@@ -36,11 +36,13 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 		bit [63:0] 	req_wmask;
 		bit [511:0]	wdata, exp_data;
 		bit success;
+		bit noAlloc;
 		string init_state;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
+		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 		//TODO:
@@ -72,12 +74,12 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 				end
 			end
 
-			dcache_partial_mask_store(req_source,addr_t+'h40*i,wdata,req_wmask);
+			dcache_partial_mask_store(req_source,addr_t+'h40*i,wdata,req_wmask,noAlloc);
 		end
 
-		for(int i=0;i<length;i++)begin
-			dcache_load(req_source,addr_t+'h40*i);
-		end
+		//for(int i=0;i<length;i++)begin
+		//	dcache_load(req_source,addr_t+'h40*i);
+		//end
 
   endtask
 

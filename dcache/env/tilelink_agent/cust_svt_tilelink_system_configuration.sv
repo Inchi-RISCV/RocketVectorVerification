@@ -54,12 +54,13 @@ function void cust_svt_tilelink_system_configuration::set_tilelink_cfg();
 			this.slave_cfg[i].is_active = 1;
 			this.slave_cfg[i].slv_delay_en = 1;
 			this.slave_cfg[i].slv_vld_rdy_delay_en = 0;
+			//this.slave_cfg[i].slv_vld_rdy_delay_en = 1;
 			this.slave_cfg[i].slv_cross_chnl_delay_en = 1;
       this.slave_cfg[i].addr_width = 32;
       this.slave_cfg[i].data_width = 512;   
 
-      this.slave_cfg[i].min_a_vld_a_rdy_assert_delay = 0;
-      this.slave_cfg[i].max_a_vld_a_rdy_assert_delay = 0;
+      this.slave_cfg[i].min_a_vld_a_rdy_assert_delay = 60;
+      this.slave_cfg[i].max_a_vld_a_rdy_assert_delay = 200;
 			this.slave_cfg[i].min_a_rdy_a_rdy_assert_delay = 0;
       this.slave_cfg[i].max_a_rdy_a_rdy_assert_delay = 0;
 			this.slave_cfg[i].min_a_rdy_deassert_delay = 0;

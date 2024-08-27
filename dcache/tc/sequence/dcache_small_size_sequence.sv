@@ -35,48 +35,57 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 		bit [2:0]	row_offset_t;
 		bit store_en;
 		bit [7:0] req_source;
-		
-	 	super.body(); 
+		bit is_mmio_range;
+		bit noAlloc;
+	 	
+		super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
 		store_en = vmm_opts::get_int("store_en", 0, "store_en");
+		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
+		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 
 		//TODO:
 		req_source 	= $urandom_range(3);
-		tag_idx_t 	= 'h4_0000;
+		if(is_mmio_range) begin
+			tag_idx_t 	= 'h3_0000;
+		end
+		else begin
+			tag_idx_t 	= 'h4_0000;
+		end
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
 
+
+		//backdoor_put_data(addr_t,6,{16{'hffff_ffff}});
+		//dcache_store(req_source,addr_t,'h1234,1);
+		//dcache_store(req_source,addr_t+2,'h5678,1);
+		//dcache_load(req_source,addr_t);
+
+
 		if(store_en) begin
 			for(int j=0;j<6;j++) begin
-				//store miss: NtoT
 				for(int i=0;i<(64/2**j);i++)begin
 					wdata = $urandom_range(255);
 					wdata_t = wdata << (8*(2**j*i));
-					dcache_store(req_source,addr_t+2**j*i,wdata_t,j);
+					dcache_store(req_source,addr_t+2**j*i,wdata_t,j,noAlloc);
 					`uvm_info("yrhu debug",$sformatf("current addr = %0h", addr_t+2**j*i),UVM_LOW);
 					`uvm_info("yrhu debug",$sformatf("wdata = %0h", wdata),UVM_LOW);
 					`uvm_info("yrhu debug",$sformatf("wdata_t = %0h", wdata_t),UVM_LOW);
-				end
-
-				//load hit: TtoT
-				for(int i=0;i<(64/2**j);i++)begin
-					dcache_load(req_source,addr_t+2**j*i,j);
 				end
 			end
 		end
 		else begin
 			backdoor_put_data(addr_t,6,{16{'h76543210}});
+		end
 
-			for(int j=0;j<6;j++) begin
-				//load miss -> hit: NtoB
-				for(int i=0;i<(64/2**j);i++)begin
-					dcache_load(req_source,addr_t+2**j*i,j);
-				end
+		for(int j=0;j<6;j++) begin
+			for(int i=0;i<(64/2**j);i++)begin
+				dcache_load(req_source,addr_t+2**j*i,j,,noAlloc);
 			end
 		end
-		
-  endtask
+  
+	endtask
 
 endclass : dcache_small_size_sequence
 
