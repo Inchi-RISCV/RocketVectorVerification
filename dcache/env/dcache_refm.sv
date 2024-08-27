@@ -501,7 +501,7 @@ task dcache_refm::do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,i
   end
 
 	rm2sb_tlc_port.write(tr_c);
-	`uvm_info(get_type_name(),$sformatf("rm send release to sb,c_addr=%0h,c_opcode=%0h,c_source=%0h,c_param=%0h",tr_c.status.c_address,tr_c.status.ch_c_msg_type,tr_c.status.c_source,tr_c.status.c_param),UVM_NONE);
+	`uvm_info(get_type_name(),$sformatf("rm send release to sb,c_addr=%0h,c_opcode=%0h,c_source=%0h,c_param=%0h,data=%0h",tr_c.status.c_address,tr_c.status.ch_c_msg_type,tr_c.status.c_source,tr_c.status.c_param,c_data),UVM_NONE);
 
 
 
