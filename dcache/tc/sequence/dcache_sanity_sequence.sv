@@ -68,7 +68,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 	  end
     #400ns;
 
-		/*
+		
 
 		//same addr load
 		tag = 'h4_0000;
@@ -145,7 +145,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 	 	 dcache_load(lsu_trans::SCALAR_INT,addr);
 	 end
 	 #400ns;
-    */
+    
 	 
 
 
@@ -282,8 +282,45 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 			addr = {tag,set_idx,addr_align}; 
 			dcache_load(lsu_trans::SCALAR_INT,addr,size,1);
 	  end
+		#400ns;
+
+		//same index store
+    tag = 'h4_0000;
+		set_idx = 90;
+
+		for(int i=0;i<20;i++)begin
+			tag = 'h4_0000+i; 		
+			addr = {tag,set_idx,6'h0};
+	    backdoor_put_data(addr,6,{16{'ha5a54321}});
+	  end
+			
+	  for(int i=0;i<20;i++)begin
+	  	tag = 'h4_0000+i; 		
+			size=6;
+			addr_align = $urandom_range(64);
+
+      case (size)
+        3'h1 : addr_align[0:0] = 0;
+        3'h2 : addr_align[1:0] = 0;
+        3'h3 : addr_align[2:0] = 0;
+        3'h4 : addr_align[3:0] = 0;
+        3'h5 : addr_align[4:0] = 0;
+        3'h6 : addr_align[5:0] = 0;
+      endcase	
+			addr = {tag,set_idx,addr_align}; 
+      for(int i=0;i<256;i++)begin
+			  data_byte = $urandom_range(0,8'hff);
+        data[i*8+:8] = data_byte;
+		  end
+			dcache_store(lsu_trans::SCALAR_INT,addr,data,size);
+	  end
+   #400ns;
+
+
 
 	endtask
+
+
 
 		
 endclass : dcache_sanity_sequence

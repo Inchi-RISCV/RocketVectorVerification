@@ -63,7 +63,7 @@ class dcache_refm extends uvm_component;
 	extern task query_block(input bit [6:0] set_index, input bit [18:0] tag, output bit[1:0] coh, output bit [1:0] way, output bit [511:0] data );
   extern task send_rsp(input bit [7:0] source ,input bit [4:0] dest , input bit [2:0] status, input bit hasdata,input bit [511:0] data);
   extern task do_acquire(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
-	extern task do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data);
+	extern task do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data,input bit [1:0] coh);
 	extern task do_refill();
 	extern task replace_plru(input bit [6:0] set_index,input bit[1:0] coh, input bit [1:0] exist_way ,output bit [1:0] victim_way,output bit victim_way_valid);
 	extern task update_cache(input bit [6:0] set_index,input bit [18:0] tag,input bit[1:0] coh, input bit [1:0] way ,input bit [511:0] data,output bit[1:0] victim_coh,output bit[511:0] victim_data,output bit[31:0] victim_addr);
@@ -250,7 +250,7 @@ task dcache_refm::do_refill();
 				  req_mask       = req_mask_arry[d_source];
           req_data       = req_data_arry[d_source];
 				  data_mask_merge(req_size_store, a_addr,req_mask, d_data,req_data,update_data);													
-					replace_plru(nset,coh,exist_way,victim_way,victim_way_valid);
+					//replace_plru(nset,coh,exist_way,victim_way,victim_way_valid);
 					//update_cache(nset,tag,lsu_trans::DIRTY,exist_way ,update_data,coh_vic,data_vic,addr_vic);
 					`uvm_info(get_type_name(),$sformatf("store miss merge data,a_addr=%0h,req_cmd=%0h,req_size=%0h,way=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",a_addr,req_cmd_arry[d_source],req_size_store,exist_way,req_mask,d_data,req_data,update_data),UVM_NONE);
 
@@ -268,10 +268,10 @@ task dcache_refm::do_refill();
 
       if(victim_way_valid)begin
         if(coh_vic == lsu_trans::DIRTY)begin  //release_data  TtoN
-          do_release(addr_vic,7,8,1,data_vic);       
+          do_release(addr_vic,7,8,1,data_vic,coh_vic);       
 		    end
 		    else begin//release BtoN
-		  	  do_release(addr_vic,6,8,2,data_vic);       
+		  	  do_release(addr_vic,6,8,2,0,coh_vic);       
 		    end
 		  end
       //clear info for source index
@@ -483,12 +483,16 @@ task dcache_refm::do_acquire(input bit [31:0] a_addr ,input bit [15:0] a_source,
 endtask
 
 
-task dcache_refm::do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data);
+task dcache_refm::do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data,input bit [1:0] coh);
    
 	svt_tilelink_slave_transaction   tr_c;
 
   tr_c = new();
 	tr_c.status = new();
+
+	if(coh == lsu_trans::DIRTY)begin
+    tr_c.status.c_data = new[64];
+  end
 
   tr_c.status.c_size         = 'h6;
   tr_c.status.c_source       = c_source;
@@ -496,12 +500,14 @@ task dcache_refm::do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,i
   tr_c.status.ch_c_msg_type  = c_opcode;
   tr_c.status.c_param        = c_param;
 
-	for(int i=0;i<256;i++)begin
+	for(int i=0;i<64;i++)begin
 		tr_c.status.c_data[i] = c_data[i*8+:8];
   end
 
 	rm2sb_tlc_port.write(tr_c);
 	`uvm_info(get_type_name(),$sformatf("rm send release to sb,c_addr=%0h,c_opcode=%0h,c_source=%0h,c_param=%0h,data=%0h",tr_c.status.c_address,tr_c.status.ch_c_msg_type,tr_c.status.c_source,tr_c.status.c_param,c_data),UVM_NONE);
+
+	`uvm_info(get_type_name(),$sformatf("release_data=%p",tr_c.status.c_data),UVM_NONE);
 
 
 
