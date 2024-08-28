@@ -172,7 +172,7 @@ task dcache_refm::do_refill();
 			join_none
 			
 
-
+      fork
 			wait(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[31:6] == a_addr[31:6]));
 			
 			query_block(nset,ntag, coh ,exist_way,data);
@@ -277,8 +277,13 @@ task dcache_refm::do_refill();
       //clear info for source index
 		  req_addr_arry[d_source]  = 0;
 		  req_source_arry[d_source]= 0;
-		  req_dest_arry[d_source]  = 0;			
+		  req_dest_arry[d_source]  = 0;	
+
+			join_none
+
 		end//end tl_chd_q
+
+
 
 	end//end forever
 
