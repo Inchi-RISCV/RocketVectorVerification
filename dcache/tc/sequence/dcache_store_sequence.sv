@@ -73,7 +73,7 @@ class dcache_store_sequence extends dcache_base_sequence;
 		end
 		
 		for(int i=0;i<length;i++)begin
-			dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
+			dcache_load(req_source,addr_t+'h40*i);
 		end
 
   endtask
