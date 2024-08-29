@@ -598,7 +598,7 @@ task dcache_refm::assemble_cmd();
 			req_signed_arry[req_dest] = req_signed;
 
 			query_block(nset,tag,coh,way,data);
-
+      `uvm_info(get_type_name(),$sformatf("query cache,addr=%0h,req_dest=%0h,set=%0h,way=%0h,tag=%0h,coh=%0h,data=%0h",req_addr,req_dest,nset,way,tag,coh,data),UVM_NONE);
 			addr_data_align(req_size,req_addr,data,align_data);
 
 
@@ -699,7 +699,7 @@ task dcache_refm::assemble_cmd();
 						req_mask_arry[a_source]       = mask;
             req_data_arry[a_source]       = req_data;
 
-						`uvm_info(get_type_name(),$sformatf("rm store processing , req_addr=%0h,source=%0h,req_cmd=%0h,req_size=%0h,req_mask=%0h,req_data=%0h",req_addr_arry[a_source],a_source,req_cmd_arry[a_source],req_size_store_arry[a_source],req_mask_arry[a_source],req_data_arry[a_source]),UVM_NONE);		
+						`uvm_info(get_type_name(),$sformatf("rm store processing , req_addr=%0h,req_dest=%0h,source=%0h,req_cmd=%0h,req_size=%0h,req_mask=%0h,req_data=%0h",req_addr_arry[a_source],req_dest,a_source,req_cmd_arry[a_source],req_size_store_arry[a_source],req_mask_arry[a_source],req_data_arry[a_source]),UVM_NONE);		
 					end
 										
 				end
@@ -710,7 +710,7 @@ task dcache_refm::assemble_cmd();
 					update_cache(nset,tag,lsu_trans::DIRTY,way ,merge_data,coh_vic,data_vic,addr_vic);
 					send_rsp(req_source ,req_dest , lsu_trans::HIT,0,merge_data);
 
-					`uvm_info(get_type_name(),$sformatf("store hit merge data,req_addr=%0h,req_cmd=%0h,req_size=%0h,way=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_cmd,req_size,way,req_wmask,data,req_data,merge_data),UVM_NONE);
+					`uvm_info(get_type_name(),$sformatf("store hit merge data,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,way=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,way,req_wmask,data,req_data,merge_data),UVM_NONE);
 				end
 
 			end
