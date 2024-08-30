@@ -669,6 +669,20 @@ task dcache_refm::assemble_cmd();
 
 					send_rsp(req_source ,req_dest ,lsu_trans::MISS,0,0);
 
+					//B write miss need release cache
+          if(coh == lsu_trans::BRANCH)begin
+		         update_cache(nset,0,lsu_trans::NOTHING,way ,0,coh_vic,data_vic,addr_vic);
+				     foreach (replace_q[nset][i])
+			         if(replace_q[nset][i] == way)begin
+				         replace_q[nset].delete(i);
+                  `uvm_info(get_type_name(),$sformatf("write miss release cache, set=%0h, q_size=%0h,way=%0h",nset,replace_q[nset].size(),way),UVM_NONE);	
+				          break;
+		           end
+
+					end
+
+
+
 	        //check if same addr req exist
 		      foreach (req_addr_arry[j])begin
 		      	if(req_addr_arry[j][31:6] == req_addr[31:6])begin
