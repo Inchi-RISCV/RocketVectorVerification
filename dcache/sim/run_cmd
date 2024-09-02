@@ -55,3 +55,4 @@ make run tc=dcache_hazard_test cfg=store_miss_load_hazard
 make run tc=dcache_hazard_test cfg=store_hit_store_hazard
 make run tc=dcache_hazard_test cfg=store_miss_store_hazard
 make run tc=dcache_hazard_test cfg=random_hazard
+make run tc=dcache_reset_load_test
