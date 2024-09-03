@@ -13,6 +13,7 @@
 ./sequence/dcache_lr_sc_sequence.sv
 ./sequence/dcache_amo_operation_sequence.sv
 ./sequence/dcache_reset_load_sequence.sv
+./sequence/dcache_s1_kill_sequence.sv
 
 
 
@@ -29,4 +30,5 @@
 ./dcache_lr_sc_test.sv
 ./dcache_amo_operation_test.sv
 ./dcache_reset_load_test.sv
+./dcache_s1_kill_test.sv
 

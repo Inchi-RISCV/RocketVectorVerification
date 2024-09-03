@@ -44,7 +44,8 @@ class dcache_base_sequence extends uvm_sequence;
 		input bit [38:0]  addr,
 		input bit [2:0]   req_size = 6,
   	input bit         req_signed = 0,
-  	input bit         req_noAlloc = 0
+  	input bit         req_noAlloc = 0,
+  	input bit         s1_kill = 0
 		);
 
 	extern task dcache_store(
@@ -144,7 +145,8 @@ task dcache_base_sequence::dcache_load(
 	input bit [38:0]  addr,
 	input bit [2:0]   req_size = 6,
   input bit         req_signed = 0,
-  input bit         req_noAlloc = 0
+  input bit         req_noAlloc = 0,
+	input bit         s1_kill = 0
 	);
  
 	lsu_seq   seq;
@@ -158,7 +160,7 @@ task dcache_base_sequence::dcache_load(
     seq.io_req_bits_signed   			== 	req_signed;
     seq.io_req_bits_noAlloc  			==	req_noAlloc;
   	seq.io_s0_kill								== 	'h0;
-  	seq.io_s1_kill								== 	'h0;
+  	seq.io_s1_kill								== 	s1_kill;
 		})
 
 endtask

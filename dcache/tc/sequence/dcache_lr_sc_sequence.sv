@@ -34,6 +34,7 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		bit [2:0]	row_offset_t;
 		bit [2:0]	size_t;
 		bit is_mmio_range;
+		bit lr_timeout;
 		bit [7:0] req_source;
 		string init_state;
 		
@@ -69,9 +70,16 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		end
 	
 		for(int i=0;i<length;i++)begin
+			lr_timeout 	= $urandom_range(1);
+			
 			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'hffff_1111}}+i,size_t); 	//sc miss fail
 			dcache_lr(req_source,addr_t+(2**size_t)*i+'h2000,size_t);
 			dcache_lr(req_source,addr_t+(2**size_t)*i,size_t);
+			
+			if(lr_timeout) begin
+				#200ns;
+			end
+			
 			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'hffff_2222}}+i,size_t);	//sc hit success
 			dcache_sc(req_source,addr_t+(2**size_t)*i,{16{'hffff_3333}}+i,size_t);	//sc hit fail
 		end
