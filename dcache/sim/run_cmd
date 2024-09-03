@@ -57,3 +57,11 @@ make run tc=dcache_hazard_test cfg=store_miss_store_hazard
 make run tc=dcache_hazard_test cfg=random_hazard
 make run tc=dcache_reset_load_test
 make run tc=dcache_s1_kill_test
+make run tc=dcache_prefetch_read_test											
+make run tc=dcache_prefetch_read_test cfg=init_state_B 															
+make run tc=dcache_prefetch_read_test cfg=init_state_Trunk 													
+make run tc=dcache_prefetch_read_test cfg=init_state_Dirty 	
+make run tc=dcache_prefetch_write_test											
+make run tc=dcache_prefetch_write_test cfg=init_state_B
+make run tc=dcache_prefetch_write_test cfg=init_state_Trunk
+make run tc=dcache_prefetch_write_test cfg=init_state_Dirty

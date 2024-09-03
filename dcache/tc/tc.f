@@ -14,6 +14,8 @@
 ./sequence/dcache_amo_operation_sequence.sv
 ./sequence/dcache_reset_load_sequence.sv
 ./sequence/dcache_s1_kill_sequence.sv
+./sequence/dcache_prefetch_read_sequence.sv
+./sequence/dcache_prefetch_write_sequence.sv
 
 
 
@@ -31,4 +33,6 @@
 ./dcache_amo_operation_test.sv
 ./dcache_reset_load_test.sv
 ./dcache_s1_kill_test.sv
+./dcache_prefetch_read_test.sv
+./dcache_prefetch_write_test.sv
 
