@@ -6,7 +6,7 @@
   wire  [1:0]   auto_out_b_bits_param;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire  [2:0]   auto_out_b_bits_size;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire  [1:0]   auto_out_b_bits_source;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
-  wire  [31:0]  auto_out_b_bits_address;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
+  wire  [38:0]  auto_out_b_bits_address;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire  [63:0]  auto_out_b_bits_mask;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire  [511:0] auto_out_b_bits_data;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire          auto_out_b_bits_corrupt;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
@@ -34,14 +34,14 @@
   wire          io_req_bits_isRefill;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
   wire  [1:0]   io_req_bits_refillWay;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
   wire          io_req_bits_refillCoh;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
-  wire          io_s0_kill;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
+//  wire          io_s0_kill;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
   wire          io_s1_kill;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
   wire         auto_out_a_valid;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire [2:0]   auto_out_a_bits_opcode;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire         auto_out_a_bits_param;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire         auto_out_a_bits_size;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire [1:0]   auto_out_a_bits_source;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
-  wire [31:0]  auto_out_a_bits_address;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
+  wire [38:0]  auto_out_a_bits_address;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire [63:0]  auto_out_a_bits_mask;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire [511:0] auto_out_a_bits_data;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire         auto_out_a_bits_corrupt;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
@@ -51,7 +51,7 @@
   wire         auto_out_c_bits_param;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire         auto_out_c_bits_size;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire [1:0]   auto_out_c_bits_source;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
-  wire [31:0]  auto_out_c_bits_address;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
+  wire [38:0]  auto_out_c_bits_address;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire [511:0] auto_out_c_bits_data;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire         auto_out_c_bits_corrupt;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
   wire         auto_out_d_ready;	// @[rocket-chip/src/main/scala/diplomacy/LazyModule.scala:366:18]
@@ -104,7 +104,7 @@ GPCDCache	U_GPCDCache(
 	.io_req_bits_isRefill   	(m_lsu_if.io_req_bits_isRefill),
 	.io_req_bits_refillWay  	(m_lsu_if.io_req_bits_refillWay),
 	.io_req_bits_refillCoh	  (m_lsu_if.io_req_bits_refillCoh),
-	.io_s0_kill	              (m_lsu_if.io_s0_kill),
+//	.io_s0_kill	              (m_lsu_if.io_s0_kill),
 	.io_s1_kill	              (m_lsu_if.io_s1_kill),
 	.auto_out_a_valid        	(tilelink_slave_if[0].a_valid),
 	.auto_out_a_bits_opcode  	(tilelink_slave_if[0].a_opcode),

@@ -40,7 +40,7 @@ function void cust_svt_tilelink_system_configuration::set_tilelink_cfg();
 		  this.master_cfg[i].is_active = 0;
 		  this.master_cfg[i].mst_delay_en = 0;
       this.master_cfg[i].num_outstanding_txn = $urandom_range(10,100);
-		  this.master_cfg[i].addr_width = 32;
+		  this.master_cfg[i].addr_width = 39;
       this.master_cfg[i].data_width = 512;			
       //this.master_cfg[i].min_d_rdy_d_rdy_assert_delay = $urandom_range(0,3);
       //this.master_cfg[i].max_d_rdy_d_rdy_assert_delay = $urandom_range(this.master_cfg[i].min_d_rdy_d_rdy_assert_delay,7);
@@ -56,7 +56,7 @@ function void cust_svt_tilelink_system_configuration::set_tilelink_cfg();
 			this.slave_cfg[i].slv_vld_rdy_delay_en = 0;
 			//this.slave_cfg[i].slv_vld_rdy_delay_en = 1;
 			this.slave_cfg[i].slv_cross_chnl_delay_en = 1;
-      this.slave_cfg[i].addr_width = 32;
+      this.slave_cfg[i].addr_width = 39;
       this.slave_cfg[i].data_width = 512;   
 
       this.slave_cfg[i].min_a_vld_a_rdy_assert_delay = 60;
