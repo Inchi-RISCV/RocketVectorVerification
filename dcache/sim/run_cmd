@@ -67,3 +67,4 @@ make run tc=dcache_prefetch_write_test cfg=init_state_Trunk
 make run tc=dcache_prefetch_write_test cfg=init_state_Dirty
 
 make run tc=tilelink_probeblock_test
+make run tc=tilelink_probeperm_test
