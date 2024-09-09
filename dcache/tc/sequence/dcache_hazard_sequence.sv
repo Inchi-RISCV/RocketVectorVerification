@@ -54,7 +54,7 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 		else if(resp_status == "miss") begin
 			length1 			= 1;
 		end
-		length2 			= 10000;
+		length2 			= 100;
 		req_source	= $urandom_range(3);
 		tag_idx_t 	= 'h4_0000;
 		cmd 	= $urandom_range(1);
@@ -79,26 +79,36 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 			end
 
 			for(int i=0;i<length1;i++)begin
-				if(cmd1 == 0) begin
+				if(cmd1 == 0) begin 	//LOAD
 					dcache_load(req_source,addr_t);
 				end
-				else if(cmd1 == 1) begin
+				else if(cmd1 == 1) begin	//STORE
 					dcache_store(req_source,addr_t,{16{'hababab00+i}});
+				end
+				else if(cmd1 == 2) begin	//PFR
+					dcache_prefetch_read(req_source,addr_t);
+				end
+				else if(cmd1 == 3) begin	//PFW
+					dcache_prefetch_write(req_source,addr_t);
 				end
 			end
 
 			for(int i=0;i<length2;i++)begin
-				if(cmd2 == 0) begin
+				if(cmd2 == 0) begin 	//LOAD
 					dcache_load(req_source,addr_t);
 				end
-				else if(cmd2 == 1) begin
+				else if(cmd2 == 1) begin	//STORE
 					dcache_store(req_source,addr_t,{16{'h76543210+i}});
+				end
+				else if(cmd2 == 2) begin	//PFR
+					dcache_prefetch_read(req_source,addr_t);
+				end
+				else if(cmd2 == 3) begin	//PFW
+					dcache_prefetch_write(req_source,addr_t);
 				end
 			end
 		end	
-
   endtask
-
 endclass : dcache_hazard_sequence
 
 `endif
