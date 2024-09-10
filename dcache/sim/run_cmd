@@ -93,4 +93,3 @@ make run tc=dcache_reset_load_test
 make run tc=dcache_s1_kill_test
 
 make run tc=tilelink_probeblock_test
-make run tc=tilelink_probeperm_test

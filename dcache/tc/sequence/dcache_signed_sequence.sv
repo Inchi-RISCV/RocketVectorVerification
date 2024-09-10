@@ -45,7 +45,7 @@ class dcache_signed_sequence extends dcache_base_sequence;
 		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 
 		//TODO:
-		length 			= 20;
+		length 			= 100;
 		if(is_mmio_range) begin
 			tag_idx_t 	= 'h3_0000;
 		end

@@ -45,7 +45,7 @@ class dcache_load_sequence extends dcache_base_sequence;
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 		//TODO:
-		length 			= 20;
+		length 			= 100;
 		req_source	= $urandom_range(3);
 		if(is_mmio_range) begin
 			tag_idx_t 	= 'h3_0000;
