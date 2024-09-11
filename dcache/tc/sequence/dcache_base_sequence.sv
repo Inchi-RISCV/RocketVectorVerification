@@ -34,13 +34,12 @@ class dcache_base_sequence extends uvm_sequence;
 		output bit [38:0] addr,
 		input bit [26:0] tag_idx,
 		input bit [6:0] set_idx,
-		input bit word_idx,
-		input bit [1:0]	bank_idx,
-		input bit [2:0]	row_offset
+		input bit word_idx = 0,
+		input bit [1:0]	bank_idx = 0,
+		input bit [2:0]	row_offset = 0
 		);
 
 	extern task dcache_load(
-		input bit [7:0]   req_source,
 		input bit [38:0]  addr,
 		input bit [2:0]   req_size = 6,
   	input bit         req_signed = 0,
@@ -49,7 +48,6 @@ class dcache_base_sequence extends uvm_sequence;
 		);
 
 	extern task dcache_store(
-		input bit [7:0]   req_source,
 		input bit [38:0]  addr,
 		input bit [511:0] req_wdata,
 		input bit [2:0]   req_size = 6,
@@ -57,7 +55,6 @@ class dcache_base_sequence extends uvm_sequence;
 		);
 
 	extern task dcache_partial_mask_store(
-		input bit [7:0]   req_source,
 		input bit [38:0]  addr,
 		input bit [511:0] req_wdata,
 		input bit [63:0] 	req_wmask,
@@ -65,20 +62,17 @@ class dcache_base_sequence extends uvm_sequence;
 		);
 
 	extern task dcache_lr(
-		input bit [7:0]   req_source,
 		input bit [38:0]  addr,
 		input bit [2:0]   req_size
 		);
 
 	extern task dcache_sc(
-		input bit [7:0]   req_source,
 		input bit [38:0]  addr,
 		input bit [511:0] req_wdata,
 		input bit [2:0]   req_size
 		);
 
 	extern task dcache_amo_operation(
-		input bit [7:0]   req_source,
 		input bit [4:0]  	req_cmd,
 		input bit [38:0]  addr,
 		input bit [511:0] req_wdata,
@@ -87,15 +81,12 @@ class dcache_base_sequence extends uvm_sequence;
 		);
 	
 	extern task dcache_prefetch_read(
-		input bit [7:0]   req_source,
 		input bit [38:0]  addr,
 		input bit [2:0]   req_size = 6
 		);
 
 	extern task dcache_prefetch_write(
-		input bit [7:0]   req_source,
 		input bit [38:0]  addr,
-		//input bit [511:0] req_wdata,
 		input bit [2:0]   req_size = 6
 		);
 
@@ -154,7 +145,6 @@ task dcache_base_sequence::dcache_random_cfg(
 endtask
 
 task dcache_base_sequence::dcache_load(
-	input bit [7:0]   req_source,
 	input bit [38:0]  addr,
 	input bit [2:0]   req_size = 6,
   input bit         req_signed = 0,
@@ -165,21 +155,18 @@ task dcache_base_sequence::dcache_load(
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   			== 	req_source;
-		//seq.io_req_bits_dest     		==	req_dest;
+		seq.io_req_bits_source   			<= 	3;
 		seq.io_req_bits_cmd      			==	lsu_trans::M_XRD;
     seq.io_req_bits_paddr				 	==	addr;
     seq.io_req_bits_size     			==	req_size;	
     seq.io_req_bits_signed   			== 	req_signed;
     seq.io_req_bits_noAlloc  			==	req_noAlloc;
-  	seq.io_s0_kill								== 	'h0;
   	seq.io_s1_kill								== 	s1_kill;
 		})
 
 endtask
 
 task dcache_base_sequence::dcache_store(
-	input bit [7:0]   req_source,
 	input bit [38:0]  addr,
 	input bit [511:0] req_wdata,
 	input bit [2:0]   req_size = 6,
@@ -189,23 +176,18 @@ task dcache_base_sequence::dcache_store(
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   		== 	req_source;
-		//seq.io_req_bits_dest     	==	req_dest;
+		seq.io_req_bits_source   		<= 	3;
 		seq.io_req_bits_cmd      		==	lsu_trans::M_XWR;
 		seq.io_req_bits_paddr			 	==	addr;
-    seq.io_req_bits_wdata    		==	req_wdata;
-    //seq.io_req_bits_wmask    	==	req_wmask;
+		seq.io_req_bits_wdata    		==	req_wdata;
     seq.io_req_bits_size     		==	req_size;	
-    //seq.io_req_bits_signed   	== 	req_signed;
     seq.io_req_bits_noAlloc  		==	req_noAlloc;
-  	seq.io_s0_kill							== 	'h0;
   	seq.io_s1_kill							== 	'h0;	
 		})
 		
 endtask
 
 task dcache_base_sequence::dcache_partial_mask_store(
-	input bit [7:0]   req_source,
 	input bit [38:0]  addr,
 	input bit [511:0] req_wdata,
 	input bit [63:0] 	req_wmask,
@@ -215,21 +197,19 @@ task dcache_base_sequence::dcache_partial_mask_store(
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   		== 	req_source;
+		seq.io_req_bits_source   		<= 	3;
 		seq.io_req_bits_cmd      		==	lsu_trans::M_PWR;
 		seq.io_req_bits_paddr			 	==	addr;
-    seq.io_req_bits_wdata    		==	req_wdata;
+		seq.io_req_bits_wdata    		==	req_wdata;
     seq.io_req_bits_wmask    		==	req_wmask;
     seq.io_req_bits_size     		==	6;	
     seq.io_req_bits_noAlloc  		==	req_noAlloc;
-  	seq.io_s0_kill							== 	'h0;
   	seq.io_s1_kill							== 	'h0;	
 		})
 
 endtask
 
 task dcache_base_sequence::dcache_lr(
-	input bit [7:0]   req_source,
 	input bit [38:0]  addr,
 	input bit [2:0]   req_size
 	);
@@ -237,20 +217,18 @@ task dcache_base_sequence::dcache_lr(
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   		== 	req_source;
+		seq.io_req_bits_source   		<= 	3;
 		seq.io_req_bits_cmd      		==	lsu_trans::M_XLR;
 		seq.io_req_bits_paddr			 	==	addr;
     seq.io_req_bits_size     		==	req_size;
 		seq.io_req_bits_signed   		== 	1;
     seq.io_req_bits_noAlloc  		==	0;
-  	seq.io_s0_kill							== 	'h0;
   	seq.io_s1_kill							== 	'h0;	
 		})
 
 endtask
 
 task dcache_base_sequence::dcache_sc(
-	input bit [7:0]   req_source,
 	input bit [38:0]  addr,
 	input bit [511:0] req_wdata,
 	input bit [2:0]   req_size
@@ -259,20 +237,18 @@ task dcache_base_sequence::dcache_sc(
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   		== 	req_source;
+		seq.io_req_bits_source   		<= 	3;
 		seq.io_req_bits_cmd      		==	lsu_trans::M_XSC;
 		seq.io_req_bits_paddr			 	==	addr;
-    seq.io_req_bits_wdata    		==	req_wdata;
+		seq.io_req_bits_wdata    		==	req_wdata;
     seq.io_req_bits_size     		==	req_size;
     seq.io_req_bits_noAlloc  		==	0;
-  	seq.io_s0_kill							== 	'h0;
   	seq.io_s1_kill							== 	'h0;	
 		})
 
 endtask
 
 task dcache_base_sequence::dcache_amo_operation(
-	input bit [7:0]   req_source,
 	input bit [4:0]  	req_cmd,
 	input bit [38:0]  addr,
 	input bit [511:0] req_wdata,
@@ -283,21 +259,19 @@ task dcache_base_sequence::dcache_amo_operation(
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   		== 	req_source;
+		seq.io_req_bits_source   		<= 	3;
 		seq.io_req_bits_cmd      		==	req_cmd;
 		seq.io_req_bits_paddr			 	==	addr;
-    seq.io_req_bits_wdata    		==	req_wdata;
+		seq.io_req_bits_wdata    		==	req_wdata;
     seq.io_req_bits_size     		==	req_size;
 		seq.io_req_bits_signed   		== 	1;
     seq.io_req_bits_noAlloc  		==	req_noAlloc;
-  	seq.io_s0_kill							== 	'h0;
   	seq.io_s1_kill							== 	'h0;	
 		})
 
 endtask
 
 task dcache_base_sequence::dcache_prefetch_read(
-	input bit [7:0]   req_source,
 	input bit [38:0]  addr,
 	input bit [2:0]   req_size = 6
 	);
@@ -305,37 +279,31 @@ task dcache_base_sequence::dcache_prefetch_read(
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   			== 	req_source;
+		seq.io_req_bits_source   			<= 	3;
 		seq.io_req_bits_cmd      			==	lsu_trans::M_PFR;
     seq.io_req_bits_paddr				 	==	addr;
     seq.io_req_bits_size     			==	req_size;	
     seq.io_req_bits_signed   			== 	'h0;
     seq.io_req_bits_noAlloc  			==	'h0;
-  	seq.io_s0_kill								== 	'h0;
   	seq.io_s1_kill								== 	'h0;
 		})
 
 endtask
 
 task dcache_base_sequence::dcache_prefetch_write(
-	input bit [7:0]   req_source,
 	input bit [38:0]  addr,
-	//input bit [511:0] req_wdata,
 	input bit [2:0]   req_size = 6
 	);
  
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   			== 	req_source;
+		seq.io_req_bits_source   			<= 	3;
 		seq.io_req_bits_cmd      			==	lsu_trans::M_PFW;
     seq.io_req_bits_paddr				 	==	addr;
-		//seq.io_req_bits_wdata    		==	req_wdata;
-		//seq.io_req_bits_wmask    		==	req_wmask;
     seq.io_req_bits_size     			==	req_size;	
     seq.io_req_bits_signed   			== 	'h0;
     seq.io_req_bits_noAlloc  			==	'h0;
-  	seq.io_s0_kill								== 	'h0;
   	seq.io_s1_kill								== 	'h0;
 		})
 

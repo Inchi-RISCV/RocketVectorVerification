@@ -1,17 +1,3 @@
-//============================================================================
-// Copyright(c) 2022 , Inchi Technology Inc, All right reserved
-// Company           : Inchi Technology .Inc
-//============================================================================
-// Project           :dcache
-// File Name         :dcache_hazard_sequence.sv
-// Author            :huangxiaogang
-// Email             :huangxiaogang@inchitech.com
-// Called by         :
-// Reversion History :2024-07-01 16:31:41
-// Reversion:        1.0
-//============================================================================
-// Description       :
-//============================================================================
 
 `ifndef _dcache_hazard_sequence_SV_
 `define _dcache_hazard_sequence_SV_
@@ -29,14 +15,12 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 		bit [38:0] addr_t;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
-		bit 			word_idx_t;
-		bit [1:0]	bank_idx_t;
-		bit [2:0]	row_offset_t;
-		bit [7:0] req_source;
+		bit [511:0] wdata;
 		bit [4:0] cmd, cmd1, cmd2;
 		string resp_status;
 		string init_state;
 		bit random_hazard;
+		bit success;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
@@ -47,64 +31,70 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 		resp_status = vmm_opts::get_string("resp_status", "hit", "resp_status");
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
-		//TODO:
 		if(resp_status == "hit") begin
 			length1 			= 50;
 		end
 		else if(resp_status == "miss") begin
 			length1 			= 1;
 		end
-		length2 			= 100;
-		req_source	= $urandom_range(3);
-		tag_idx_t 	= 'h4_0000;
-		cmd 	= $urandom_range(1);
-
-		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
+		length2 			= $urandom_range(50, 500);
 		
+		success 	= std::randomize(tag_idx_t,set_idx_t) with {
+			tag_idx_t inside {['h4_0000:'h7_ffff]};
+			set_idx_t inside {[0:127]};
+			((tag_idx_t<<13)+(set_idx_t<<6)+64*(length1+length2)) inside {['h8000_0000:'hffff_ffff]};
+		};
+
+		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);
+		
+
+		cmd 	= $urandom_range(1);
+		success	= std::randomize(wdata) with {wdata <= (2**512-1);};
 		backdoor_put_data(addr_t,6,{16{'haaaa_0000}});
+		
 		if(random_hazard) begin
 			for(int i=0;i<length2;i++)begin
 				cmd 	= $urandom_range(1);
 				if(cmd == 0) begin
-					dcache_load(req_source,addr_t);
+					dcache_load(addr_t);
 				end
 				else if(cmd == 1) begin
-					dcache_store(req_source,addr_t,{16{'h76543210+i}});
+					dcache_store(addr_t,wdata);
 				end
 			end
 		end 
 		else begin			
 			if(init_state == "T") begin
-				dcache_store(req_source,addr_t,{16{'hbbbb_0000}});
+				dcache_store(addr_t,wdata);
 			end
 
 			for(int i=0;i<length1;i++)begin
 				if(cmd1 == 0) begin 	//LOAD
-					dcache_load(req_source,addr_t);
+					dcache_load(addr_t);
 				end
 				else if(cmd1 == 1) begin	//STORE
-					dcache_store(req_source,addr_t,{16{'hababab00+i}});
+					dcache_store(addr_t,wdata);
 				end
 				else if(cmd1 == 2) begin	//PFR
-					dcache_prefetch_read(req_source,addr_t);
+					dcache_prefetch_read(addr_t);
 				end
 				else if(cmd1 == 3) begin	//PFW
-					dcache_prefetch_write(req_source,addr_t);
+					dcache_prefetch_write(addr_t);
 				end
 			end
 
 			for(int i=0;i<length2;i++)begin
 				if(cmd2 == 0) begin 	//LOAD
-					dcache_load(req_source,addr_t);
+					dcache_load(addr_t);
 				end
 				else if(cmd2 == 1) begin	//STORE
-					dcache_store(req_source,addr_t,{16{'h76543210+i}});
+					dcache_store(addr_t,wdata);
 				end
 				else if(cmd2 == 2) begin	//PFR
-					dcache_prefetch_read(req_source,addr_t);
+					dcache_prefetch_read(addr_t);
 				end
 				else if(cmd2 == 3) begin	//PFW
-					dcache_prefetch_write(req_source,addr_t);
+					dcache_prefetch_write(addr_t);
 				end
 			end
 		end	

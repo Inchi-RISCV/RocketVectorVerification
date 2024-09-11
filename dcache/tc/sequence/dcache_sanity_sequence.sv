@@ -64,7 +64,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
         3'h6 : addr_align[5:0] = 0;
       endcase	
 			addr = {tag,set_idx,addr_align}; 
-			dcache_load(lsu_trans::SCALAR_INT,addr,size,1);
+			dcache_load(addr,size,1);
 	  end
     #400ns;
 
@@ -79,7 +79,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 
    	for(int i=0;i<20;i++)begin
 		  addr = {tag,set_idx,6'h0}; 
-			dcache_load(lsu_trans::SCALAR_INT,addr);
+			dcache_load(addr);
 	  end
     #400ns;
 
@@ -98,7 +98,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 	  for(int i=0;i<20;i++)begin
 	  	tag = 'h4_0000+i; 		
 	  	addr = {tag,set_idx,6'h0};
-	  	dcache_load(lsu_trans::SCALAR_INT,addr);
+	  	dcache_load(addr);
 	  end
    #400ns;
 
@@ -119,7 +119,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 		 set_idx = 40;
 		 tag = 'h4_0000+i;		 
 	 	 addr = {tag,set_idx,6'h0};
-	 	 dcache_load(lsu_trans::SCALAR_INT,addr);
+	 	 dcache_load(addr);
 	 end
 
 	 #50ns;
@@ -128,21 +128,21 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 		 set_idx = 40;
 		 tag = 'h4_0000+i;			 
 	 	 addr = {tag,set_idx,6'h0};
-	 	 dcache_load(lsu_trans::SCALAR_INT,addr);
+	 	 dcache_load(addr);
 	 end
 
 	 for(int i=0;i<1;i++)begin
 		 set_idx = 40;
 		 tag = 'h4_0000+i;			 
 	 	 addr = {tag,set_idx,6'h0};
-	 	 dcache_load(lsu_trans::SCALAR_INT,addr);
+	 	 dcache_load(addr);
 	 end
 
 	 for(int i=0;i<4;i++)begin
 		 set_idx = 40;
 		 tag = 'h4_0010+i;	
 	 	 addr = {tag,set_idx,6'h0};
-	 	 dcache_load(lsu_trans::SCALAR_INT,addr);
+	 	 dcache_load(addr);
 	 end
 	 #400ns;
     
@@ -178,8 +178,8 @@ class dcache_sanity_sequence extends dcache_base_sequence;
         data[i*8+:8] = data_byte;
 		  end
 			//data = {16{'ha5a5a5a5}}+i;
-			dcache_store(lsu_trans::SCALAR_INT,addr,data,size);
-			dcache_load(lsu_trans::SCALAR_INT,addr,size,1);
+			dcache_store(addr,data,size);
+			dcache_load(addr,size,1);
 	  end
     #100ns;
 		// load hit
@@ -198,7 +198,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
         3'h6 : addr_align[5:0] = 0;
       endcase	
 			addr = {tag,set_idx,addr_align}; 
-			dcache_load(lsu_trans::SCALAR_INT,addr,size,1);
+			dcache_load(addr,size,1);
 	  end
     #100ns;
 
@@ -222,8 +222,8 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 			  data_byte = $urandom_range(0,8'hff);
         data[i*8+:8] = data_byte;
 		  end
-			dcache_store(lsu_trans::SCALAR_INT,addr,data,size);
-			dcache_load(lsu_trans::SCALAR_INT,addr,size,1);
+			dcache_store(addr,data,size);
+			dcache_load(addr,size,1);
 	  end
     #400ns;
 
@@ -260,8 +260,8 @@ class dcache_sanity_sequence extends dcache_base_sequence;
         mask[i*8+:8] = $urandom_range(0,8'hff);
 		  end
 			
-			dcache_partial_mask_store(lsu_trans::SCALAR_INT,addr,data,mask);
-			dcache_load(lsu_trans::SCALAR_INT,addr,size,1);
+			dcache_partial_mask_store(addr,data,mask);
+			dcache_load(addr,size,1);
 	  end
      #100ns;
 		// load hit
@@ -280,7 +280,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
         3'h6 : addr_align[5:0] = 0;
       endcase	
 			addr = {tag,set_idx,addr_align}; 
-			dcache_load(lsu_trans::SCALAR_INT,addr,size,1);
+			dcache_load(addr,size,1);
 	  end
 		#400ns;
 
@@ -312,7 +312,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 			  data_byte = $urandom_range(0,8'hff);
         data[i*8+:8] = data_byte;
 		  end
-			dcache_store(lsu_trans::SCALAR_INT,addr,data,size);
+			dcache_store(addr,data,size);
 	  end
    #400ns;
 

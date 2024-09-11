@@ -1,17 +1,3 @@
-//============================================================================
-// Copyright(c) 2022 , Inchi Technology Inc, All right reserved
-// Company           : Inchi Technology .Inc
-//============================================================================
-// Project           :dcache
-// File Name         :dcache_addr_random_sequence.sv
-// Author            :huangxiaogang
-// Email             :huangxiaogang@inchitech.com
-// Called by         :
-// Reversion History :2024-07-01 16:31:41
-// Reversion:        1.0
-//============================================================================
-// Description       :
-//============================================================================
 
 `ifndef _dcache_addr_random_sequence_SV_
 `define _dcache_addr_random_sequence_SV_
@@ -25,17 +11,14 @@ class dcache_addr_random_sequence extends dcache_base_sequence;
   endfunction
 
   virtual task body();
-		bit [31:0] length;
 		bit [38:0] addr_t;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
-		bit 			word_idx_t;
-		bit [1:0]	bank_idx_t;
-		bit [2:0]	row_offset_t;
-		bit [7:0] req_source;
+		bit [511:0] wdata;
 		bit store_en;
 		bit is_mmio_range;
 		bit noAlloc;
+		bit success;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
@@ -44,21 +27,29 @@ class dcache_addr_random_sequence extends dcache_base_sequence;
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
 		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 
-		//TODO:
-		req_source 	= $urandom_range(3);
 		if(is_mmio_range) begin
-			tag_idx_t 	= 'h3_0000;
+			success 	= std::randomize(tag_idx_t,set_idx_t) with {
+				tag_idx_t inside {['h3_0000:'h3_ffff]};
+				set_idx_t inside {[0:127]};
+				((tag_idx_t<<13)+(set_idx_t<<6)+32*1024) inside {['h6000_0000:'h7fff_ffff]};
+			};
 		end
 		else begin
-			tag_idx_t 	= 'h4_0000;
+			success 	= std::randomize(tag_idx_t,set_idx_t) with {
+				tag_idx_t inside {['h4_0000:'h7_ffff]};
+				set_idx_t inside {[0:127]};
+				((tag_idx_t<<13)+(set_idx_t<<6)+32*1024) inside {['h8000_0000:'hffff_ffff]};
+			};
 		end
 
-		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
+		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);
+
 
 		for(int j=0;j<4;j++)begin 	//4 way
 			for(int i=0;i<128;i++)begin	//128 set
 				if(store_en) begin
-					dcache_store(req_source,addr_t+'h40*i+'h2000*j,{16{'h76543210}},,noAlloc);
+					success	= std::randomize(wdata) with {wdata <= (2**512-1);};
+					dcache_store(addr_t+'h40*i+'h2000*j,wdata,,noAlloc);
 				end
 				else begin
 					backdoor_put_data(addr_t+'h40*i+'h2000*j,6,{16{'h76543210}}+i);
@@ -68,12 +59,10 @@ class dcache_addr_random_sequence extends dcache_base_sequence;
 
 		for(int j=0;j<4;j++)begin 	//4 way
 			for(int i=0;i<128;i++)begin	//128 set
-				dcache_load(req_source,addr_t+'h40*i+'h2000*j,,,noAlloc);
+				dcache_load(addr_t+'h40*i+'h2000*j,,,noAlloc);
 			end
 		end
-
   endtask
-
 endclass : dcache_addr_random_sequence
 
 `endif

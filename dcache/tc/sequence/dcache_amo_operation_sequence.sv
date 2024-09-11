@@ -1,17 +1,3 @@
-//============================================================================
-// Copyright(c) 2022 , Inchi Technology Inc, All right reserved
-// Company           : Inchi Technology .Inc
-//============================================================================
-// Project           :dcache
-// File Name         :dcache_amo_operation_sequence.sv
-// Author            :huangxiaogang
-// Email             :huangxiaogang@inchitech.com
-// Called by         :
-// Reversion History :2024-07-01 16:31:41
-// Reversion:        1.0
-//============================================================================
-// Description       :
-//============================================================================
 
 `ifndef _dcache_amo_operation_sequence_SV_
 `define _dcache_amo_operation_sequence_SV_
@@ -29,13 +15,11 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		bit [38:0] addr_t;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
-		bit 			word_idx_t;
-		bit [1:0]	bank_idx_t;
-		bit [2:0]	row_offset_t;
 		bit [2:0]	size_t;
+		bit [511:0] wdata;
 		bit is_mmio_range;
 		bit noAlloc;
-		bit [7:0] req_source;
+		bit success;
 		bit [4:0] req_cmd;
 		
 	 	super.body(); 
@@ -45,38 +29,47 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		req_cmd = vmm_opts::get_int("req_cmd", 0, "req_cmd");
 		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 
-		//TODO:
-		length 			= 20;
 		size_t 			= $urandom_range(2,3);
-		req_source 	= $urandom_range(3);
+		length 			= $urandom_range(1, 500);
+		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
+
 		if(is_mmio_range) begin
-			tag_idx_t 	= 'h3_0000;
+			success 	= std::randomize(tag_idx_t,set_idx_t) with {
+				tag_idx_t inside {['h3_0000:'h3_ffff]};
+				set_idx_t inside {[0:127]};
+				((tag_idx_t<<13)+(set_idx_t<<6)+64*length) inside {['h6000_0000:'h7fff_ffff]};
+			};
 		end
 		else begin
-			tag_idx_t 	= 'h4_0000;
+			success 	= std::randomize(tag_idx_t,set_idx_t) with {
+				tag_idx_t inside {['h4_0000:'h7_ffff]};
+				set_idx_t inside {[0:127]};
+				((tag_idx_t<<13)+(set_idx_t<<6)+64*length) inside {['h8000_0000:'hffff_ffff]};
+			};
 		end
 
-		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
+		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);
 
+		
 		for(int i=0;i<length;i++)begin
+			success	= std::randomize(wdata) with {wdata <= (2**512-1);};
+
 			backdoor_put_data(addr_t+(2**size_t)*i,size_t,{16{'hffff_1111}}+i);
-			dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_2222}}+i,size_t,noAlloc); 	//init state: N
+			dcache_amo_operation(req_cmd,addr_t+(2**size_t)*i,wdata,size_t,noAlloc); 	//init state: N
 			
 			if((!is_mmio_range)&&(!noAlloc)) begin
-				dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
-				dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_3333}}+i,size_t); 	//init state: B
+				dcache_load(addr_t+(2**size_t)*i,size_t);
+				dcache_amo_operation(req_cmd,addr_t+(2**size_t)*i,wdata,size_t); 	//init state: B
 
-				dcache_store(req_source,addr_t+(2**size_t)*i,{16{'hffff_4444}}+i,size_t);
-				dcache_amo_operation(req_source,req_cmd,addr_t+(2**size_t)*i,{16{'hffff_5555}}+i,size_t);		//init state: Dirty
+				dcache_store(addr_t+(2**size_t)*i,wdata,size_t);
+				dcache_amo_operation(req_cmd,addr_t+(2**size_t)*i,wdata,size_t);		//init state: Dirty
 			end
 		end
 
 		for(int i=0;i<length;i++)begin
-			dcache_load(req_source,addr_t+(2**size_t)*i,size_t);
+			dcache_load(addr_t+(2**size_t)*i,size_t);
 		end
-
   endtask
-
 endclass : dcache_amo_operation_sequence
 
 `endif

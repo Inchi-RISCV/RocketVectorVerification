@@ -1,17 +1,3 @@
-//============================================================================
-// Copyright(c) 2022 , Inchi Technology Inc, All right reserved
-// Company           : Inchi Technology .Inc
-//============================================================================
-// Project           :dcache
-// File Name         :dcache_partial_mask_store_sequence.sv
-// Author            :huangxiaogang
-// Email             :huangxiaogang@inchitech.com
-// Called by         :
-// Reversion History :2024-07-01 16:31:41
-// Reversion:        1.0
-//============================================================================
-// Description       :
-//============================================================================
 
 `ifndef _dcache_partial_mask_store_sequence_SV_
 `define _dcache_partial_mask_store_sequence_SV_
@@ -29,10 +15,6 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 		bit [38:0] 	addr_t;
 		bit [26:0] 	tag_idx_t;
 		bit [6:0] 	set_idx_t;
-		bit 				word_idx_t;
-		bit [1:0]		bank_idx_t;
-		bit [2:0]		row_offset_t;
-		bit [7:0] 	req_source;
 		bit [63:0] 	req_wmask;
 		bit [511:0]	wdata, exp_data;
 		bit success;
@@ -45,27 +27,34 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
-		//TODO:
-		length 			= 100;
-		tag_idx_t 	= 'h4_0000;
-		req_source 	= $urandom_range(3);
+		length 			= $urandom_range(1, 500);
+		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
+		
+		success 	= std::randomize(tag_idx_t,set_idx_t) with {
+			tag_idx_t inside {['h4_0000:'h7_ffff]};
+			set_idx_t inside {[0:127]};
+			((tag_idx_t<<13)+(set_idx_t<<6)+64*length) inside {['h8000_0000:'hffff_ffff]};
+		};
 
-		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t,word_idx_t,bank_idx_t,row_offset_t);
+		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);
+
 
 		for(int i=0;i<length;i++)begin
+			success = std::randomize(wdata) with { wdata <= (2**512-1);};
+
 			if(init_state == "B") begin
-				dcache_load(req_source,addr_t+'h40*i);
+				dcache_load(addr_t+'h40*i);
 			end
 			else if(init_state == "Trunk") begin
-				dcache_lr(req_source,addr_t+'h40*i,2);
+				dcache_lr(addr_t+'h40*i,2);
 			end
 			else if(init_state == "Dirty") begin
-				dcache_store(req_source,addr_t+'h40*i,{16{'habababa0}}+i);
+				dcache_store(addr_t+'h40*i,wdata);
 			end
 		end
 
 		for(int i=0;i<length;i++)begin
-			wdata = {16{'h76543210}}+i;
+			success = std::randomize(wdata) with { wdata <= (2**512-1);};
 			success = std::randomize (req_wmask) with {req_wmask <= (2**(2**6))-1;};
 			
 			foreach(req_wmask[k]) begin
@@ -74,15 +63,13 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 				end
 			end
 
-			dcache_partial_mask_store(req_source,addr_t+'h40*i,wdata,req_wmask,noAlloc);
+			dcache_partial_mask_store(addr_t+'h40*i,wdata,req_wmask,noAlloc);
 		end
 
 		for(int i=0;i<length;i++)begin
-			dcache_load(req_source,addr_t+'h40*i);
+			dcache_load(addr_t+'h40*i);
 		end
-
   endtask
-
 endclass : dcache_partial_mask_store_sequence
 
 `endif
