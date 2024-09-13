@@ -33,6 +33,15 @@ make run tc=dcache_amo_operation_test cfg=amo_maxu
 make run tc=dcache_release_test cfg=init_state_B 														//load release
 make run tc=dcache_release_test cfg=init_state_Trunk 												//lr release
 make run tc=dcache_release_test cfg=init_state_Dirty												//store release
+make run tc=dcache_release_test cfg=loadA_replace_hazard
+make run tc=dcache_release_test cfg=storeA_replace_hazard
+make run tc=dcache_release_test cfg=replace_loadA_hazard
+make run tc=dcache_release_test cfg=replace_storeA_hazard
+make run tc=dcache_release_test cfg=loadB_replace_hazard
+make run tc=dcache_release_test cfg=storeB_replace_hazard
+make run tc=dcache_release_test cfg=replace_loadB_hazard
+make run tc=dcache_release_test cfg=replace_storeB_hazard
+
 make run tc=dcache_addr_random_test																					//only load
 make run tc=dcache_addr_random_test cfg=store																//store+load
 make run tc=dcache_addr_random_test cfg=mmio_range													
@@ -92,4 +101,6 @@ make run tc=dcache_hazard_test cfg=random_hazard 														//random load or 
 make run tc=dcache_reset_load_test
 make run tc=dcache_s1_kill_test
 
-make run tc=tilelink_probeblock_test
+make run tc=tilelink_probeblock_test cfg=b_param_toN
+make run tc=tilelink_probeblock_test cfg=b_param_toB
+make run tc=tilelink_probeblock_test cfg=b_param_toT
