@@ -69,6 +69,9 @@ class dcache_refm extends uvm_component;
 	extern task update_cache(input bit [6:0] set_index,input bit [18:0] tag,input bit[1:0] coh, input bit [1:0] way ,input bit [511:0] data,output bit[1:0] victim_coh,output bit[511:0] victim_data,output bit[31:0] victim_addr);
  	extern task release_source_id(input bit [15:0] source_id);
   extern task sign_extension(input bit [2:0] size,input bit [511:0] data,output bit [511:0] sign_data);
+	extern task amoalu(input bit [4:0] cmd, input bit [2:0] size ,input bit [511:0] old_data, input bit [511:0] new_data,output bit [511:0] data_out);
+
+
 
   /**  write for tilelink monitor */
   virtual function void write_slave_trans_rx(svt_tilelink_slave_transaction slave_trans);
@@ -113,6 +116,69 @@ task dcache_refm::get_lsu_port();
     `uvm_info(get_type_name(), {"rm get lsu_port item\n",tr.sprint}, UVM_NONE)
 		lsu_tr_q.push_back(tr);
 	end
+
+endtask
+
+task dcache_refm::amoalu(input bit [4:0] cmd, input bit [2:0] size ,input bit [511:0] old_data, input bit [511:0] new_data,output bit [511:0] data_out);
+  bit         is_signed_old,is_signed_new;
+	bit [511:0] sign_data_old,sign_data_new;
+
+	if(size==2)begin
+		is_signed_old = old_data[31];
+		is_signed_new = new_data[31];
+		sign_data_old = old_data[31:31]   ? {{480{1'b1}},old_data[31:0]}  : old_data;
+		sign_data_new = new_data[31:31]   ? {{480{1'b1}},new_data[31:0]}  : new_data;
+	end
+	else if(size==3)begin
+		is_signed_old = old_data[63];
+		is_signed_new = new_data[63];
+		sign_data_old = old_data[63:63]   ? {{448{1'b1}},old_data[63:0]}  : old_data;
+		sign_data_new = new_data[63:63]   ? {{448{1'b1}},new_data[63:0]}  : new_data;
+	end
+
+	if(cmd == lsu_trans::M_XA_SWAP)begin
+     data_out = new_data;
+	end
+	else if(cmd == lsu_trans::M_XA_XOR)begin
+     data_out = old_data ^ new_data;
+	end
+	else if(cmd == lsu_trans::M_XA_OR)begin
+     data_out = old_data | new_data;
+	end
+	else if(cmd == lsu_trans::M_XA_AND)begin
+      data_out = old_data & new_data;
+	end
+	else if(cmd == lsu_trans::M_XA_MINU)begin
+      data_out = (new_data<old_data) ? new_data : old_data ;
+	end
+	else if(cmd == lsu_trans::M_XA_MAXU)begin
+      data_out = (new_data>old_data) ? new_data : old_data ;
+	end
+	else if(cmd == lsu_trans::M_XA_ADD)begin
+    data_out = sign_data_old + sign_data_new;
+ 	end
+	else if(cmd == lsu_trans::M_XA_MAX)begin
+		if(is_signed_old == is_signed_new)begin
+      data_out  = (new_data>old_data) ? new_data : old_data ;
+	  end
+		else begin
+      data_out = is_signed_new ? old_data : new_data;
+		end
+
+	end
+	else if(cmd == lsu_trans::M_XA_MIN)begin
+		if(is_signed_old == is_signed_new)begin
+      data_out  = (new_data<old_data) ? new_data : old_data ;
+	  end
+		else begin
+      data_out = is_signed_new ? new_data : old_data;
+		end
+			
+	end
+
+
+	`uvm_info(get_type_name(),$sformatf("amo alu ,cmd=%0h,size=%0h,old_data=%0h,new_data=%0h,data_out=%0h",cmd,size,old_data,new_data,data_out),UVM_NONE);	
+
 
 endtask
 
@@ -172,9 +238,10 @@ task dcache_refm::do_refill();
 			join_none
 			
 
-      fork
+
 			wait(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[31:6] == a_addr[31:6]));
 			
+      `uvm_info(get_type_name(),$sformatf("rm wait dut refill done,a_addr=%0h,valid=%0h,isrefill=%0h",a_addr,tb_top.U_GPCDCache.mainReqArb.io_out_valid,tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill),UVM_NONE);
 			query_block(nset,ntag, coh ,exist_way,data);
 			replace_plru(nset,coh,exist_way ,victim_way,victim_way_valid);
 
@@ -279,11 +346,9 @@ task dcache_refm::do_refill();
 		  req_source_arry[d_source]= 0;
 		  req_dest_arry[d_source]  = 0;	
 
-			join_none
-
 		end//end tl_chd_q
 
-
+    
 
 	end//end forever
 
@@ -611,7 +676,7 @@ task dcache_refm::assemble_cmd();
 				if(coh == lsu_trans::NOTHING )begin
 					rsp_status = lsu_trans::MISS;
           send_rsp(req_source ,req_dest ,rsp_status,0,0);
-
+          
 
           //check if same addr req exist
 		      foreach (req_addr_arry[j])begin
@@ -727,7 +792,27 @@ task dcache_refm::assemble_cmd();
 					`uvm_info(get_type_name(),$sformatf("store hit merge data,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,way=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,way,req_wmask,data,req_data,merge_data),UVM_NONE);
 				end
 
+			end//end write
+
+	    //AMO
+			if(req_cmd == lsu_trans::M_XA_SWAP || req_cmd == lsu_trans::M_XA_ADD || req_cmd == lsu_trans::M_XA_XOR || req_cmd == lsu_trans::M_XA_OR  || 
+				 req_cmd == lsu_trans::M_XA_AND  || req_cmd == lsu_trans::M_XA_MIN || req_cmd == lsu_trans::M_XA_MAX || req_cmd == lsu_trans::M_XA_MINU || 
+				 req_cmd == lsu_trans::M_XA_MAXU)begin
+
+				 //miss
+				if(coh == lsu_trans::NOTHING )begin
+
+        end
+				else if(coh == lsu_trans::BRANCH )begin
+					//release
+					
+				end
+
+
+
+
 			end
+
 
 
 		end

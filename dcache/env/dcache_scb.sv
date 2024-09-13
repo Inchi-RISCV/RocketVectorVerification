@@ -158,7 +158,7 @@ task dcache_scb::comp_a_channel();
     end
 
     while(1)begin
-			wait(tl_cha_act_q.size()>0);
+			wait(tl_cha_act_q.size()>0 & tl_cha_exp_q.size()>0);
     	if(tl_cha_act_q.size()>0)begin
     		tla_act_tr = tl_cha_act_q.pop_front();
 				tla_exp_tr = tl_cha_exp_q.pop_front();
