@@ -732,6 +732,7 @@ task dcache_refm::assemble_cmd();
 				//miss
 				if(coh == lsu_trans::NOTHING || coh == lsu_trans::BRANCH )begin
 
+					a_param =  (coh == lsu_trans::NOTHING) ? 1 : 2 ;//NOTHING NtoT,BRANCH BtoT
 					send_rsp(req_source ,req_dest ,lsu_trans::MISS,0,0);
 
 					//B write miss need release cache
@@ -770,7 +771,6 @@ task dcache_refm::assemble_cmd();
 						  end  
 					  end
 
-            a_param =  (coh == lsu_trans::NOTHING) ? 1 : 2 ;//NOTHING NtoT,BRANCH BtoT
 				    do_acquire(req_addr,a_source,a_param);
             req_addr_arry[a_source]  = req_addr;
 						req_cmd_arry[a_source]        = req_cmd;
