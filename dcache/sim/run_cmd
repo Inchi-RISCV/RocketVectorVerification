@@ -41,7 +41,6 @@ make run tc=dcache_release_test cfg=loadB_replace_hazard
 make run tc=dcache_release_test cfg=storeB_replace_hazard
 make run tc=dcache_release_test cfg=replace_loadB_hazard
 make run tc=dcache_release_test cfg=replace_storeB_hazard
-
 make run tc=dcache_addr_random_test																					//only load
 make run tc=dcache_addr_random_test cfg=store																//store+load
 make run tc=dcache_addr_random_test cfg=mmio_range													
@@ -101,6 +100,15 @@ make run tc=dcache_hazard_test cfg=random_hazard 														//random load or 
 make run tc=dcache_reset_load_test
 make run tc=dcache_s1_kill_test
 
-make run tc=tilelink_probeblock_test cfg=b_param_toN
-make run tc=tilelink_probeblock_test cfg=b_param_toB
-make run tc=tilelink_probeblock_test cfg=b_param_toT
+make run tc=tilelink_probeblock_test cfg=probe_toN_init_state_N
+make run tc=tilelink_probeblock_test cfg=probe_toN_init_state_B
+make run tc=tilelink_probeblock_test cfg=probe_toN_init_state_Trunk
+make run tc=tilelink_probeblock_test cfg=probe_toN_init_state_Dirty
+make run tc=tilelink_probeblock_test cfg=probe_toB_init_state_N
+make run tc=tilelink_probeblock_test cfg=probe_toB_init_state_B
+make run tc=tilelink_probeblock_test cfg=probe_toB_init_state_Trunk
+make run tc=tilelink_probeblock_test cfg=probe_toB_init_state_Dirty
+make run tc=tilelink_probeblock_test cfg=probe_toT_init_state_N
+make run tc=tilelink_probeblock_test cfg=probe_toT_init_state_B
+make run tc=tilelink_probeblock_test cfg=probe_toT_init_state_Trunk
+make run tc=tilelink_probeblock_test cfg=probe_toT_init_state_Dirty
