@@ -36,6 +36,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
     bit [2:0] size;
 		bit [5:0] addr_align;
 		bit [63:0] mask;
+	  bit sign;
 
     `uvm_info(get_type_name(), "dcache sanity sequence starting", UVM_NONE)
 		super.body(); 
@@ -54,6 +55,9 @@ class dcache_sanity_sequence extends dcache_base_sequence;
 			set_idx = i;
 			size = $urandom_range(6);
 			addr_align = $urandom_range(64);
+			sign = $urandom_range(1);
+
+
 
       case (size)
         3'h1 : addr_align[0:0] = 0;
@@ -64,7 +68,7 @@ class dcache_sanity_sequence extends dcache_base_sequence;
         3'h6 : addr_align[5:0] = 0;
       endcase	
 			addr = {tag,set_idx,addr_align}; 
-			dcache_load(addr,size,1);
+			dcache_load(addr,size,sign);
 	  end
     #400ns;
 

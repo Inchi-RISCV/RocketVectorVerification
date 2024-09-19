@@ -136,7 +136,9 @@ task dcache_env::shutdown_phase(uvm_phase phase);
   if(!rm2sb_rsp_fifo.is_empty())begin
     `uvm_error(get_type_name(), "rm2sb_rsp_fifo is not empty!")
 	end
-
+  if(!rm2sb_tlc_fifo.is_empty())begin
+    `uvm_error(get_type_name(), "rm2sb_rsp_fifo is not empty!")
+	end
 
 
 endtask : shutdown_phase

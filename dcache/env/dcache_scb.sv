@@ -75,7 +75,7 @@ class dcache_scb extends uvm_scoreboard;
   virtual function void write_slave_trans_tx(svt_tilelink_slave_transaction slave_trans);
     `uvm_info(get_type_name(), {"get tl2sb_tlc_port\n",slave_trans.sprint}, UVM_NONE)
 		tl_chc_act_q.push_back(slave_trans);
-		`uvm_info(get_type_name(), $sformatf("tl2sb_tlc_port addr=%0h",slave_trans.status.c_address), UVM_NONE)
+		//`uvm_info(get_type_name(), $sformatf("tl2sb_tlc_port addr=%0h",slave_trans.status.c_address), UVM_NONE)
   endfunction : write_slave_trans_tx
 
 
@@ -192,7 +192,7 @@ task dcache_scb::comp_c_channel();
     end
 
 	  while(1)begin
-			wait(tl_chc_act_q.size()>0);
+			wait(tl_chc_act_q.size()>0 & tl_chc_exp_q.size()>0 );
     	if(tl_chc_act_q.size()>0)begin
     		tlc_act_tr = tl_chc_act_q.pop_front();
 				tlc_exp_tr = tl_chc_exp_q.pop_front();
