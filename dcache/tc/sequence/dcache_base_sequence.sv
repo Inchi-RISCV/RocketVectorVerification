@@ -81,13 +81,11 @@ class dcache_base_sequence extends uvm_sequence;
 	);
 	
 	extern task dcache_prefetch_read(
-		input bit [38:0]  addr,
-		input bit [2:0]   req_size = 6
+		input bit [38:0]  addr
 	);
 
 	extern task dcache_prefetch_write(
-		input bit [38:0]  addr,
-		input bit [2:0]   req_size = 6
+		input bit [38:0]  addr
 	);
 
 	extern task tilelink_chnlB_probeblock(
@@ -277,8 +275,7 @@ task dcache_base_sequence::dcache_amo_operation(
 endtask
 
 task dcache_base_sequence::dcache_prefetch_read(
-	input bit [38:0]  addr,
-	input bit [2:0]   req_size = 6
+	input bit [38:0]  addr
 	);
  
 	lsu_seq   seq;
@@ -287,7 +284,7 @@ task dcache_base_sequence::dcache_prefetch_read(
 		seq.io_req_bits_source   			<= 	3;
 		seq.io_req_bits_cmd      			==	lsu_trans::M_PFR;
     seq.io_req_bits_paddr				 	==	addr;
-    seq.io_req_bits_size     			==	req_size;	
+    seq.io_req_bits_size     			<=	6;	
     seq.io_req_bits_signed   			== 	'h0;
     seq.io_req_bits_noAlloc  			==	'h0;
   	seq.io_s1_kill								== 	'h0;
@@ -296,8 +293,7 @@ task dcache_base_sequence::dcache_prefetch_read(
 endtask
 
 task dcache_base_sequence::dcache_prefetch_write(
-	input bit [38:0]  addr,
-	input bit [2:0]   req_size = 6
+	input bit [38:0]  addr
 	);
  
 	lsu_seq   seq;
@@ -306,7 +302,7 @@ task dcache_base_sequence::dcache_prefetch_write(
 		seq.io_req_bits_source   			<= 	3;
 		seq.io_req_bits_cmd      			==	lsu_trans::M_PFW;
     seq.io_req_bits_paddr				 	==	addr;
-    seq.io_req_bits_size     			==	req_size;	
+    seq.io_req_bits_size     			<=	6;	
     seq.io_req_bits_signed   			== 	'h0;
     seq.io_req_bits_noAlloc  			==	'h0;
   	seq.io_s1_kill								== 	'h0;

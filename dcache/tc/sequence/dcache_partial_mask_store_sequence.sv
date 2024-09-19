@@ -38,6 +38,9 @@ class dcache_partial_mask_store_sequence extends dcache_base_sequence;
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);
 
+		for(int i=0;i<length;i++)begin
+			backdoor_put_data(addr_t+'h40*i,6,{16{'h76543210}}+i);
+	  end
 
 		for(int i=0;i<length;i++)begin
 			success = std::randomize(wdata) with { wdata <= (2**512-1);};

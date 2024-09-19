@@ -1,114 +1,114 @@
-make run tc=dcache_load_test											
-make run tc=dcache_load_test cfg=init_state_B 															//load+load
-make run tc=dcache_load_test cfg=init_state_Trunk 													//lr+load
-make run tc=dcache_load_test cfg=init_state_Dirty 													//store+load
-make run tc=dcache_load_test cfg=mmio_range  					
-make run tc=dcache_load_test cfg=noAlloc  							
-make run tc=dcache_store_test											
-make run tc=dcache_store_test cfg=init_state_B 															//load+store
-make run tc=dcache_store_test cfg=init_state_Trunk 													//lr+store
-make run tc=dcache_store_test cfg=init_state_Dirty 													//store+store
-make run tc=dcache_store_test cfg=mmio_range
-make run tc=dcache_store_test cfg=noAlloc
-make run tc=dcache_partial_mask_store_test
-make run tc=dcache_partial_mask_store_test cfg=init_state_B
-make run tc=dcache_partial_mask_store_test cfg=init_state_Trunk
-make run tc=dcache_partial_mask_store_test cfg=init_state_Dirty
-make run tc=dcache_partial_mask_store_test cfg=noAlloc
-make run tc=dcache_lr_sc_test
-make run tc=dcache_lr_sc_test cfg=init_state_B
-make run tc=dcache_lr_sc_test cfg=init_state_Trunk
-make run tc=dcache_lr_sc_test cfg=init_state_Dirty
-make run tc=dcache_amo_operation_test cfg=amo_swap
-make run tc=dcache_amo_operation_test cfg=amo_add
-make run tc=dcache_amo_operation_test cfg=amo_add_mmio
-make run tc=dcache_amo_operation_test cfg=amo_add_noAlloc
-make run tc=dcache_amo_operation_test cfg=amo_xor
-make run tc=dcache_amo_operation_test cfg=amo_or
-make run tc=dcache_amo_operation_test cfg=amo_and
-make run tc=dcache_amo_operation_test cfg=amo_min
-make run tc=dcache_amo_operation_test cfg=amo_max
-make run tc=dcache_amo_operation_test cfg=amo_minu
-make run tc=dcache_amo_operation_test cfg=amo_maxu
-make run tc=dcache_release_test cfg=init_state_B 														//load release
-make run tc=dcache_release_test cfg=init_state_Trunk 												//lr release
-make run tc=dcache_release_test cfg=init_state_Dirty												//store release
-make run tc=dcache_release_test cfg=loadA_replace_hazard
-make run tc=dcache_release_test cfg=storeA_replace_hazard
-make run tc=dcache_release_test cfg=replace_loadA_hazard
-make run tc=dcache_release_test cfg=replace_storeA_hazard
-make run tc=dcache_release_test cfg=loadB_replace_hazard
-make run tc=dcache_release_test cfg=storeB_replace_hazard
-make run tc=dcache_release_test cfg=replace_loadB_hazard
-make run tc=dcache_release_test cfg=replace_storeB_hazard
-make run tc=dcache_addr_random_test																					//only load
-make run tc=dcache_addr_random_test cfg=store																//store+load
-make run tc=dcache_addr_random_test cfg=mmio_range													
-make run tc=dcache_addr_random_test cfg=noAlloc													
-make run tc=dcache_small_size_test 																					//only load
-make run tc=dcache_small_size_test cfg=store 																//store+load
-make run tc=dcache_small_size_test cfg=mmio_range 													
-make run tc=dcache_small_size_test cfg=noAlloc 															
-make run tc=dcache_signed_test 																							//only load
-make run tc=dcache_signed_test cfg=store 																		//store+load
-make run tc=dcache_signed_test cfg=mmio_range 															
-make run tc=dcache_signed_test cfg=noAlloc 																	
-make run tc=dcache_prefetch_read_test											
-make run tc=dcache_prefetch_read_test cfg=init_state_B 															
-make run tc=dcache_prefetch_read_test cfg=init_state_Trunk 													
-make run tc=dcache_prefetch_read_test cfg=init_state_Dirty 	
-make run tc=dcache_prefetch_write_test											
-make run tc=dcache_prefetch_write_test cfg=init_state_B
-make run tc=dcache_prefetch_write_test cfg=init_state_Trunk
-make run tc=dcache_prefetch_write_test cfg=init_state_Dirty
-make run tc=dcache_hazard_test cfg=load_hit_load_hazard
-make run tc=dcache_hazard_test cfg=load_miss_load_hazard
-make run tc=dcache_hazard_test cfg=B_load_hit_store_hazard
-make run tc=dcache_hazard_test cfg=T_load_hit_store_hazard
-make run tc=dcache_hazard_test cfg=load_miss_store_hazard
-make run tc=dcache_hazard_test cfg=store_hit_load_hazard
-make run tc=dcache_hazard_test cfg=store_miss_load_hazard
-make run tc=dcache_hazard_test cfg=store_hit_store_hazard
-make run tc=dcache_hazard_test cfg=store_miss_store_hazard
-make run tc=dcache_hazard_test cfg=pfr_hit_load_hazard
-make run tc=dcache_hazard_test cfg=pfr_miss_load_hazard
-make run tc=dcache_hazard_test cfg=B_pfr_hit_store_hazard
-make run tc=dcache_hazard_test cfg=T_pfr_hit_store_hazard
-make run tc=dcache_hazard_test cfg=pfr_miss_store_hazard
-make run tc=dcache_hazard_test cfg=pfw_hit_load_hazard
-make run tc=dcache_hazard_test cfg=pfw_miss_load_hazard
-make run tc=dcache_hazard_test cfg=pfw_hit_store_hazard
-make run tc=dcache_hazard_test cfg=pfw_miss_store_hazard
-make run tc=dcache_hazard_test cfg=load_hit_pfr_hazard
-make run tc=dcache_hazard_test cfg=load_miss_pfr_hazard
-make run tc=dcache_hazard_test cfg=B_load_hit_pfw_hazard
-make run tc=dcache_hazard_test cfg=T_load_hit_pfw_hazard
-make run tc=dcache_hazard_test cfg=load_miss_pfw_hazard
-make run tc=dcache_hazard_test cfg=store_hit_pfr_hazard
-make run tc=dcache_hazard_test cfg=store_miss_pfr_hazard
-make run tc=dcache_hazard_test cfg=store_hit_pfw_hazard
-make run tc=dcache_hazard_test cfg=store_miss_pfw_hazard
-make run tc=dcache_hazard_test cfg=pfr_hit_pfr_hazard
-make run tc=dcache_hazard_test cfg=pfr_miss_pfr_hazard
-make run tc=dcache_hazard_test cfg=pfr_hit_pfw_hazard
-make run tc=dcache_hazard_test cfg=pfr_miss_pfw_hazard
-make run tc=dcache_hazard_test cfg=pfw_hit_pfr_hazard
-make run tc=dcache_hazard_test cfg=pfw_miss_pfr_hazard
-make run tc=dcache_hazard_test cfg=pfw_hit_pfw_hazard
-make run tc=dcache_hazard_test cfg=pfw_miss_pfw_hazard
-make run tc=dcache_hazard_test cfg=random_hazard 														//random load or store
-make run tc=dcache_reset_load_test
-make run tc=dcache_s1_kill_test
+make ncrun tc=dcache_load_test											
+make ncrun tc=dcache_load_test cfg=init_state_B 															//load+load
+make ncrun tc=dcache_load_test cfg=init_state_Trunk 													//lr+load
+make ncrun tc=dcache_load_test cfg=init_state_Dirty 													//store+load
+make ncrun tc=dcache_load_test cfg=mmio_range  					
+make ncrun tc=dcache_load_test cfg=noAlloc  							
+make ncrun tc=dcache_store_test											
+make ncrun tc=dcache_store_test cfg=init_state_B 															//load+store
+make ncrun tc=dcache_store_test cfg=init_state_Trunk 													//lr+store
+make ncrun tc=dcache_store_test cfg=init_state_Dirty 													//store+store
+make ncrun tc=dcache_store_test cfg=mmio_range
+make ncrun tc=dcache_store_test cfg=noAlloc
+make ncrun tc=dcache_partial_mask_store_test
+make ncrun tc=dcache_partial_mask_store_test cfg=init_state_B
+make ncrun tc=dcache_partial_mask_store_test cfg=init_state_Trunk
+make ncrun tc=dcache_partial_mask_store_test cfg=init_state_Dirty
+make ncrun tc=dcache_partial_mask_store_test cfg=noAlloc
+make ncrun tc=dcache_lr_sc_test
+make ncrun tc=dcache_lr_sc_test cfg=init_state_B
+make ncrun tc=dcache_lr_sc_test cfg=init_state_Trunk
+make ncrun tc=dcache_lr_sc_test cfg=init_state_Dirty
+make ncrun tc=dcache_amo_operation_test cfg=amo_swap
+make ncrun tc=dcache_amo_operation_test cfg=amo_add
+make ncrun tc=dcache_amo_operation_test cfg=amo_add_mmio
+make ncrun tc=dcache_amo_operation_test cfg=amo_add_noAlloc
+make ncrun tc=dcache_amo_operation_test cfg=amo_xor
+make ncrun tc=dcache_amo_operation_test cfg=amo_or
+make ncrun tc=dcache_amo_operation_test cfg=amo_and
+make ncrun tc=dcache_amo_operation_test cfg=amo_min
+make ncrun tc=dcache_amo_operation_test cfg=amo_max
+make ncrun tc=dcache_amo_operation_test cfg=amo_minu
+make ncrun tc=dcache_amo_operation_test cfg=amo_maxu
+make ncrun tc=dcache_release_test cfg=init_state_B 														//load release
+make ncrun tc=dcache_release_test cfg=init_state_Trunk 												//lr release
+make ncrun tc=dcache_release_test cfg=init_state_Dirty												//store release
+make ncrun tc=dcache_release_test cfg=loadA_replace_hazard
+make ncrun tc=dcache_release_test cfg=storeA_replace_hazard
+make ncrun tc=dcache_release_test cfg=replace_loadA_hazard
+make ncrun tc=dcache_release_test cfg=replace_storeA_hazard
+make ncrun tc=dcache_release_test cfg=loadB_replace_hazard
+make ncrun tc=dcache_release_test cfg=storeB_replace_hazard
+make ncrun tc=dcache_release_test cfg=replace_loadB_hazard
+make ncrun tc=dcache_release_test cfg=replace_storeB_hazard
+make ncrun tc=dcache_addr_random_test																					//only load
+make ncrun tc=dcache_addr_random_test cfg=store																//store+load
+make ncrun tc=dcache_addr_random_test cfg=mmio_range													
+make ncrun tc=dcache_addr_random_test cfg=noAlloc													
+make ncrun tc=dcache_small_size_test 																					//only load
+make ncrun tc=dcache_small_size_test cfg=store 																//store+load
+make ncrun tc=dcache_small_size_test cfg=mmio_range 													
+make ncrun tc=dcache_small_size_test cfg=noAlloc 															
+make ncrun tc=dcache_signed_test 																							//only load
+make ncrun tc=dcache_signed_test cfg=store 																		//store+load
+make ncrun tc=dcache_signed_test cfg=mmio_range 															
+make ncrun tc=dcache_signed_test cfg=noAlloc 																	
+make ncrun tc=dcache_prefetch_read_test											
+make ncrun tc=dcache_prefetch_read_test cfg=init_state_B 															
+make ncrun tc=dcache_prefetch_read_test cfg=init_state_Trunk 													
+make ncrun tc=dcache_prefetch_read_test cfg=init_state_Dirty 	
+make ncrun tc=dcache_prefetch_write_test											
+make ncrun tc=dcache_prefetch_write_test cfg=init_state_B
+make ncrun tc=dcache_prefetch_write_test cfg=init_state_Trunk
+make ncrun tc=dcache_prefetch_write_test cfg=init_state_Dirty
+make ncrun tc=dcache_hazard_test cfg=load_hit_load_hazard
+make ncrun tc=dcache_hazard_test cfg=load_miss_load_hazard
+make ncrun tc=dcache_hazard_test cfg=B_load_hit_store_hazard
+make ncrun tc=dcache_hazard_test cfg=T_load_hit_store_hazard
+make ncrun tc=dcache_hazard_test cfg=load_miss_store_hazard
+make ncrun tc=dcache_hazard_test cfg=store_hit_load_hazard
+make ncrun tc=dcache_hazard_test cfg=store_miss_load_hazard
+make ncrun tc=dcache_hazard_test cfg=store_hit_store_hazard
+make ncrun tc=dcache_hazard_test cfg=store_miss_store_hazard
+make ncrun tc=dcache_hazard_test cfg=pfr_hit_load_hazard
+make ncrun tc=dcache_hazard_test cfg=pfr_miss_load_hazard
+make ncrun tc=dcache_hazard_test cfg=B_pfr_hit_store_hazard
+make ncrun tc=dcache_hazard_test cfg=T_pfr_hit_store_hazard
+make ncrun tc=dcache_hazard_test cfg=pfr_miss_store_hazard
+make ncrun tc=dcache_hazard_test cfg=pfw_hit_load_hazard
+make ncrun tc=dcache_hazard_test cfg=pfw_miss_load_hazard
+make ncrun tc=dcache_hazard_test cfg=pfw_hit_store_hazard
+make ncrun tc=dcache_hazard_test cfg=pfw_miss_store_hazard
+make ncrun tc=dcache_hazard_test cfg=load_hit_pfr_hazard
+make ncrun tc=dcache_hazard_test cfg=load_miss_pfr_hazard
+make ncrun tc=dcache_hazard_test cfg=B_load_hit_pfw_hazard
+make ncrun tc=dcache_hazard_test cfg=T_load_hit_pfw_hazard
+make ncrun tc=dcache_hazard_test cfg=load_miss_pfw_hazard
+make ncrun tc=dcache_hazard_test cfg=store_hit_pfr_hazard
+make ncrun tc=dcache_hazard_test cfg=store_miss_pfr_hazard
+make ncrun tc=dcache_hazard_test cfg=store_hit_pfw_hazard
+make ncrun tc=dcache_hazard_test cfg=store_miss_pfw_hazard
+make ncrun tc=dcache_hazard_test cfg=pfr_hit_pfr_hazard
+make ncrun tc=dcache_hazard_test cfg=pfr_miss_pfr_hazard
+make ncrun tc=dcache_hazard_test cfg=pfr_hit_pfw_hazard
+make ncrun tc=dcache_hazard_test cfg=pfr_miss_pfw_hazard
+make ncrun tc=dcache_hazard_test cfg=pfw_hit_pfr_hazard
+make ncrun tc=dcache_hazard_test cfg=pfw_miss_pfr_hazard
+make ncrun tc=dcache_hazard_test cfg=pfw_hit_pfw_hazard
+make ncrun tc=dcache_hazard_test cfg=pfw_miss_pfw_hazard
+make ncrun tc=dcache_hazard_test cfg=random_hazard 														//random load or store
+make ncrun tc=dcache_reset_load_test
+make ncrun tc=dcache_s1_kill_test
 
-make run tc=tilelink_probeblock_test cfg=probe_toN_init_state_N
-make run tc=tilelink_probeblock_test cfg=probe_toN_init_state_B
-make run tc=tilelink_probeblock_test cfg=probe_toN_init_state_Trunk
-make run tc=tilelink_probeblock_test cfg=probe_toN_init_state_Dirty
-make run tc=tilelink_probeblock_test cfg=probe_toB_init_state_N
-make run tc=tilelink_probeblock_test cfg=probe_toB_init_state_B
-make run tc=tilelink_probeblock_test cfg=probe_toB_init_state_Trunk
-make run tc=tilelink_probeblock_test cfg=probe_toB_init_state_Dirty
-make run tc=tilelink_probeblock_test cfg=probe_toT_init_state_N
-make run tc=tilelink_probeblock_test cfg=probe_toT_init_state_B
-make run tc=tilelink_probeblock_test cfg=probe_toT_init_state_Trunk
-make run tc=tilelink_probeblock_test cfg=probe_toT_init_state_Dirty
+make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_N
+make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_B
+make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_Trunk
+make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_Dirty
+make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_N
+make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_B
+make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_Trunk
+make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_Dirty
+make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_N
+make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_B
+make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_Trunk
+make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_Dirty

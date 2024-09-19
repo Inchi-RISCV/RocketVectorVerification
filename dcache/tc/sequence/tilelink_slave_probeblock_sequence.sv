@@ -30,7 +30,8 @@ task tilelink_slave_probeblock_sequence::body();
 
 	success = std::randomize(addr_t,length) with {
 		solve length before addr_t;
-				
+			
+		//TODO:
 		//length inside {[1:100]};
 		length == 10;
 		addr_t inside {['h8000_0000:'hffff_ffff]};
@@ -42,6 +43,9 @@ task tilelink_slave_probeblock_sequence::body();
 	b_param = vmm_opts::get_int("b_param", 0, "b_param");
 	init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
+	for(int i=0;i<length;i++)begin
+		backdoor_put_data(addr_t+'h40*i,6,{16{'h76543210}}+i);
+	end
 
 	if(init_state == "N") begin
 		for(int i=0;i<length;i++)begin

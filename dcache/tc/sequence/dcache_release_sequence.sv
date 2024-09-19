@@ -40,7 +40,10 @@ class dcache_release_sequence extends dcache_base_sequence;
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);
 
-		
+		for(int i=0;i<length;i++)begin
+			backdoor_put_data(addr_t+'h2000*i,6,{16{'h76543210}}+i);
+	  end
+
 		if(!hazard_en) begin
 			for(int i=0;i<length;i++)begin
 				success	= std::randomize(wdata) with {wdata <= (2**512-1);};
