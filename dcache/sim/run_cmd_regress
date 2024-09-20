@@ -25,3 +25,11 @@ make ncrun tc=dcache_hazard_test cfg=store_miss_load_hazard
 make ncrun tc=dcache_hazard_test cfg=store_hit_store_hazard
 make ncrun tc=dcache_hazard_test cfg=store_miss_store_hazard
 make ncrun tc=dcache_hazard_test cfg=random_hazard
+make ncrun tc=dcache_release_test cfg=loadA_replace_hazard
+make ncrun tc=dcache_release_test cfg=storeA_replace_hazard
+make ncrun tc=dcache_release_test cfg=replace_loadA_hazard
+make ncrun tc=dcache_release_test cfg=replace_storeA_hazard
+make ncrun tc=dcache_release_test cfg=loadB_replace_hazard
+make ncrun tc=dcache_release_test cfg=storeB_replace_hazard
+make ncrun tc=dcache_release_test cfg=replace_loadB_hazard
+make ncrun tc=dcache_release_test cfg=replace_storeB_hazard
