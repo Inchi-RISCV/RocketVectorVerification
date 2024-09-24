@@ -99,6 +99,7 @@ make ncrun tc=dcache_hazard_test cfg=pfw_miss_pfw_hazard
 make ncrun tc=dcache_hazard_test cfg=random_hazard 														//random load or store
 make ncrun tc=dcache_reset_load_test
 make ncrun tc=dcache_s1_kill_test
+make ncrun tc=dcache_long_delay_test
 
 make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_N
 make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_B
