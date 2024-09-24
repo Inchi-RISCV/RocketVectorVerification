@@ -37,23 +37,21 @@ class dcache_refm extends uvm_component;
 	bit [1:0] nway;
 	bit [512*4-1:0] data_arry[128]; //data 4way 
 	bit [32*4-1:0]  meta_arry[128]; //20bit tag ,2bit coh ,4way
-	bit        unfinsh[32]; //0:finish 1:unfinish
-  bit        req_unfinsh_arry[8];
   bit        mshr_source_id_valid[8] = {1,1,1,1,1,1,1,1};
 	bit        iomshr_source_id_valid[8] = {1,1,1,1,1,1,1,1};
-	bit [31:0] req_addr_arry[8];
+	bit [31:0] req_addr_arry[32];
   //bit [38:0]  req_source_q[$]; //addr+dest
   bit [51:0] same_addr_info_q[$];   //sign+cmd+addr+source+dest  1+5+32+8+6
 	bit [51:0] same_addr_info_tmp_q[$];
-	bit [5:0]  req_dest_arry[8];      
-	bit [7:0]  req_source_arry[8];
+	bit [5:0]  req_dest_arry[32];      
+	bit [7:0]  req_source_arry[32];
 	bit [2:0]  req_size_arry[32];
 	bit        req_signed_arry[32];
-	bit [2:0]  req_size_store_arry[8];
-  bit [63:0] req_mask_arry[8];
-	bit [511:0] req_data_arry[8]; 
+	bit [2:0]  req_size_store_arry[32];
+  bit [63:0] req_mask_arry[32];
+	bit [511:0] req_data_arry[32]; 
 
-	lsu_trans::req_cmd_enum 		req_cmd_arry[8];
+	lsu_trans::req_cmd_enum 		req_cmd_arry[32];
 
   extern function new(string name, uvm_component parent);
   extern task main_phase(uvm_phase phase);
@@ -63,7 +61,8 @@ class dcache_refm extends uvm_component;
 	extern task assemble_cmd();
 	extern task query_block(input bit [6:0] set_index, input bit [18:0] tag, output bit[1:0] coh, output bit [1:0] way, output bit [511:0] data );
   extern task send_rsp(input bit [7:0] source ,input bit [4:0] dest , input bit [2:0] status, input bit hasdata,input bit [511:0] data);
-  extern task do_acquire(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
+  extern task do_tlc_message(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
+	extern task do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask);
 	extern task do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data,input bit [1:0] coh);
 	extern task do_refill();
 	extern task replace_plru(input bit [6:0] set_index,input bit[1:0] coh, input bit [1:0] exist_way ,output bit [1:0] victim_way,output bit victim_way_valid);
@@ -190,7 +189,7 @@ task dcache_refm::do_refill();
 	bit [15:0]   d_source;
 	bit [1:0]    d_param[8];
 	bit [31:0]   a_addr;
-  bit [511:0]  d_data_arry[8];
+  bit [511:0]  d_data_arry[32];
 
 
 	bit [1:0]    coh,coh_tmp,coh_vic;
@@ -207,7 +206,6 @@ task dcache_refm::do_refill();
 	bit [4:0]    req_cmd_same_addr,req_cmd;
 	bit [2:0]    req_size,req_size_store;
   bit          req_signed;
-	bit [511:0]  d_data_arry[];
 	bit [31:0]   same_addr_refill_num,tmp_num;
 	bit [51:0]   same_addr_info,same_addr_info_tmp;
   bit          victim_way_valid;
@@ -232,6 +230,21 @@ task dcache_refm::do_refill();
 		  d_data_arry[d_source] = d_data;
 
 			`uvm_info(get_type_name(),$sformatf("rm get grant,a_addr=%0h,d_source=%0h,d_param=%0h,d_opcode=%0h,d_data=%0h,tl_chd_q_size=%0h",req_addr_arry[d_source],d_source,d_param[d_source],d_opcode,d_data,tl_chd_q.size()),UVM_NONE); 
+
+			//get put or atomic
+      if((d_opcode == 1) || (d_opcode==0) )begin
+        if(d_opcode == 1)begin
+				  req_dest_tmp = req_dest_arry[d_source];
+				  sign_extension(req_signed_arry[req_dest_tmp],req_size_arry[req_dest_tmp],d_data,refill_data);
+			    send_rsp(req_source_arry[d_source] ,req_dest_arry[d_source] , lsu_trans::REFILL,1,refill_data);
+		      `uvm_info(get_type_name(),$sformatf("rm send get refill resp,req_dest=%0h,req_addr=%0h,req_source=%0h,data=%0h",req_dest_arry[d_source],a_addr,req_source_arry[d_source],refill_data),UVM_NONE);
+			  end
+				
+			  req_addr_arry[d_source]  = 0;
+		    req_source_arry[d_source]= 0;
+		    req_dest_arry[d_source]  = 0;	
+		  end
+
 
 
       // waiting source_id release
@@ -565,7 +578,7 @@ task dcache_refm::send_rsp(input bit [7:0] source ,input bit [4:0] dest , input 
 
 endtask
 
-task dcache_refm::do_acquire(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
+task dcache_refm::do_tlc_message(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
 
   svt_tilelink_master_transaction   tr_a;
 
@@ -578,6 +591,38 @@ task dcache_refm::do_acquire(input bit [31:0] a_addr ,input bit [15:0] a_source,
 
 	rm2sb_tltx_port.write(tr_a);
 	`uvm_info(get_type_name(),$sformatf("rm send acquire to sb , a_addr=%0h,a_source=%0h,a_param=%0h",tr_a.a_address,tr_a.a_source,tr_a.a_param),UVM_NONE);
+
+endtask
+
+
+task dcache_refm::do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask);
+
+  svt_tilelink_master_transaction   tr_a;
+
+  tr_a = new();
+
+  if((a_opcode == 0) || (a_opcode == 1) )begin
+    tr_a.a_data = new[64];
+		tr_a.a_mask = new[1];
+
+	  for(int i=0;i<64;i++)begin
+		  tr_a.a_data[i] = a_data[i*8+:8];
+    end
+		tr_a.a_mask[0] = a_mask;
+
+  end
+
+  tr_a.a_size    = a_size;
+  tr_a.a_source  = a_source;
+  tr_a.a_address = a_addr;
+  tr_a.ch_a_msg_type  = a_opcode;
+  tr_a.a_param   = 0;
+
+
+
+
+	rm2sb_tltx_port.write(tr_a);
+	`uvm_info(get_type_name(),$sformatf("rm send acquire to sb , a_addr=%0h,a_source=%0h,a_mask=%0h,a_data=%0h",tr_a.a_address,tr_a.a_source,a_mask,a_data),UVM_NONE);
 
 endtask
 
@@ -616,7 +661,7 @@ endtask
 
 task dcache_refm::release_source_id(input bit [15:0] source_id); 
   
-	
+	bit [15:0] source_id_tmp;
 
 	case(source_id)
     0: wait(tb_top.U_GPCDCache.mshrs.mshrs.allocateArb.io_in_0_valid);
@@ -627,22 +672,24 @@ task dcache_refm::release_source_id(input bit [15:0] source_id);
     5: wait(tb_top.U_GPCDCache.mshrs.mshrs.allocateArb.io_in_5_valid);
     6: wait(tb_top.U_GPCDCache.mshrs.mshrs.allocateArb.io_in_6_valid);
     7: wait(tb_top.U_GPCDCache.mshrs.mshrs.allocateArb.io_in_7_valid);
-    8:  wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_0_valid);
-    9:  wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_1_valid);
-    10: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_2_valid);
-    11: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_3_valid);
-    12: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_4_valid);
-    13: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_5_valid);
-    14: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_6_valid);
-    15: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_7_valid);
+    16:  wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_0_valid);
+    17:  wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_1_valid);
+    18: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_2_valid);
+    19: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_3_valid);
+    20: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_4_valid);
+    21: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_5_valid);
+    22: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_6_valid);
+    23: wait(tb_top.U_GPCDCache.mshrs.iomshrs.allocArb.io_in_7_valid);
 
   endcase
 
 	if(source_id >= 0 && source_id <= 7)begin
-	  mshr_source_id_valid[source_id] = 1;
+		source_id_tmp = source_id;
+	  mshr_source_id_valid[source_id_tmp] = 1;
   end
-	else if(source_id >= 8 && source_id <= 15) begin
-	  iomshr_source_id_valid[source_id] = 1;
+	else if(source_id >= 16 && source_id <= 23) begin
+		source_id_tmp = source_id -16;
+	  iomshr_source_id_valid[source_id_tmp] = 1;
 	end
   `uvm_info(get_type_name(),$sformatf("release_source_id , source_id=%0h",source_id),UVM_NONE);
 	`uvm_info(get_type_name(),$sformatf("release_source_id mshr_source_id_valid=%p,iomshr_source_id_valid=%p", mshr_source_id_valid,iomshr_source_id_valid),UVM_NONE);
@@ -667,6 +714,7 @@ task dcache_refm::assemble_cmd();
   bit         req_signed;
 	bit [15:0]  a_source;
   bit [2:0]   a_param;
+	bit [2:0]   a_opcode;
   bit [51:0]  same_addr_info,same_addr_info_tmp;
 	bit         same_addr_exist;
 	bit [511:0] align_data,refill_data,merge_data,amo_data;
@@ -699,9 +747,9 @@ task dcache_refm::assemble_cmd();
       nset = req_addr[12:6];
 
 		      
-		  `uvm_info(get_type_name(),$sformatf("rm get cmd , rea_addr=%0h,set=%0h,req_cmd=%0h,req_dest=%0h,req_size=%0h",req_addr,nset,req_cmd,req_dest,req_size),UVM_NONE);
+		  `uvm_info(get_type_name(),$sformatf("rm get cmd,rea_addr=%0h,set=%0h,req_cmd=%0h,req_dest=%0h,req_size=%0h",req_addr,nset,req_cmd,req_dest,req_size),UVM_NONE);
 			`uvm_info(get_type_name(),$sformatf("processing addr=%p", req_addr_arry),UVM_NONE);
-      `uvm_info(get_type_name(),$sformatf("mshr_source_id_valid=%p", mshr_source_id_valid),UVM_NONE);
+      `uvm_info(get_type_name(),$sformatf("mshr_source_id_valid=%p,iomshr_source_id_valid=%p", mshr_source_id_valid,iomshr_source_id_valid),UVM_NONE);
      	req_size_arry[req_dest] = req_size;
 			req_signed_arry[req_dest] = req_signed;
 
@@ -738,16 +786,34 @@ task dcache_refm::assemble_cmd();
 						continue;
 					end
 					else begin
-						//get valid sour_id
-						wait (mshr_source_id_valid.or >0);
-					  foreach (mshr_source_id_valid[j])begin
-						  if(mshr_source_id_valid[j])begin
-                a_source = j;
-							  mshr_source_id_valid[j]=0;
-							  break;
-						  end  
-				  	end
-					  do_acquire(req_addr,a_source,0);//NtoB
+						if(req_noAlloc)begin
+						  //get iomshr valid sour_id
+						  wait (iomshr_source_id_valid.or >0);
+					    foreach (iomshr_source_id_valid[j])begin
+						    if(iomshr_source_id_valid[j])begin
+                  a_source = j+16;
+							    iomshr_source_id_valid[j]=0;
+							    break;
+						    end  
+				  	  end							
+
+							do_tlu_message(req_addr ,4,req_size,a_source,0,0);// get
+
+						end
+						else begin
+						  //get mshr valid sour_id
+						  wait (mshr_source_id_valid.or >0);
+					    foreach (mshr_source_id_valid[j])begin
+						    if(mshr_source_id_valid[j])begin
+                  a_source = j;
+							    mshr_source_id_valid[j]=0;
+							    break;
+						    end  
+				  	  end
+
+					    do_tlc_message(req_addr,a_source,0);//NtoB
+
+						end
 					  req_addr_arry[a_source]  = req_addr;
 					  req_dest_arry[a_source]  = req_dest;
 				    req_source_arry[a_source]  = req_source;
@@ -804,16 +870,32 @@ task dcache_refm::assemble_cmd();
 						continue;
 					end
 					else begin
-						wait (mshr_source_id_valid.or >0);
-					  foreach (mshr_source_id_valid[j])begin
-						  if(mshr_source_id_valid[j])begin
-                a_source = j;
-							  mshr_source_id_valid[j]=0;
-							  break;
-						  end  
-				  	end						
+						if(req_noAlloc)begin
+						  //get iomshr valid sour_id
+						  wait (iomshr_source_id_valid.or >0);
+					    foreach (iomshr_source_id_valid[j])begin
+						    if(iomshr_source_id_valid[j])begin
+                  a_source = j+16;
+							    iomshr_source_id_valid[j]=0;
+							    break;
+						    end  
+				  	  end	
+							a_opcode = (req_cmd == lsu_trans::M_PWR) ? 1 : 0 ;
+							req_wmask = (req_cmd == lsu_trans::M_PWR) ? req_wmask : {64{1'b1}};
+							do_tlu_message(req_addr ,a_opcode,req_size,a_source,req_data,req_wmask);
+						end
+            else begin
+					    wait (mshr_source_id_valid.or >0);
+					    foreach (mshr_source_id_valid[j])begin
+					      if(mshr_source_id_valid[j])begin
+                  a_source = j;
+					    	  mshr_source_id_valid[j]=0;
+					    	  break;
+					      end  
+				      end
+							do_tlc_message(req_addr,a_source,a_param);
+				  	end
 
-				    do_acquire(req_addr,a_source,a_param);
             req_addr_arry[a_source]  = req_addr;
 						req_cmd_arry[a_source]        = req_cmd;
 						req_size_store_arry[a_source] = req_size;

@@ -2,11 +2,11 @@ Magic 271485
 Revision Verdi_V-2023.12
 
 ; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
-viewPort 0 25 2190 618 394 218
+viewPort 0 25 2337 824 394 218
 
 ; File list:
 ; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
-openDirFile -d / "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_sanity_test_1.fsdb"
+openDirFile -d / -i 3 "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_sanity_test_1.fsdb"
 
 ; file time scale:
 ; fileTimeScale ### s|ms|us|ns|ps
@@ -18,30 +18,18 @@ signalSpacing 5
 windowTimeUnit 1ns
 
 ; waveform viewport range
-zoom 283.980856 382.790000 1n
-cursor 359.000000
+zoom 0.000000 4545.000000 1n
+cursor 368.000000
 marker 389.000000
 
-; user define markers
-; userMarker time_pos marker_name color linestyle
 ; visible top row signal index
-top 14
+top 26
 ; marker line index
-markerPos 31
+markerPos 38
 
-; logical expression list
-; addExprSig expr_name expression_string
+; rename signal list
+; addRenameSig new_name org_name
 activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_sanity_test_1.fsdb"
-
-addExprSig -b 1 -n UU logical_expression_2 "/tb_top/m_lsu_if/io_req_valid"& "/tb_top/m_lsu_if/io_req_ready"
-
-; rename signal list
-; addRenameSig new_name org_name
-
-addRenameSig "/req_hs" "/logical_expression_2" keep
-
-; rename signal list
-; addRenameSig new_name org_name
 
 addRenameSig "/tb_top/m_lsu_if/paddr_tag[38:13]" "/tb_top/m_lsu_if/io_req_bits_paddr[38:13]" keep
 
@@ -64,6 +52,11 @@ addRenameSig "/tb_top/m_lsu_if/paddr_bank[4:3]" "/tb_top/m_lsu_if/io_req_bits_pa
 ; addRenameSig new_name org_name
 
 addRenameSig "/tb_top/m_lsu_if/paddr_row_offset[2:0]" "/tb_top/m_lsu_if/io_req_bits_paddr[2:0]" keep
+
+; logical expression list
+; addExprSig expr_name expression_string
+
+addExprSig -b 1 -n UU logical_expression_2 "/tb_top/m_lsu_if/io_req_valid"& "/tb_top/m_lsu_if/io_req_ready"
 
 ; event list
 ; addEvent event_name event_expression
@@ -89,8 +82,7 @@ addSignal -h 24 /tb_top/m_lsu_if/clk
 addSignal -h 24 -holdScope rst_n
 addSignal -h 24 -holdScope io_req_valid
 addSignal -h 24 -holdScope io_req_ready
-addSignal -c ID_ORANGE5 -ls solid -lw 1 -h 24 /req_hs
-addSignal -h 24 -UNSIGNED -HEX /tb_top/m_lsu_if/io_req_bits_cmd[4:0]
+addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_cmd[4:0]
 addSignal -c ID_PURPLE5 -ls solid -lw 1 -h 24 -UNSIGNED -HEX -holdScope io_req_bits_size[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_dest[4:0]
 addSignal -expanded -c ID_YELLOW5 -ls solid -lw 1 -h 24 -UNSIGNED -HEX -holdScope io_req_bits_paddr[38:0]
@@ -104,18 +96,26 @@ addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_wdata[511:0]
 addSignal -h 24 -holdScope io_req_bits_noAlloc
 addSignal -h 24 -holdScope io_req_bits_signed
 addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_source[7:0]
-addSignal -c ID_RED5 -ls solid -lw 0 -h 20 /tb_top/U_GPCDCache/mainReqArb/io_out_valid
-addSignal -c ID_RED5 -ls solid -lw 0 -h 20 -holdScope io_out_bits_isRefill
-addSignal -c ID_RED5 -ls solid -lw 0 -h 20 -UNSIGNED -HEX -holdScope io_out_bits_refillWay[1:0]
-addSignal -c ID_RED5 -ls solid -lw 0 -h 20 -UNSIGNED -HEX -holdScope io_out_bits_paddr[38:0]
-addSignal -c ID_RED6 -ls solid -lw 0 -h 20 /tb_top/U_GPCDCache/mshrs/mshrs/allocateArb/io_in_0_valid
-addSignal -c ID_RED6 -ls solid -lw 0 -h 20 -holdScope io_in_1_valid
-addSignal -c ID_RED6 -ls solid -lw 0 -h 20 -holdScope io_in_2_valid
-addSignal -c ID_RED6 -ls solid -lw 0 -h 20 -holdScope io_in_3_valid
-addSignal -c ID_RED6 -ls solid -lw 0 -h 20 -holdScope io_in_4_valid
-addSignal -c ID_RED6 -ls solid -lw 0 -h 20 -holdScope io_in_5_valid
-addSignal -c ID_RED6 -ls solid -lw 0 -h 20 -holdScope io_in_6_valid
-addSignal -c ID_RED6 -ls solid -lw 0 -h 20 -holdScope io_in_7_valid
+addSignal -c ID_RED5 -ls solid -lw 1 -h 20 /tb_top/U_GPCDCache/mainReqArb/io_out_valid
+addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -holdScope io_out_bits_isRefill
+addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -UNSIGNED -HEX -holdScope io_out_bits_refillWay[1:0]
+addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -UNSIGNED -HEX -holdScope io_out_bits_paddr[38:0]
+addSignal -c ID_RED6 -ls solid -lw 1 -h 20 /tb_top/U_GPCDCache/mshrs/mshrs/allocateArb/io_in_0_valid
+addSignal -c ID_RED6 -ls solid -lw 1 -h 20 -holdScope io_in_1_valid
+addSignal -c ID_RED6 -ls solid -lw 1 -h 20 -holdScope io_in_2_valid
+addSignal -c ID_RED6 -ls solid -lw 1 -h 20 -holdScope io_in_3_valid
+addSignal -c ID_RED6 -ls solid -lw 1 -h 20 -holdScope io_in_4_valid
+addSignal -c ID_RED6 -ls solid -lw 1 -h 20 -holdScope io_in_5_valid
+addSignal -c ID_RED6 -ls solid -lw 1 -h 20 -holdScope io_in_6_valid
+addSignal -c ID_RED6 -ls solid -lw 1 -h 20 -holdScope io_in_7_valid
+addSignal -h 20 /tb_top/U_GPCDCache/mshrs/iomshrs/allocArb/io_in_0_valid
+addSignal -h 20 -holdScope io_in_1_valid
+addSignal -h 20 -holdScope io_in_2_valid
+addSignal -h 20 -holdScope io_in_3_valid
+addSignal -h 20 -holdScope io_in_4_valid
+addSignal -h 20 -holdScope io_in_5_valid
+addSignal -h 20 -holdScope io_in_6_valid
+addSignal -h 20 -holdScope io_in_7_valid
 addGroup "G2"
 addSignal -h 24 /tb_top/m_lsu_if/clk
 addSignal -h 24 -holdScope io_resp_valid
@@ -188,10 +188,11 @@ activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dc
 GETSIGNALFORM_SCOPE_HIERARCHY_BEGIN
 getSignalForm close
 
-"/_vcs_unit__3509641180"
+"/_vcs_unit__4214790066"
 "/tb_top"
 
 SCOPE_LIST_BEGIN
+"/_vcs_unit__4214790066"
 "/_vcs_unit__3509641180"
 "/_vcs_unit__3654021924"
 "/_vcs_unit__417921794"

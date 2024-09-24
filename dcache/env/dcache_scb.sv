@@ -56,7 +56,13 @@ class dcache_scb extends uvm_scoreboard;
   virtual function void write_master_trans_tx(svt_tilelink_master_transaction master_trans);
     `uvm_info(get_type_name(), {"get tl2sb_tltx_port\n",master_trans.sprint}, UVM_HIGH)
 
-		`uvm_info(get_type_name(), $sformatf("tl2sb_tltx_port addr=%0h,source=%0h",master_trans.a_address,master_trans.a_source), UVM_NONE)
+		if((master_trans.ch_a_msg_type ==  svt_tilelink_master_transaction::CH_A_PUT_FULL_DATA) || (master_trans.ch_a_msg_type ==  svt_tilelink_master_transaction::CH_A_PUT_PARTIAL_DATA))begin
+		  `uvm_info(get_type_name(), $sformatf("tl2sb_tltx_port addr=%0h,source=%0h",master_trans.a_address,master_trans.a_source), UVM_NONE)
+			`uvm_info(get_type_name(), $sformatf("tl2sb_tltx_port data=%p,mask=%p",master_trans.a_data,master_trans.a_mask), UVM_NONE)
+	  end
+	  else  begin
+      `uvm_info(get_type_name(), $sformatf("tl2sb_tltx_port addr=%0h,source=%0h",master_trans.a_address,master_trans.a_source), UVM_NONE)
+	  end
      tl_cha_act_q.push_back(master_trans);
 
   endfunction : write_master_trans_tx
@@ -173,6 +179,18 @@ task dcache_scb::comp_a_channel();
 			 else begin
          `uvm_info(get_type_name(), $sformatf("tl cha compare pass! addr=%0h,source=%0h,param=%0h",tla_act_tr.a_address,tla_act_tr.a_source,tla_act_tr.a_param), UVM_NONE)
 			 end
+
+			 //put
+
+			 if((tla_act_tr.ch_a_msg_type ==  svt_tilelink_master_transaction::CH_A_PUT_FULL_DATA) || (tla_act_tr.ch_a_msg_type ==  svt_tilelink_master_transaction::CH_A_PUT_PARTIAL_DATA))begin
+
+				 if(tla_exp_tr.a_data != tla_act_tr.a_data || tla_exp_tr.a_mask != tla_act_tr.a_mask)begin
+					 `uvm_error(get_type_name(),$sformatf(" tl cha compare fail!\naddr=%0h\nExpect data=%p,mask=%p\nActual data=%p,mask=%p",tla_exp_tr.a_address,tla_exp_tr.a_data,tla_exp_tr.a_mask,tla_act_tr.a_data,tla_act_tr.a_mask));
+
+
+				 end
+	    end
+
 
       end	
     end
