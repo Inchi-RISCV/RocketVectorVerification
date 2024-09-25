@@ -45,8 +45,7 @@ make ncrun tc=dcache_addr_random_test																					//only load
 make ncrun tc=dcache_addr_random_test cfg=store																//store+load
 make ncrun tc=dcache_addr_random_test cfg=mmio_range													
 make ncrun tc=dcache_addr_random_test cfg=noAlloc													
-make ncrun tc=dcache_small_size_test 																					//only load
-make ncrun tc=dcache_small_size_test cfg=store 																//store+load
+make ncrun tc=dcache_small_size_test 																					//store+load
 make ncrun tc=dcache_small_size_test cfg=mmio_range 													
 make ncrun tc=dcache_small_size_test cfg=noAlloc 															
 make ncrun tc=dcache_signed_test 																							//only load
