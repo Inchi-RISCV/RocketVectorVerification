@@ -16,7 +16,6 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 		bit [511:0] wdata_t;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
-		bit store_en;
 		bit is_mmio_range;
 		bit noAlloc;
 	 	bit success;
@@ -24,7 +23,6 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 		super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
-		store_en = vmm_opts::get_int("store_en", 0, "store_en");
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
 		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 
@@ -45,27 +43,18 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);
 
-
-		if(store_en) begin
-			for(int j=0;j<6;j++) begin
-				for(int i=0;i<(64/2**j);i++)begin
-					wdata = $urandom_range(255);
-					//wdata_t = wdata << (8*(2**j*i));
-					dcache_store(addr_t+2**j*i,wdata,j,noAlloc);
-				end
-
-				for(int i=0;i<(64/2**j);i++)begin
-					dcache_load(addr_t+2**j*i,j,,noAlloc);
-				end
+		
+		backdoor_put_data(addr_t,6,{16{'h76543210}});
+		
+		for(int j=0;j<6;j++) begin
+			for(int i=0;i<(64/2**j);i++)begin
+				wdata = $urandom_range(255);
+				//wdata_t = wdata << (8*(2**j*i));
+				dcache_store(addr_t+2**j*i,wdata,j,noAlloc);
 			end
-		end
-		else begin
-			backdoor_put_data(addr_t,6,{16{'h76543210}});
-			
-			for(int j=0;j<6;j++) begin
-				for(int i=0;i<(64/2**j);i++)begin
-					dcache_load(addr_t+2**j*i,j,,noAlloc);
-				end
+
+			for(int i=0;i<(64/2**j);i++)begin
+				dcache_load(addr_t+2**j*i,j,,noAlloc);
 			end
 		end
 	endtask

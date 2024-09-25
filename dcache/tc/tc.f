@@ -16,6 +16,7 @@
 ./sequence/dcache_s1_kill_sequence.sv
 ./sequence/dcache_prefetch_read_sequence.sv
 ./sequence/dcache_prefetch_write_sequence.sv
+./sequence/dcache_long_delay_sequence.sv
 
 ./sequence/tilelink_slave_probeblock_sequence.sv
 
@@ -36,6 +37,7 @@
 ./dcache_s1_kill_test.sv
 ./dcache_prefetch_read_test.sv
 ./dcache_prefetch_write_test.sv
+./dcache_long_delay_test.sv
 
 ./tilelink_probeblock_test.sv
 

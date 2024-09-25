@@ -65,7 +65,7 @@ task tilelink_slave_probeblock_sequence::body();
 		for(int i=0;i<length;i++)begin
 			dcache_lr(addr_t+'h40*i,3);
 		end
-		#100ns;
+		#300ns; 	//TODO
 		for(int i=0;i<length;i++)begin
 			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
 		end

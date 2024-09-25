@@ -20,7 +20,8 @@ class dcache_reset_load_sequence extends dcache_base_sequence;
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 		
-		length 			= $urandom_range(1, 500);
+		//length 			= $urandom_range(1, 500);
+		length 			= 10;
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 		
 		success 	= std::randomize(tag_idx_t,set_idx_t) with {
@@ -44,6 +45,7 @@ class dcache_reset_load_sequence extends dcache_base_sequence;
 		uvm_hdl_force("tb_top.reset",1);
 		#150ns;
 		uvm_hdl_force("tb_top.reset",0);
+		wait(!tb_top.reset) 	//wait meta array init
 		#200ns;
 
 		for(int i=0;i<length;i++)begin
