@@ -622,7 +622,7 @@ task dcache_refm::do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opco
 
 
 	rm2sb_tltx_port.write(tr_a);
-	`uvm_info(get_type_name(),$sformatf("rm send acquire to sb , a_addr=%0h,a_source=%0h,a_mask=%0h,a_data=%0h",tr_a.a_address,tr_a.a_source,a_mask,a_data),UVM_NONE);
+	`uvm_info(get_type_name(),$sformatf("rm send tlu message to sb , a_addr=%0h,a_source=%0h,a_mask=%0h,a_data=%0h",tr_a.a_address,tr_a.a_source,a_mask,a_data),UVM_NONE);
 
 endtask
 
@@ -812,9 +812,10 @@ task dcache_refm::assemble_cmd();
 				  	  end
 
 					    do_tlc_message(req_addr,a_source,0);//NtoB
+							req_addr_arry[a_source]  = req_addr;
 
 						end
-					  req_addr_arry[a_source]  = req_addr;
+
 					  req_dest_arry[a_source]  = req_dest;
 				    req_source_arry[a_source]  = req_source;
 						req_cmd_arry[a_source]  = req_cmd;
@@ -846,16 +847,7 @@ task dcache_refm::assemble_cmd();
           if(coh == lsu_trans::BRANCH)begin
 		         update_cache(nset,0,lsu_trans::NOTHING,way ,0,coh_vic,data_vic,addr_vic);
 						 `uvm_info(get_type_name(),$sformatf("write miss release cache, set=%0h, q_size=%0h,way=%0h",nset,replace_q[nset].size(),way),UVM_NONE);
-				     //foreach (replace_q[nset][i])
-			       //  if(replace_q[nset][i] == way)begin
-				     //    replace_q[nset].delete(i);
-             //     `uvm_info(get_type_name(),$sformatf("write miss release cache, set=%0h, q_size=%0h,way=%0h",nset,replace_q[nset].size(),way),UVM_NONE);	
-				      //    break;
-		          // end
-
 					end
-
-
 
 	        //check if same addr req exist
 		      foreach (req_addr_arry[j])begin
@@ -885,6 +877,7 @@ task dcache_refm::assemble_cmd();
 							do_tlu_message(req_addr ,a_opcode,req_size,a_source,req_data,req_wmask);
 						end
             else begin
+							//get mshr valid sour_id
 					    wait (mshr_source_id_valid.or >0);
 					    foreach (mshr_source_id_valid[j])begin
 					      if(mshr_source_id_valid[j])begin
@@ -894,10 +887,11 @@ task dcache_refm::assemble_cmd();
 					      end  
 				      end
 							do_tlc_message(req_addr,a_source,a_param);
+							req_addr_arry[a_source]  = req_addr;
+
 				  	end
 
-            req_addr_arry[a_source]  = req_addr;
-						req_cmd_arry[a_source]        = req_cmd;
+ 						req_cmd_arry[a_source]        = req_cmd;
 						req_size_store_arry[a_source] = req_size;
 						req_mask_arry[a_source]       = mask;
             req_data_arry[a_source]       = req_data;
