@@ -96,10 +96,32 @@ make ncrun tc=dcache_hazard_test cfg=pfw_miss_pfr_hazard
 make ncrun tc=dcache_hazard_test cfg=pfw_hit_pfw_hazard
 make ncrun tc=dcache_hazard_test cfg=pfw_miss_pfw_hazard
 make ncrun tc=dcache_hazard_test cfg=random_hazard 														//random load or store
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_hit_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_hit_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_miss_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_miss_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_bypass_hit_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_bypass_hit_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_bypass_hit_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_bypass_hit_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=bypass_miss_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=bypass_miss_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_load_hit_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_load_hit_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_hit_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=load_miss_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_miss_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_load_hit_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_load_hit_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_hit_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=load_miss_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_miss_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=random_hazard
+make ncrun tc=dcache_iomshr_hazard_test
+make ncrun tc=dcache_iomshr_hazard_test cfg=mmio_range
 make ncrun tc=dcache_reset_load_test
 make ncrun tc=dcache_s1_kill_test
 make ncrun tc=dcache_long_delay_test
-
 make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_N
 make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_B
 make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_Trunk

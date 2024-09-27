@@ -14,7 +14,6 @@ make ncrun tc=dcache_addr_random_test cfg=store
 make ncrun tc=dcache_signed_test
 make ncrun tc=dcache_signed_test cfg=store
 make ncrun tc=dcache_small_size_test
-make ncrun tc=dcache_small_size_test cfg=store
 make ncrun tc=dcache_hazard_test cfg=load_hit_load_hazard
 make ncrun tc=dcache_hazard_test cfg=load_miss_load_hazard
 make ncrun tc=dcache_hazard_test cfg=B_load_hit_store_hazard

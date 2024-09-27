@@ -4,6 +4,8 @@
 ./sequence/dcache_sanity_sequence.sv
 ./sequence/dcache_load_sequence.sv
 ./sequence/dcache_hazard_sequence.sv
+./sequence/dcache_iomshr_hazard_sequence.sv
+./sequence/dcache_mshr_iomshr_hazard_sequence.sv
 ./sequence/dcache_store_sequence.sv
 ./sequence/dcache_addr_random_sequence.sv
 ./sequence/dcache_release_sequence.sv
@@ -25,6 +27,8 @@
 ./dcache_sanity_test.sv
 ./dcache_load_test.sv
 ./dcache_hazard_test.sv
+./dcache_iomshr_hazard_test.sv
+./dcache_mshr_iomshr_hazard_test.sv
 ./dcache_store_test.sv
 ./dcache_addr_random_test.sv
 ./dcache_release_test.sv
