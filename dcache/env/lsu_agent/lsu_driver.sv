@@ -151,6 +151,8 @@ task lsu_driver::do_drive();
 
 			while(1)begin
         destid = $urandom_range(31);
+				`uvm_info("YRHU",$sformatf("destid = %0h",destid),UVM_LOW);
+				`uvm_info("YRHU",$sformatf("destid_reuse[destid] = %b",destid_reuse[destid]),UVM_LOW);
 			  if(!destid_reuse[destid])
 					break;
 			end
@@ -174,8 +176,8 @@ task lsu_driver::do_drive();
 				//vif.replay_req            <= #`DELAY 0;
 				req_last = req;
 
-			  //when load ,set destid_reuse 1
-		    if(req.io_req_bits_cmd == lsu_trans::M_XRD)begin
+			  //when has data, set destid_reuse 1
+		    if(req.io_req_bits_cmd == lsu_trans::M_XRD||req.io_req_bits_cmd == lsu_trans::M_XA_SWAP||req.io_req_bits_cmd == lsu_trans::M_XA_ADD||req.io_req_bits_cmd == lsu_trans::M_XA_XOR||req.io_req_bits_cmd == lsu_trans::M_XA_OR||req.io_req_bits_cmd == lsu_trans::M_XA_AND||req.io_req_bits_cmd == lsu_trans::M_XA_MIN||req.io_req_bits_cmd == lsu_trans::M_XA_MAX||req.io_req_bits_cmd == lsu_trans::M_XA_MINU||req.io_req_bits_cmd == lsu_trans::M_XA_MAXU) begin
 				  destid_reuse[destid] = 1;
 				  `uvm_info(get_type_name(),$sformatf("set destid_reuse , destid = %0h",destid),UVM_HIGH);	
 			  end
