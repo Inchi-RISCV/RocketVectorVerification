@@ -62,7 +62,7 @@ class dcache_refm extends uvm_component;
 	extern task query_block(input bit [6:0] set_index, input bit [18:0] tag, output bit[1:0] coh, output bit [1:0] way, output bit [511:0] data );
   extern task send_rsp(input bit [7:0] source ,input bit [4:0] dest , input bit [2:0] status, input bit hasdata,input bit [511:0] data);
   extern task do_tlc_message(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
-	extern task do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask);
+	extern task do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask,input bit [2:0] a_param = 0);
 	extern task do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data,input bit [1:0] coh);
 	extern task do_refill();
 	extern task replace_plru(input bit [6:0] set_index,input bit[1:0] coh, input bit [1:0] exist_way ,output bit [1:0] victim_way,output bit victim_way_valid);
@@ -233,11 +233,11 @@ task dcache_refm::do_refill();
 
 			//get put or atomic
       if((d_opcode == 1) || (d_opcode==0) )begin
-        if(d_opcode == 1)begin
+        if(d_opcode == 1)begin //AccessAckData
 				  req_dest_tmp = req_dest_arry[d_source];
 				  sign_extension(req_signed_arry[req_dest_tmp],req_size_arry[req_dest_tmp],d_data,refill_data);
 			    send_rsp(req_source_arry[d_source] ,req_dest_arry[d_source] , lsu_trans::REFILL,1,refill_data);
-		      `uvm_info(get_type_name(),$sformatf("rm send get refill resp,req_dest=%0h,req_addr=%0h,req_source=%0h,data=%0h",req_dest_arry[d_source],a_addr,req_source_arry[d_source],refill_data),UVM_NONE);
+		      `uvm_info(get_type_name(),$sformatf("rm send iomsr refill resp,req_dest=%0h,req_addr=%0h,req_source=%0h,data=%0h",req_dest_arry[d_source],a_addr,req_source_arry[d_source],refill_data),UVM_NONE);
 			  end
 				
 			  req_addr_arry[d_source]  = 0;
@@ -595,14 +595,14 @@ task dcache_refm::do_tlc_message(input bit [31:0] a_addr ,input bit [15:0] a_sou
 endtask
 
 
-task dcache_refm::do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask);
+task dcache_refm::do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask,input bit [2:0] a_param = 0);
 
   svt_tilelink_master_transaction   tr_a;
 
   tr_a = new();
 
   if((a_opcode == 0) || (a_opcode == 1) )begin
-    tr_a.a_data = new[64];
+    tr_a.a_data = new[2**a_size];
 		tr_a.a_mask = new[1];
 
 	  for(int i=0;i<64;i++)begin
@@ -616,13 +616,13 @@ task dcache_refm::do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opco
   tr_a.a_source  = a_source;
   tr_a.a_address = a_addr;
   tr_a.ch_a_msg_type  = a_opcode;
-  tr_a.a_param   = 0;
+  tr_a.a_param   = a_param;
 
 
 
 
 	rm2sb_tltx_port.write(tr_a);
-	`uvm_info(get_type_name(),$sformatf("rm send tlu message to sb , a_addr=%0h,a_source=%0h,a_mask=%0h,a_data=%0h",tr_a.a_address,tr_a.a_source,a_mask,a_data),UVM_NONE);
+	`uvm_info(get_type_name(),$sformatf("rm send tlu message to sb , a_addr=%0h,a_source=%0h,a_mask=%0h,a_data=%0h,a_param=%0h",tr_a.a_address,tr_a.a_source,a_mask,a_data,a_param),UVM_NONE);
 
 endtask
 
@@ -706,7 +706,7 @@ task dcache_refm::assemble_cmd();
 	bit [1:0]   way,victim_way;
 	bit [2:0]   req_size;
 	bit [511:0] req_data;
-	bit [63:0]  req_wmask,mask;
+	bit [63:0]  req_wmask,mask,mask_tlu;
 	bit [5:0]   req_dest;
 	bit         req_noAlloc;
  	bit [31:0]  req_addr,addr_vic;
@@ -719,7 +719,7 @@ task dcache_refm::assemble_cmd();
 	bit         same_addr_exist;
 	bit [511:0] align_data,refill_data,merge_data,amo_data;
 	bit         victim_way_valid;
-
+  bit [5:0]   mask_addr;
     
 	lsu_trans   req;
 	lsu_trans::req_cmd_enum 		req_cmd;
@@ -873,8 +873,14 @@ task dcache_refm::assemble_cmd();
 						    end  
 				  	  end	
 							a_opcode = (req_cmd == lsu_trans::M_PWR) ? 1 : 0 ;
-							req_wmask = (req_cmd == lsu_trans::M_PWR) ? req_wmask : {64{1'b1}};
-							do_tlu_message(req_addr ,a_opcode,req_size,a_source,req_data,req_wmask);
+							
+							mask_addr = req_addr[5:0];
+							mask_tlu = 0;
+							for(int i=0;i<2**req_size;i++)begin
+                mask_tlu[mask_addr+i] = 1;
+							end
+							mask_tlu = (req_cmd == lsu_trans::M_PWR) ? req_wmask : mask_tlu;
+							do_tlu_message(req_addr ,a_opcode,req_size,a_source,req_data,mask_tlu);
 						end
             else begin
 							//get mshr valid sour_id
@@ -918,16 +924,59 @@ task dcache_refm::assemble_cmd();
 				 req_cmd == lsu_trans::M_XA_MAXU)begin
 
 				 //miss
-				if(coh == lsu_trans::NOTHING )begin
+				if(coh == lsu_trans::NOTHING || coh == lsu_trans::BRANCH)begin
+				
 					send_rsp(req_source ,req_dest ,lsu_trans::MISS,0,0);
-					//same addr hazard
+
+					//B need release
+					if(coh == lsu_trans::BRANCH)begin
+		        update_cache(nset,0,lsu_trans::NOTHING,way ,0,coh_vic,data_vic,addr_vic);
+						do_release({req_addr[31:6],6'h0},6,8,2,data,coh);
+						`uvm_info(get_type_name(),$sformatf("AMO B miss release cache, addr=%0h,set=%0h, q_size=%0h,way=%0h",req_addr,nset,replace_q[nset].size(),way),UVM_NONE);
+						
+					end
+
+					//same addr hazard todo
+
+					//get iomshr valid sour_id
+					wait (iomshr_source_id_valid.or >0);
+					  foreach (iomshr_source_id_valid[j])begin
+						  if(iomshr_source_id_valid[j])begin
+                a_source = j+16;
+							  iomshr_source_id_valid[j]=0;
+							  break;
+						  end  
+				  	end	
+					a_opcode = (req_cmd == lsu_trans::M_XA_SWAP || req_cmd == lsu_trans::M_XA_XOR || req_cmd == lsu_trans::M_XA_OR || req_cmd == lsu_trans::M_XA_AND  ) ? 3 : 2 ;
+          
+					if(a_opcode == 3)begin //logicaldata
+						case (req_cmd)
+              lsu_trans::M_XA_XOR : a_param = 0;
+              lsu_trans::M_XA_OR  : a_param = 1;
+              lsu_trans::M_XA_AND : a_param = 2;
+						  lsu_trans::M_XA_SWAP: a_param = 3;
+		        endcase
+					end
+					else begin
+					  case (req_cmd)
+              lsu_trans::M_XA_MIN : a_param = 0;
+              lsu_trans::M_XA_MAX : a_param = 1;
+              lsu_trans::M_XA_MINU: a_param = 2;
+						  lsu_trans::M_XA_MAXU: a_param = 3;
+					    lsu_trans::M_XA_ADD : a_param = 4;							
+		        endcase
+					end
+					
+					do_tlu_message(req_addr ,a_opcode,req_size,a_source,req_data,mask_tlu,a_param);
+
+					req_addr_arry[a_source]  = req_addr;
+					req_dest_arry[a_source]  = req_dest;
+				  req_source_arry[a_source]  = req_source;
+				  req_cmd_arry[a_source]  = req_cmd;
+					`uvm_info(get_type_name(),$sformatf("rm amo processing,a_source=%0h, req_addr=%0h,req_dest=%0h,req_cmd=%0h,a_param=%0h",a_source,req_addr_arry[a_source],req_dest_arry[a_source],req_cmd_arry[a_source],a_param),UVM_NONE);
 
 
         end
-				else if(coh == lsu_trans::BRANCH )begin
-					//release
-					
-				end
 				else begin
 					amoalu(req_cmd, req_size ,align_data,req_data,amo_data);
 
@@ -936,8 +985,8 @@ task dcache_refm::assemble_cmd();
 
 
 					sign_extension(req_signed,req_size,align_data,refill_data);
-					send_rsp(req_source ,req_dest , lsu_trans::HIT,0,align_data);
-          `uvm_info(get_type_name(),$sformatf("store hit merge data,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,way=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,way,req_wmask,data,req_data,merge_data),UVM_NONE);
+					send_rsp(req_source ,req_dest , lsu_trans::HIT,1,align_data);
+          `uvm_info(get_type_name(),$sformatf("amo hit merge data,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,way=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,way,req_wmask,data,req_data,merge_data),UVM_NONE);
 
 
 
