@@ -68,7 +68,7 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 						dcache_store(addr_t,wdata);
 					end
 					else begin
-						dcache_partial_mask_store(addr_t,wdata,wmask,1);
+						dcache_partial_mask_store(addr_t,wdata,wmask);
 					end
 				end
 			end
