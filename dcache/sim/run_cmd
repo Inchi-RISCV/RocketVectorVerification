@@ -69,6 +69,14 @@ make ncrun tc=dcache_hazard_test cfg=store_hit_load_hazard
 make ncrun tc=dcache_hazard_test cfg=store_miss_load_hazard
 make ncrun tc=dcache_hazard_test cfg=store_hit_store_hazard
 make ncrun tc=dcache_hazard_test cfg=store_miss_store_hazard
+make ncrun tc=dcache_hazard_test cfg=load_hit_lr_hazard
+make ncrun tc=dcache_hazard_test cfg=load_miss_lr_hazard
+make ncrun tc=dcache_hazard_test cfg=lr_load_hazard
+make ncrun tc=dcache_hazard_test cfg=store_hit_lr_hazard
+make ncrun tc=dcache_hazard_test cfg=store_miss_lr_hazard
+make ncrun tc=dcache_hazard_test cfg=lr_store_hazard
+make ncrun tc=dcache_hazard_test cfg=lr_lr_hazard
+make ncrun tc=dcache_hazard_test cfg=lr_sc_hazard
 make ncrun tc=dcache_hazard_test cfg=pfr_hit_load_hazard
 make ncrun tc=dcache_hazard_test cfg=pfr_miss_load_hazard
 make ncrun tc=dcache_hazard_test cfg=B_pfr_hit_store_hazard
