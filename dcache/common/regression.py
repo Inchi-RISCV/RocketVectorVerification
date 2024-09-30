@@ -70,8 +70,8 @@ def run_sim(dict_list):
         else:
             for i in os.listdir(tmp_mode_dir + '/logs'):
                 pth_fi = tmp_mode_dir + '/logs/' + i
-                #if i != 'vcs_compiler.log':
-                    #os.remove(pth_fi)
+                if i != 'vcs_compiler.log':
+                    os.remove(pth_fi)
     # submit regression jobs
     for para in dict_list:
         mode_name  = para['mode']
