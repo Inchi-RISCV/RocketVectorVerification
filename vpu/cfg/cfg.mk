@@ -9,6 +9,7 @@ seed := 1
 mode := base_func
 tc := instr_test
 cfg:=rv64ui-p-add
+cfg_base:=$(basename $(cfg))
 cfg_dir := ../tc/sequence
 
 
@@ -49,8 +50,8 @@ USER_COMP_OPTS += +define+NRET=1\
 					      	+define+VLEN=128\
 
 
-
-USER_RUN_OPTS := +UVM_TESTNAME=$(tc) +UVM_VERBOSITY=${pl} +ntb_random_seed=${seed} +SPIKE_INSTR_NAME=$(cfg_dir)/$(cfg).elf +DUT_INSTR_NAME=$(cfg_dir)/hex/$(cfg).hex
+#USER_RUN_OPTS := +UVM_TESTNAME=$(tc) +UVM_VERBOSITY=${pl} +ntb_random_seed=${seed} +SPIKE_INSTR_NAME=$(cfg_dir)/$(cfg).elf +DUT_INSTR_NAME=$(cfg_dir)/hex/$(cfg).hex
+USER_RUN_OPTS := +UVM_TESTNAME=$(tc) +UVM_VERBOSITY=${pl} +ntb_random_seed=${seed} +SPIKE_INSTR_NAME=$(cfg_dir)/$(cfg) +DUT_INSTR_NAME=$(cfg_dir)/hex/$(cfg_base).hex
 USER_VERDI_OPTS += -dbdir ./$(mode)/exec/simv.daidir
 
 fsdb :=on

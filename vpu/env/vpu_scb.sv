@@ -191,8 +191,8 @@ task vpu_scb::commit_check();
 
 		    if(dut_start_cp & instr_finish!=1) begin
          	//`uvm_info(get_type_name(),{" scb get act data : ",data_act_tr.sprint},UVM_NONE);
-
-		       inchi_difftest_exec();
+		       
+					 inchi_difftest_exec();
 		       do_exp_tr();
            //`uvm_info(get_type_name(),{" scb get exp data : ",data_exp_tr.sprint},UVM_NONE);
 
@@ -208,8 +208,15 @@ task vpu_scb::commit_check();
            	end
            end
 
-		    
-          if(!data_act_tr.verif_sfma)begin
+		      //used for guanyuantest 
+          //if(!data_act_tr.verif_sfma)begin
+					//		if(data_act_tr.verif_commit_prevPc != 'h8000_028a)begin
+		     	//  		comp_pass = data_act_tr.my_compare(data_exp_tr);
+					//		end
+				  //end
+         
+					//used for other tests
+					if(!data_act_tr.verif_sfma)begin
 		     	  comp_pass = data_act_tr.my_compare(data_exp_tr);
 				  end
 		     	commit_num ++;
@@ -304,6 +311,7 @@ task vpu_scb::commit_check();
 
 		
     //dut update ooo reg info
+		//changed exp_ooo_gpr_reg_info[gpr_reg_num][127:64] to exp_ooo_gpr_reg_info[gpr_reg_num][103:64] because only 40bits pc need to be compared now 
 	  while(1) begin
 			data_agent_port_update.get(data_act_tr_1);
 			if(data_act_tr_1.verif_update_reg_valid & dut_start_cp)begin
@@ -311,25 +319,27 @@ task vpu_scb::commit_check();
 				fpr_reg_num = data_act_tr_1.verif_update_reg_rfd;
 
 				if(data_act_tr_1.verif_update_reg_gpr_en)begin//update gpr
-					if(exp_ooo_gpr_reg_info[gpr_reg_num] == {data_act_tr_1.verif_update_reg_pc,data_act_tr_1.verif_update_reg_data}) begin
-	          `uvm_info(get_type_name(),$sformatf(" dut update gpr reg pc success ,reg_num=%0h,exp_reg=%0h,exp_pc=%0h,act_reg=%0h,act_pc=%0h,",gpr_reg_num,exp_ooo_gpr_reg_info[gpr_reg_num][63:0],exp_ooo_gpr_reg_info[gpr_reg_num][127:64],data_act_tr_1.verif_update_reg_data, data_act_tr_1.verif_update_reg_pc),UVM_NONE);						
+					if((exp_ooo_gpr_reg_info[gpr_reg_num][103:64] == data_act_tr_1.verif_update_reg_pc) &&
+						(exp_ooo_gpr_reg_info[gpr_reg_num][63:0] == data_act_tr_1.verif_update_reg_data)) begin
+	          `uvm_info(get_type_name(),$sformatf(" dut update gpr reg pc success ,reg_num=%0h,exp_reg=%0h,exp_pc=%0h,act_reg=%0h,act_pc=%0h,",gpr_reg_num,exp_ooo_gpr_reg_info[gpr_reg_num][63:0],exp_ooo_gpr_reg_info[gpr_reg_num][103:64],data_act_tr_1.verif_update_reg_data, data_act_tr_1.verif_update_reg_pc),UVM_NONE);						
             act_ooo_gpr_reg_info[gpr_reg_num] = 0;
 						exp_ooo_gpr_reg_info[gpr_reg_num] = 0;
 						ooo_gpr_time[gpr_reg_num] = 0;            
 					end
 					else if(exp_ooo_gpr_reg_info[gpr_reg_num] != 0) begin // o do not check
-						`uvm_error(get_type_name(),$sformatf(" dut update gpr reg pc not match ,reg_num=%0h,exp_reg=%0h,exp_pc=%0h,act_reg=%0h,act_pc=%0h,",gpr_reg_num,exp_ooo_gpr_reg_info[gpr_reg_num][63:0],exp_ooo_gpr_reg_info[gpr_reg_num][127:64],data_act_tr_1.verif_update_reg_data, data_act_tr_1.verif_update_reg_pc));
+						`uvm_error(get_type_name(),$sformatf(" dut update gpr reg pc not match ,reg_num=%0h,exp_reg=%0h,exp_pc=%0h,act_reg=%0h,act_pc=%0h,",gpr_reg_num,exp_ooo_gpr_reg_info[gpr_reg_num][63:0],exp_ooo_gpr_reg_info[gpr_reg_num][103:64],data_act_tr_1.verif_update_reg_data, data_act_tr_1.verif_update_reg_pc));
 					end
 				end
 				else begin //update fpr
-					if(exp_ooo_fpr_reg_info[fpr_reg_num] == {data_act_tr_1.verif_update_reg_pc,data_act_tr_1.verif_update_reg_data}) begin
-	          `uvm_info(get_type_name(),$sformatf(" dut update fpr reg success ,reg_num=%0h,exp_reg=%0h,exp_pc=%0h,act_reg=%0h,act_pc=%0h,",fpr_reg_num,exp_ooo_fpr_reg_info[fpr_reg_num][63:0],exp_ooo_fpr_reg_info[fpr_reg_num][127:64],data_act_tr_1.verif_update_reg_data, data_act_tr_1.verif_update_reg_pc),UVM_NONE);						
+					if((exp_ooo_fpr_reg_info[fpr_reg_num][103:64] == data_act_tr_1.verif_update_reg_pc)&&
+						(exp_ooo_fpr_reg_info[fpr_reg_num][63:0] == data_act_tr_1.verif_update_reg_data)) begin
+	          `uvm_info(get_type_name(),$sformatf(" dut update fpr reg success ,reg_num=%0h,exp_reg=%0h,exp_pc=%0h,act_reg=%0h,act_pc=%0h,",fpr_reg_num,exp_ooo_fpr_reg_info[fpr_reg_num][63:0],exp_ooo_fpr_reg_info[fpr_reg_num][103:64],data_act_tr_1.verif_update_reg_data, data_act_tr_1.verif_update_reg_pc),UVM_NONE);						
             act_ooo_fpr_reg_info[fpr_reg_num] = 0;
 						exp_ooo_fpr_reg_info[fpr_reg_num] = 0;
 						ooo_fpr_time[fpr_reg_num] = 0;             
 					end
 					else if(exp_ooo_fpr_reg_info[fpr_reg_num] != 0)begin // 0 do not check
-						`uvm_error(get_type_name(),$sformatf(" dut update fpr reg pc not match ,reg_num=%0h,exp_reg=%0h,exp_pc=%0h,act_reg=%0h,act_pc=%0h,",fpr_reg_num,exp_ooo_fpr_reg_info[fpr_reg_num][63:0],exp_ooo_fpr_reg_info[fpr_reg_num][127:64],data_act_tr_1.verif_update_reg_data, data_act_tr_1.verif_update_reg_pc));
+						`uvm_error(get_type_name(),$sformatf(" dut update fpr reg pc not match ,reg_num=%0h,exp_reg=%0h,exp_pc=%0h,act_reg=%0h,act_pc=%0h,",fpr_reg_num,exp_ooo_fpr_reg_info[fpr_reg_num][63:0],exp_ooo_fpr_reg_info[fpr_reg_num][103:64],data_act_tr_1.verif_update_reg_data, data_act_tr_1.verif_update_reg_pc));
 					end
 				end
 			end// end if data_act_tr.verif_update_reg_valid
@@ -549,6 +559,7 @@ task vpu_scb::init_spike_info(data_trans data_act_tr);
   spike_arry[3]  =   data_act_tr.verif_csr_vcsrWr     ;      
   spike_arry[2]  =   data_act_tr.verif_csr_vlWr       ;      
   spike_arry[1]  =   data_act_tr.verif_csr_vstartWr   ;      
+  //`uvm_info(get_type_name(),$sformatf(" get set_reg initial value %0h",data_act_tr.verif_csr_medelegWr ),UVM_NONE);
 
 	inchi_difftest_set_reg(spike_arry);
 	
