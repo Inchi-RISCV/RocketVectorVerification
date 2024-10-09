@@ -50,6 +50,7 @@ class dcache_refm extends uvm_component;
 	bit [2:0]  req_size_store_arry[32];
   bit [63:0] req_mask_arry[32];
 	bit [511:0] req_data_arry[32]; 
+	bit [559:0]  w_miss_release_data_q[$]; //addr+data 48+512
 
 	lsu_trans::req_cmd_enum 		req_cmd_arry[32];
 
@@ -210,8 +211,9 @@ task dcache_refm::do_refill();
 	bit [51:0]   same_addr_info,same_addr_info_tmp;
   bit          victim_way_valid;
   bit [63:0]   req_mask;
-	bit [511:0]  req_data,merge_data;
+	bit [511:0]  req_data,merge_data,wite_miss_data;
   bit          refill_valid[8];
+	bit [559:0]  w_miss_release_data;
 	
 	fork
 
@@ -226,10 +228,27 @@ task dcache_refm::do_refill();
 		    d_data[i*8+:8] = tr.d_data[i];
 			end
 		  d_source = tr.d_source;
-		  d_param[d_source] =  tr.d_param;  
-		  d_data_arry[d_source] = d_data;
+		  d_param[d_source] =  tr.d_param;
+			
 
-			`uvm_info(get_type_name(),$sformatf("rm get grant,a_addr=%0h,d_source=%0h,d_param=%0h,d_opcode=%0h,d_data=%0h,tl_chd_q_size=%0h",req_addr_arry[d_source],d_source,d_param[d_source],d_opcode,d_data,tl_chd_q.size()),UVM_NONE); 
+		  // get B write miss release data,if grant data = release data
+		  for(int i=0 ;i<w_miss_release_data_q.size();i++)begin
+        w_miss_release_data = w_miss_release_data_q.pop_front();
+		    if( w_miss_release_data[559:512] == req_addr_arry[d_source])begin
+					//d_data_arry[d_source] = w_miss_release_data[511:0];
+					wite_miss_data = w_miss_release_data[511:0];
+					`uvm_info(get_type_name(),$sformatf("rm get write miss data,addr=%0h,d_source=%0h,d_data=%0h,q_size=%0h",w_miss_release_data[559:512],d_source,wite_miss_data,tl_chd_q.size()),UVM_NONE);
+		    end
+		    else begin
+          w_miss_release_data_q.push_back(w_miss_release_data);
+		    end
+		  end
+
+      
+			d_data_arry[d_source] = (d_opcode == 4) ? wite_miss_data : d_data ;
+
+
+			`uvm_info(get_type_name(),$sformatf("rm get grant,a_addr=%0h,d_source=%0h,d_param=%0h,d_opcode=%0h,d_data=%0h,tl_chd_q_size=%0h",req_addr_arry[d_source],d_source,d_param[d_source],d_opcode,d_data_arry[d_source],tl_chd_q.size()),UVM_NONE); 
 
 			//get put or atomic
       if((d_opcode == 1) || (d_opcode==0) )begin
@@ -846,6 +865,7 @@ task dcache_refm::assemble_cmd();
 					//B write miss need release cache
           if(coh == lsu_trans::BRANCH)begin
 		         update_cache(nset,0,lsu_trans::NOTHING,way ,0,coh_vic,data_vic,addr_vic);
+						 w_miss_release_data_q.push_back({addr_vic,data_vic});
 						 `uvm_info(get_type_name(),$sformatf("write miss release cache, set=%0h, q_size=%0h,way=%0h",nset,replace_q[nset].size(),way),UVM_NONE);
 					end
 
