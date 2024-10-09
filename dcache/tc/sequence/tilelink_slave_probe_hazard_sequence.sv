@@ -53,7 +53,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 		solve length1, length2 before addr_t;
 			
 		//TODO:
-		if(resp_status == "hit"||cmd1 == 3) {
+		if(resp_status == "hit"||cmd1 == 2||cmd1 == 3) {
 			length1 	== 20;
 		}
 		else { 	//miss or lr
@@ -68,7 +68,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 	
 	backdoor_put_data(addr_t,6,{16{'h76543210}});
 
-	for(int i=0;i<length2;i++)begin
+	for(int i=0;i<length2;i++) begin
 		if(cmd2 == 3) begin 	//Replace
 			dcache_load(addr_t+'h2000*i);
 		end
