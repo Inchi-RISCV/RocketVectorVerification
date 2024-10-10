@@ -231,8 +231,8 @@ task dcache_refm::do_refill();
 		  d_param[d_source] =  tr.d_param;
 			
 
-		  // get B write miss release data,if grant data = release data
-		  for(int i=0 ;i<w_miss_release_data_q.size();i++)begin
+		  // get B write miss release data
+			for(int i=0 ;i<w_miss_release_data_q.size();i++)begin
         w_miss_release_data = w_miss_release_data_q.pop_front();
 		    if( w_miss_release_data[559:512] == req_addr_arry[d_source])begin
 					//d_data_arry[d_source] = w_miss_release_data[511:0];
@@ -244,7 +244,7 @@ task dcache_refm::do_refill();
 		    end
 		  end
 
-      
+      //if ack is grant ,data = release data
 			d_data_arry[d_source] = (d_opcode == 4) ? wite_miss_data : d_data ;
 
 
@@ -765,6 +765,13 @@ task dcache_refm::assemble_cmd();
 			tag  = req_addr[31:13];
       nset = req_addr[12:6];
 
+      #0.1
+			if(tb_top.U_GPCDCache.io_resp_bits_status[1:0] == 2)begin
+			 `uvm_info(get_type_name(),$sformatf("replay cmd rm donot accept ,addr=%0h,dest=%0h,cmd=%0h",req_addr,req_dest,req_cmd),UVM_NONE)
+       continue;
+
+			end
+
 		      
 		  `uvm_info(get_type_name(),$sformatf("rm get cmd,rea_addr=%0h,set=%0h,req_cmd=%0h,req_dest=%0h,req_size=%0h",req_addr,nset,req_cmd,req_dest,req_size),UVM_NONE);
 			`uvm_info(get_type_name(),$sformatf("processing addr=%p", req_addr_arry),UVM_NONE);
@@ -805,7 +812,7 @@ task dcache_refm::assemble_cmd();
 						continue;
 					end
 					else begin
-						if(req_noAlloc)begin
+						if(req_noAlloc || ((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)))begin
 						  //get iomshr valid sour_id
 						  wait (iomshr_source_id_valid.or >0);
 					    foreach (iomshr_source_id_valid[j])begin
@@ -882,7 +889,7 @@ task dcache_refm::assemble_cmd();
 						continue;
 					end
 					else begin
-						if(req_noAlloc)begin
+						if(req_noAlloc || ((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)))begin
 						  //get iomshr valid sour_id
 						  wait (iomshr_source_id_valid.or >0);
 					    foreach (iomshr_source_id_valid[j])begin
