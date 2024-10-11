@@ -31,6 +31,7 @@ class dcache_refm extends uvm_component;
 	lsu_trans rsp;
   svt_tilelink_master_transaction  tlmst_tr;
   svt_tilelink_slave_transaction   tl_chd_q[$]; 
+	svt_tilelink_slave_transaction   tl_chb_q[$]; 
 	bit [1:0] replace_q[128][$:3];
 
   bit [6:0] nset;
@@ -71,13 +72,18 @@ class dcache_refm extends uvm_component;
  	extern task release_source_id(input bit [15:0] source_id);
   extern task sign_extension(input bit is_signed,input bit [2:0] size,input bit [511:0] data,output bit [511:0] sign_data);
 	extern task amoalu(input bit [4:0] cmd, input bit [2:0] size ,input bit [511:0] old_data, input bit [511:0] new_data,output bit [511:0] data_out);
-
+  extern task do_probe();
 
 
   /**  write for tilelink monitor */
   virtual function void write_slave_trans_rx(svt_tilelink_slave_transaction slave_trans);
     if(slave_trans.status.drive_chnl_A_or_C)begin
    	  tl_chd_q.push_back(slave_trans);
+			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port\n",slave_trans.sprint}, UVM_NONE)
+	  end
+
+		if(slave_trans.drive_chnl_B)begin
+   	  tl_chb_q.push_back(slave_trans);
 			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port\n",slave_trans.sprint}, UVM_NONE)
 	  end
 
@@ -182,6 +188,55 @@ task dcache_refm::amoalu(input bit [4:0] cmd, input bit [2:0] size ,input bit [5
 
 
 endtask
+
+task dcache_refm::do_probe();
+
+  svt_tilelink_slave_transaction tr;
+	bit [4:0]  b_source;
+	bit [38:0] b_addr;
+	bit [1:0]  b_param;
+	bit [2:0]  b_opcode;
+  bit [24:0] ntag;
+  bit [6:0]    nset ;
+  bit [1:0]    coh;
+	bit [1:0]    exist_way;
+	bit [511:0]  data;
+
+
+
+	while(1) begin
+		#0.1;
+		if(tl_chb_q.size()>0)begin
+      tr = tl_chb_q.pop_front();
+      `uvm_info(get_type_name(), {"get tl_chb_q item\n",tr.sprint}, UVM_NONE)
+      b_opcode = tr.ch_b_msg_type;
+      b_addr= tr.b_address;
+      b_param  = tr.b_param;
+      b_source = tr.b_source;
+
+      nset = b_addr[12:6];
+		  ntag = b_addr[38:13];
+
+			query_block(nset,ntag, coh ,exist_way,data);
+			//replace_plru(nset,coh,exist_way ,victim_way,victim_way_valid);
+
+      //toN
+			if(b_param == 0)begin
+
+			end
+			else if(b_param == 1)begin//toB
+
+			end
+			else begin//toT
+
+			end
+
+		end
+
+	end
+
+endtask
+
 
 task dcache_refm::do_refill();
   svt_tilelink_slave_transaction tr;

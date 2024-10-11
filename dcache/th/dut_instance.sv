@@ -102,7 +102,7 @@ GPCDCache	U_GPCDCache(
 	.io_req_bits_noAlloc	    (m_lsu_if.io_req_bits_noAlloc),
 	.io_req_bits_dest	        (m_lsu_if.io_req_bits_dest),
 	.io_req_bits_isRefill   	(m_lsu_if.io_req_bits_isRefill),
-	.io_req_bits_refillWay  	(m_lsu_if.io_req_bits_refillWay),
+	//.io_req_bits_refillWay  	(m_lsu_if.io_req_bits_refillWay),
 	.io_req_bits_refillCoh	  (m_lsu_if.io_req_bits_refillCoh),
 //	.io_s0_kill	              (m_lsu_if.io_s0_kill),
 	.io_s1_kill	              (m_lsu_if.io_s1_kill),

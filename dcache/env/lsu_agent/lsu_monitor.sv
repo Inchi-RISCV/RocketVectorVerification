@@ -63,7 +63,7 @@ task lsu_monitor::main_phase(uvm_phase phase);
   `uvm_info(get_type_name(), "main_phase", UVM_HIGH)
   fork
     do_mon_req();
-	  //do_mon_rsp();
+	  do_mon_rsp();
   join
 
 
@@ -116,21 +116,12 @@ task lsu_monitor::do_mon_rsp();
       tr_rsp.io_resp_bits_data    = vif.io_resp_bits_data;	
       tr_rsp.io_nextCycleWb       = vif.io_nextCycleWb;	
 
-			if(tr_rsp.io_resp_bits_status == lsu_trans::REPLAY)begin
-				tr_req = req_mon_q.pop_front();
-        `uvm_info(get_type_name(),$sformatf("replay rsp donot send to scb ,dest=%0h",tr_rsp.io_resp_bits_dest),UVM_NONE)
-				`uvm_info(get_type_name(),$sformatf("replay cmd donot send to rm ,addr=%0h,dest=%0h",tr_req.io_req_bits_paddr,tr_req.io_req_bits_dest),UVM_NONE)
-			end
-			else begin
+		  if(tr_rsp.io_resp_bits_status != lsu_trans::REPLAY)begin
 			  analysis_port_rsp.write(tr_rsp);
-				`uvm_info(get_type_name(), {"send monitor rsp item\n",tr_rsp.sprint}, UVM_HIGH)
-				if(tr_rsp.io_resp_bits_status == lsu_trans::HIT || tr_rsp.io_resp_bits_status == lsu_trans::MISS)begin
-					tr_req = req_mon_q.pop_front();
-				  analysis_port_req.write(tr_req);
-				  `uvm_info(get_type_name(), {"send monitor req item\n",tr_req.sprint}, UVM_HIGH)
-			  end
-			end		
-		end	
+			  `uvm_info(get_type_name(), {"send monitor rsp item\n",tr_rsp.sprint}, UVM_HIGH)
+		  end
+		end
+
 	end
 
 endtask : do_mon_rsp
