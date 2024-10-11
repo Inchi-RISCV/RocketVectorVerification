@@ -53,13 +53,18 @@ task tilelink_slave_probe_hazard_sequence::body();
 		solve length1, length2 before addr_t;
 			
 		//TODO:
-		if(resp_status == "hit"||cmd1 == 2||cmd1 == 3) {
-			length1 	== 20;
+		if(resp_status == "hit"||(cmd1 == 2 && cmd2 == 3)||cmd1 == 3) {
+			length1 == 20;
 		}
 		else { 	//miss or lr
-			length1 	== 1;
+			length1 == 1;
 		}
-		length2 == 10;
+		if(cmd2 != 2) {
+			length2 == 20;
+		} 
+		else {
+			length2 == 1;
+		}
 		addr_t inside {['h8000_0000:'hffff_ffff]};
 		(addr_t%64) == 0;
 		(addr_t+64*(length1+length2)) inside {['h8000_0000:'hffff_ffff]};
@@ -110,6 +115,8 @@ task tilelink_slave_probe_hazard_sequence::body();
 			else if(resp_status == "miss")
 				wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h1);
 	
+			//wait(tb_top.tilelink_slave_if[0].a_valid == 'h1); 	//TODO
+
 			if(cmd1 == 3) begin 	//replace
 				wait(tb_top.tilelink_slave_if[0].c_opcode[2:0] == 'h6);
 			end
