@@ -962,6 +962,7 @@ task dcache_refm::assemble_cmd();
 						`uvm_info(get_type_name(),$sformatf("AMO B miss release cache, addr=%0h,set=%0h, q_size=%0h,way=%0h",req_addr,nset,replace_q[nset].size(),way),UVM_NONE);
 						
 					end
+					 
 
 					//same addr hazard todo
 
