@@ -37,13 +37,13 @@ class dcache_refm extends uvm_component;
   bit [6:0] nset;
 	bit [1:0] nway;
 	bit [512*4-1:0] data_arry[128]; //data 4way 
-	bit [32*4-1:0]  meta_arry[128]; //20bit tag ,2bit coh ,4way
+	bit [39*4-1:0]  meta_arry[128]; //26bit tag ,2bit coh ,4way
   bit        mshr_source_id_valid[8] = {1,1,1,1,1,1,1,1};
 	bit        iomshr_source_id_valid[8] = {1,1,1,1,1,1,1,1};
-	bit [31:0] req_addr_arry[32];
+	bit [38:0] req_addr_arry[32];
   //bit [38:0]  req_source_q[$]; //addr+dest
-  bit [51:0] same_addr_info_q[$];   //sign+cmd+addr+source+dest  1+5+32+8+6
-	bit [51:0] same_addr_info_tmp_q[$];
+  bit [58:0] same_addr_info_q[$];   //sign+cmd+addr+source+dest  1+5+39+8+6
+	bit [58:0] same_addr_info_tmp_q[$];
 	bit [5:0]  req_dest_arry[32];      
 	bit [7:0]  req_source_arry[32];
 	bit [2:0]  req_size_arry[32];
@@ -57,18 +57,18 @@ class dcache_refm extends uvm_component;
 
   extern function new(string name, uvm_component parent);
   extern task main_phase(uvm_phase phase);
-	extern task addr_data_align(input bit [2:0] size, input bit [31:0] addr,input bit [511:0] data,output [511:0] align_data);
-	extern task data_mask_merge(input bit [2:0] size, input bit [31:0] addr,input bit [63:0] mask, input bit [511:0] r_data, input bit [511:0] w_data,output [511:0] data);
+	extern task addr_data_align(input bit [2:0] size, input bit [38:0] addr,input bit [511:0] data,output [511:0] align_data);
+	extern task data_mask_merge(input bit [2:0] size, input bit [38:0] addr,input bit [63:0] mask, input bit [511:0] r_data, input bit [511:0] w_data,output [511:0] data);
   extern task get_lsu_port();
 	extern task assemble_cmd();
-	extern task query_block(input bit [6:0] set_index, input bit [18:0] tag, output bit[1:0] coh, output bit [1:0] way, output bit [511:0] data );
+	extern task query_block(input bit [6:0] set_index, input bit [25:0] tag, output bit[1:0] coh, output bit [1:0] way, output bit [511:0] data );
   extern task send_rsp(input bit [7:0] source ,input bit [4:0] dest , input bit [2:0] status, input bit hasdata,input bit [511:0] data);
-  extern task do_tlc_message(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
-	extern task do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask,input bit [2:0] a_param = 0);
-	extern task do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data,input bit [1:0] coh);
+  extern task do_tlc_message(input bit [38:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
+	extern task do_tlu_message(input bit [38:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask,input bit [2:0] a_param = 0);
+	extern task do_release(input bit [38:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data,input bit [1:0] coh);
 	extern task do_refill();
 	extern task replace_plru(input bit [6:0] set_index,input bit[1:0] coh, input bit [1:0] exist_way ,output bit [1:0] victim_way,output bit victim_way_valid);
-	extern task update_cache(input bit [6:0] set_index,input bit [18:0] tag,input bit[1:0] coh, input bit [1:0] way ,input bit [511:0] data,output bit[1:0] victim_coh,output bit[511:0] victim_data,output bit[31:0] victim_addr);
+	extern task update_cache(input bit [6:0] set_index,input bit [25:0] tag,input bit[1:0] coh, input bit [1:0] way ,input bit [511:0] data,output bit[1:0] victim_coh,output bit[511:0] victim_data,output bit[38:0] victim_addr);
  	extern task release_source_id(input bit [15:0] source_id);
   extern task sign_extension(input bit is_signed,input bit [2:0] size,input bit [511:0] data,output bit [511:0] sign_data);
 	extern task amoalu(input bit [4:0] cmd, input bit [2:0] size ,input bit [511:0] old_data, input bit [511:0] new_data,output bit [511:0] data_out);
@@ -77,14 +77,16 @@ class dcache_refm extends uvm_component;
 
   /**  write for tilelink monitor */
   virtual function void write_slave_trans_rx(svt_tilelink_slave_transaction slave_trans);
+
+	  //`uvm_info(get_type_name(), {"get tl2rm_tlrx_port\n",slave_trans.sprint}, UVM_NONE)
     if(slave_trans.status.drive_chnl_A_or_C)begin
    	  tl_chd_q.push_back(slave_trans);
-			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port\n",slave_trans.sprint}, UVM_NONE)
+			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port tl_chd_q \n",slave_trans.sprint}, UVM_HIGH)
 	  end
 
 		if(slave_trans.drive_chnl_B)begin
    	  tl_chb_q.push_back(slave_trans);
-			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port\n",slave_trans.sprint}, UVM_NONE)
+			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port tl_chb_q\n",slave_trans.sprint}, UVM_HIGH)
 	  end
 
   endfunction : write_slave_trans_rx
@@ -111,6 +113,7 @@ task dcache_refm::main_phase(uvm_phase phase);
 		get_lsu_port();
 		assemble_cmd();
     do_refill();
+		do_probe();
 	join
 
 
@@ -192,23 +195,29 @@ endtask
 task dcache_refm::do_probe();
 
   svt_tilelink_slave_transaction tr;
-	bit [4:0]  b_source;
-	bit [38:0] b_addr;
-	bit [1:0]  b_param;
-	bit [2:0]  b_opcode;
-  bit [24:0] ntag;
+	bit [4:0]    b_source;
+	bit [38:0]   b_addr,probe_addr;
+	bit [2:0]    b_param;
+	bit [2:0]    b_opcode;
+  bit [25:0]   ntag;
   bit [6:0]    nset ;
-  bit [1:0]    coh;
+  bit [1:0]    coh,coh_vic,coh_tmp[32];
 	bit [1:0]    exist_way;
-	bit [511:0]  data;
+	bit [511:0]  data,data_vic;
+	bit [38:0]   addr_vic;
+	bit [38:0]   probe_addr_arry[32];
+	bit [1:0]    probe_way[32];
+	bit [2:0]    c_param;
+	bit [2:0]    c_opcode;
 
+  
+	fork
 
-
-	while(1) begin
+	while (1) begin
 		#0.1;
 		if(tl_chb_q.size()>0)begin
       tr = tl_chb_q.pop_front();
-      `uvm_info(get_type_name(), {"get tl_chb_q item\n",tr.sprint}, UVM_NONE)
+      //`uvm_info(get_type_name(), {"get tl_chb_q item\n",tr.sprint}, UVM_NONE)
       b_opcode = tr.ch_b_msg_type;
       b_addr= tr.b_address;
       b_param  = tr.b_param;
@@ -217,23 +226,70 @@ task dcache_refm::do_probe();
       nset = b_addr[12:6];
 		  ntag = b_addr[38:13];
 
-			query_block(nset,ntag, coh ,exist_way,data);
-			//replace_plru(nset,coh,exist_way ,victim_way,victim_way_valid);
+			`uvm_info(get_type_name(),$sformatf("rm get probe,b_addr=%0h,b_source=%0h,b_param=%0h,b_opcode=%0h,tl_chb_q_size=%0h",b_addr,b_source,b_param,b_opcode,tl_chb_q.size()),UVM_NONE);
+
+			query_block(nset,ntag,coh,exist_way,data);
 
       //toN
-			if(b_param == 0)begin
+			if(b_param == 2)begin
 
+				//TtoB 0; TtoN 1; BtoN 2; TtoT 3; BtoB 4; NtoN 5;
+				case (coh)
+          lsu_trans::NOTHING : c_param = 5 ;// NtoN
+          lsu_trans::BRANCH  : c_param = 2 ;// BtoN
+          lsu_trans::TRUNK   : c_param = 1 ;// TtoN
+          lsu_trans::DIRTY   : c_param = 1 ;// TtoN
+		    endcase
+				coh_tmp[b_source] = lsu_trans::NOTHING;
 			end
 			else if(b_param == 1)begin//toB
-
+			  case (coh)
+          lsu_trans::NOTHING : c_param = 5 ;// NtoN	
+          lsu_trans::BRANCH  : c_param = 4 ;// BtoB
+          lsu_trans::TRUNK   : c_param = 0 ;// TtoB
+          lsu_trans::DIRTY   : c_param = 0 ;// TtoB
+		    endcase	
+				coh_tmp[b_source] = lsu_trans::BRANCH;
 			end
 			else begin//toT
-
+			  case (coh)
+          lsu_trans::NOTHING : c_param = 5 ;// NtoN	
+          lsu_trans::BRANCH  : c_param = 4 ;// BtoB
+          lsu_trans::TRUNK   : c_param = 3 ;// TtoT
+          lsu_trans::DIRTY   : c_param = 3 ;// TtoT					
+		    endcase	
+        coh_tmp[b_source] = lsu_trans::TRUNK;
 			end
+
+  
+			//cacheline DIRTY probeAckData
+			c_opcode = (coh == lsu_trans::DIRTY) ? 5 : 4;
+      do_release(b_addr,c_opcode,b_source,c_param,data,coh);
+      `uvm_info(get_type_name(),$sformatf("do probeack ,addr=%0h,c_source=%0h,source_coh=%0h,b_param=%0h,c_param=%0h",b_addr,b_source,coh,b_param,c_param),UVM_NONE);
+
+	    probe_addr_arry[b_source]  = b_addr;
+	    probe_way[b_source]   = exist_way;
 
 		end
 
 	end
+
+	while(1) begin
+		@(posedge tb_top.clock);
+		foreach (probe_addr_arry[i]) begin
+			if(probe_addr_arry[i])begin
+				`uvm_info(get_type_name(),$sformatf("probe_addr_arry=%p,i=%0h", probe_addr_arry,i),UVM_NONE);
+		    probe_addr = probe_addr_arry[i];
+	      if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && !tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[38:6] == probe_addr[38:6] && tb_top.U_GPCDCache._mainReqArb_io_out_bits_isProbe))begin	
+				  update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp[i],probe_way[i],0,coh_vic,data_vic,addr_vic);
+          `uvm_info(get_type_name(),$sformatf("probe update cacheline,addr=%0h,c_source=%0h,way=%0h,coh=%0h",probe_addr,i,probe_way[i],coh_tmp[i]),UVM_NONE);
+					probe_addr_arry[i] = 0;
+				end
+	    end
+		end
+	end			
+
+  join
 
 endtask
 
@@ -244,26 +300,26 @@ task dcache_refm::do_refill();
 	bit [511:0]  d_data,align_data,refill_data,data_vic,update_data;
 	bit [15:0]   d_source;
 	bit [1:0]    d_param[8];
-	bit [31:0]   a_addr;
+	bit [38:0]   a_addr;
   bit [511:0]  d_data_arry[32];
 
 
 	bit [1:0]    coh,coh_tmp,coh_vic;
 	bit [1:0]    exist_way,victim_way;
 	bit [511:0]  data;
-	bit [127:0]  meta_data;
+	bit [39*4-1:0]  meta_data;
 	bit [2047:0] set_data;
   bit [6:0]    nset ;
-  bit [18:0]   ntag ;
-  bit [31:0]   meta_tmp ;
+  bit [25:0]   ntag ;
+  bit [38:0]   meta_tmp ;
   bit [7:0]    req_source;
-  bit [31:0]   req_addr,addr_vic;	
+  bit [38:0]   req_addr,addr_vic;	
   bit [5:0]    req_dest,req_dest_tmp;
 	bit [4:0]    req_cmd_same_addr,req_cmd;
 	bit [2:0]    req_size,req_size_store;
   bit          req_signed;
-	bit [31:0]   same_addr_refill_num,tmp_num;
-	bit [51:0]   same_addr_info,same_addr_info_tmp;
+	bit [38:0]   same_addr_refill_num,tmp_num;
+	bit [58:0]   same_addr_info,same_addr_info_tmp;
   bit          victim_way_valid;
   bit [63:0]   req_mask;
 	bit [511:0]  req_data,merge_data,wite_miss_data;
@@ -335,7 +391,7 @@ task dcache_refm::do_refill();
 		foreach (req_addr_arry[i]) begin
 			if(req_addr_arry[i])begin
 		    a_addr = req_addr_arry[i];
-	      if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[31:6] == a_addr[31:6]))begin	
+	      if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[38:6] == a_addr[38:6] && !tb_top.U_GPCDCache._mainReqArb_io_out_bits_isProbe))begin	
 					refill_valid[i]=1;
           `uvm_info(get_type_name(),$sformatf("rm wait dut refill done,a_addr=%0h,valid=%0h,isrefill=%0h",a_addr,tb_top.U_GPCDCache.mainReqArb.io_out_valid,tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill),UVM_NONE);
 					`uvm_info(get_type_name(),$sformatf(" req_addr_arry=%p,refill_valid=%p", req_addr_arry,refill_valid),UVM_NONE);
@@ -352,7 +408,7 @@ task dcache_refm::do_refill();
           d_source = i;
 				  a_addr = req_addr_arry[d_source];	
           nset = a_addr[12:6];
-		    	ntag = a_addr[31:13];
+		    	ntag = a_addr[38:13];
 
 			    query_block(nset,ntag, coh ,exist_way,data);
 			    replace_plru(nset,coh,exist_way ,victim_way,victim_way_valid);
@@ -387,9 +443,9 @@ task dcache_refm::do_refill();
 		        	
                 req_dest = same_addr_info[5:0];
                 req_source = same_addr_info[13:6];
-		        	  req_cmd_same_addr = same_addr_info[50:46];
-		        	  req_signed = same_addr_info[51:51];
-		        	  req_addr  = same_addr_info[45:14];
+		        	  req_cmd_same_addr = same_addr_info[57:53];
+		        	  req_signed = same_addr_info[58:58];
+		        	  req_addr  = same_addr_info[52:14];
 		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_refill_num),UVM_NONE);
 		        	  if(req_addr[31:6] == a_addr[31:6])begin 
   	        	  	addr_data_align(req_size_arry[req_dest],req_addr,d_data_arry[d_source],align_data);
@@ -416,9 +472,9 @@ task dcache_refm::do_refill();
 		          	same_addr_info_q.push_front(same_addr_info_tmp);
 		        	  req_dest =   same_addr_info_tmp[5:0];
                 req_source = same_addr_info_tmp[13:6];
-		          	req_cmd_same_addr =    same_addr_info_tmp[50:46];
-		        	  req_signed = same_addr_info_tmp[51:51];
-		        	  req_addr  =  same_addr_info_tmp[45:14];
+		          	req_cmd_same_addr =    same_addr_info_tmp[57:53];
+		        	  req_signed = same_addr_info_tmp[58:58];
+		        	  req_addr  =  same_addr_info_tmp[52:14];
 		        	  `uvm_info(get_type_name(),$sformatf("push back same addr info ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_info_tmp_q.size()),UVM_NONE);  
                
 		          end
@@ -467,12 +523,12 @@ task dcache_refm::do_refill();
 endtask
 
 
-task dcache_refm::update_cache(input bit [6:0] set_index,input bit [18:0] tag,input bit[1:0] coh, input bit [1:0] way ,input bit [511:0] data,output bit[1:0] victim_coh,output bit[511:0] victim_data,output bit[31:0] victim_addr);
+task dcache_refm::update_cache(input bit [6:0] set_index,input bit [25:0] tag,input bit[1:0] coh, input bit [1:0] way ,input bit [511:0] data,output bit[1:0] victim_coh,output bit[511:0] victim_data,output bit[38:0] victim_addr);
 	
-	bit [127:0] meta_data;
+	bit [39*4-1:0] meta_data;
 	bit [2047:0] set_data;
-  bit [31:0] meta_tmp ;
-	bit [31:0] meta_victim_tmp ;
+  bit [38:0] meta_tmp ;
+	bit [38:0] meta_victim_tmp ;
 
 
   meta_data = meta_arry[set_index];
@@ -489,10 +545,10 @@ task dcache_refm::update_cache(input bit [6:0] set_index,input bit [18:0] tag,in
 	endcase
 
 	case (way)
-    2'h0 : meta_victim_tmp = meta_data[31:0]  ;
-		2'h1 : meta_victim_tmp = meta_data[63:32] ;
-		2'h2 : meta_victim_tmp = meta_data[95:64] ;
-		2'h3 : meta_victim_tmp = meta_data[127:96];	
+    2'h0 : meta_victim_tmp = meta_data[38:0]  ;
+		2'h1 : meta_victim_tmp = meta_data[77:39] ;
+		2'h2 : meta_victim_tmp = meta_data[116:78] ;
+		2'h3 : meta_victim_tmp = meta_data[155:117];	
 	endcase
 	
 	case (way)
@@ -503,10 +559,10 @@ task dcache_refm::update_cache(input bit [6:0] set_index,input bit [18:0] tag,in
 	endcase
 
 	case (way)
-    2'h0 : meta_data[31:0]  =meta_tmp;
-		2'h1 : meta_data[63:32] =meta_tmp;
-		2'h2 : meta_data[95:64] =meta_tmp;
-		2'h3 : meta_data[127:96]=meta_tmp;	
+    2'h0 : meta_data[38:0]  =meta_tmp;
+		2'h1 : meta_data[77:39] =meta_tmp;
+		2'h2 : meta_data[116:78] =meta_tmp;
+		2'h3 : meta_data[155:117]=meta_tmp;	
 	endcase
 	
 			
@@ -515,7 +571,7 @@ task dcache_refm::update_cache(input bit [6:0] set_index,input bit [18:0] tag,in
 
 
 	victim_coh  = meta_victim_tmp[1:0];
-	victim_addr = {meta_victim_tmp[31:13],set_index,6'h0};
+	victim_addr = {meta_victim_tmp[38:13],set_index,6'h0};
 
 
 	`uvm_info(get_type_name(),$sformatf("update cache ,set=%0h,tag=%0h,way=%0h,coh=%0h,data=%0h,victim_addr=%0h,victim_coh=%0h,victim_data=%0h",set_index,tag,way,coh,data,victim_addr,victim_coh,victim_data),UVM_NONE)
@@ -523,7 +579,7 @@ task dcache_refm::update_cache(input bit [6:0] set_index,input bit [18:0] tag,in
 
 endtask
 
-task dcache_refm::addr_data_align(input bit [2:0] size, input bit [31:0] addr,input bit [511:0] data,output [511:0] align_data);
+task dcache_refm::addr_data_align(input bit [2:0] size, input bit [38:0] addr,input bit [511:0] data,output [511:0] align_data);
 
   bit [5:0]   addr_align;
   bit [511:0] valid_bits;
@@ -567,7 +623,7 @@ task dcache_refm::addr_data_align(input bit [2:0] size, input bit [31:0] addr,in
 endtask
 
 
-task dcache_refm::data_mask_merge(input bit [2:0] size, input bit [31:0] addr,input bit [63:0] mask, input bit [511:0] r_data, input bit [511:0] w_data,output [511:0] data);
+task dcache_refm::data_mask_merge(input bit [2:0] size, input bit [38:0] addr,input bit [63:0] mask, input bit [511:0] r_data, input bit [511:0] w_data,output [511:0] data);
 
 	bit [511:0] valid_bits,data_tmp,wdata_tmp;
 
@@ -652,14 +708,14 @@ task dcache_refm::send_rsp(input bit [7:0] source ,input bit [4:0] dest , input 
 
 endtask
 
-task dcache_refm::do_tlc_message(input bit [31:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
+task dcache_refm::do_tlc_message(input bit [38:0] a_addr ,input bit [15:0] a_source,input bit [2:0] a_param);
 
   svt_tilelink_master_transaction   tr_a;
 
   tr_a = new();
   tr_a.a_size    = 'h6;
   tr_a.a_source  = a_source;
-  tr_a.a_address = {a_addr[31:6],6'h0};
+  tr_a.a_address = {a_addr[38:6],6'h0};
   tr_a.ch_a_msg_type  = svt_tilelink_master_transaction::CH_A_ACQUIRE_BLOCK;
   tr_a.a_param   = a_param;
 
@@ -669,7 +725,7 @@ task dcache_refm::do_tlc_message(input bit [31:0] a_addr ,input bit [15:0] a_sou
 endtask
 
 
-task dcache_refm::do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask,input bit [2:0] a_param = 0);
+task dcache_refm::do_tlu_message(input bit [38:0] a_addr ,input bit [2:0] a_opcode,input bit [2:0] a_size,input bit [15:0] a_source,input bit [511:0] a_data,input bit [63:0] a_mask,input bit [2:0] a_param = 0);
 
   svt_tilelink_master_transaction   tr_a;
 
@@ -701,20 +757,25 @@ task dcache_refm::do_tlu_message(input bit [31:0] a_addr ,input bit [2:0] a_opco
 endtask
 
 
-task dcache_refm::do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data,input bit [1:0] coh);
+task dcache_refm::do_release(input bit [38:0] c_addr ,input bit [2:0] c_opcode,input bit [15:0] c_source,input bit [2:0] c_param,input bit [511:0] c_data,input bit [1:0] coh);
    
 	svt_tilelink_slave_transaction   tr_c;
 
   tr_c = new();
 	tr_c.status = new();
 
-	if(coh == lsu_trans::DIRTY)begin
+//if(coh == lsu_trans::DIRTY)begin
+//  tr_c.status.c_data = new[64];
+//end
+
+  //ReleaseData ProbeAckData
+  if(c_opcode==7 || c_opcode==5 )begin
     tr_c.status.c_data = new[64];
-  end
+	end
 
   tr_c.status.c_size         = 'h6;
   tr_c.status.c_source       = c_source;
-  tr_c.status.c_address      = {c_addr[31:6],6'h0};
+  tr_c.status.c_address      = {c_addr[38:6],6'h0};
   tr_c.status.ch_c_msg_type  = c_opcode;
   tr_c.status.c_param        = c_param;
 
@@ -723,7 +784,7 @@ task dcache_refm::do_release(input bit [31:0] c_addr ,input bit [2:0] c_opcode,i
   end
 
 	rm2sb_tlc_port.write(tr_c);
-	`uvm_info(get_type_name(),$sformatf("rm send release to sb,c_addr=%0h,c_opcode=%0h,c_source=%0h,c_param=%0h,data=%0h",tr_c.status.c_address,tr_c.status.ch_c_msg_type,tr_c.status.c_source,tr_c.status.c_param,c_data),UVM_NONE);
+	`uvm_info(get_type_name(),$sformatf("rm send channel_c message to sb,c_addr=%0h,c_opcode=%0h,c_source=%0h,c_param=%0h,data=%0h",tr_c.status.c_address,tr_c.status.ch_c_msg_type,tr_c.status.c_source,tr_c.status.c_param,c_data),UVM_NONE);
 
 	`uvm_info(get_type_name(),$sformatf("release_data=%p",tr_c.status.c_data),UVM_NONE);
 
@@ -776,20 +837,20 @@ task dcache_refm::assemble_cmd();
 	bit [511:0] data,data_vic;
 	bit         hit;
 	bit [2:0]   coh,coh_vic;
-	bit [18:0]  tag;
+	bit [25:0]  tag;
 	bit [1:0]   way,victim_way;
 	bit [2:0]   req_size;
 	bit [511:0] req_data;
 	bit [63:0]  req_wmask,mask,mask_tlu;
 	bit [5:0]   req_dest;
 	bit         req_noAlloc;
- 	bit [31:0]  req_addr,addr_vic;
+ 	bit [38:0]  req_addr,addr_vic;
 	bit [7:0]   req_source;
   bit         req_signed;
 	bit [15:0]  a_source;
   bit [2:0]   a_param;
 	bit [2:0]   a_opcode;
-  bit [51:0]  same_addr_info,same_addr_info_tmp;
+  bit [58:0]  same_addr_info,same_addr_info_tmp;
 	bit         same_addr_exist;
 	bit [511:0] align_data,refill_data,merge_data,amo_data;
 	bit         victim_way_valid;
@@ -817,7 +878,7 @@ task dcache_refm::assemble_cmd();
 			req_source = req.io_req_bits_source;
 			req_signed = req.io_req_bits_signed;
       
-			tag  = req_addr[31:13];
+			tag  = req_addr[38:13];
       nset = req_addr[12:6];
 
       #0.1
@@ -850,7 +911,7 @@ task dcache_refm::assemble_cmd();
           
           //check if same addr req exist
 		      foreach (req_addr_arry[j])begin
-		      	if(req_addr_arry[j][31:6] == req_addr[31:6])begin
+		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && !((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)) )begin
 				   	//load miss need refill resp
 					  //req_source_q.push_back(req_source);
             same_addr_info = {req_signed,req_cmd,req_addr,req_source,req_dest};
@@ -933,7 +994,7 @@ task dcache_refm::assemble_cmd();
 
 	        //check if same addr req exist
 		      foreach (req_addr_arry[j])begin
-		      	if(req_addr_arry[j][31:6] == req_addr[31:6])begin
+		      	if(req_addr_arry[j][38:6] == req_addr[38:6])begin
 					  `uvm_info(get_type_name(),$sformatf("store has same addr load,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,j),UVM_NONE);
 						same_addr_exist = 1;
 						break;
@@ -1013,7 +1074,7 @@ task dcache_refm::assemble_cmd();
 					//B need release
 					if(coh == lsu_trans::BRANCH)begin
 		        update_cache(nset,0,lsu_trans::NOTHING,way ,0,coh_vic,data_vic,addr_vic);
-						do_release({req_addr[31:6],6'h0},6,8,2,data,coh);
+						do_release({req_addr[38:6],6'h0},6,8,2,data,coh);
 						`uvm_info(get_type_name(),$sformatf("AMO B miss release cache, addr=%0h,set=%0h, q_size=%0h,way=%0h",req_addr,nset,replace_q[nset].size(),way),UVM_NONE);
 						
 					end
@@ -1051,11 +1112,13 @@ task dcache_refm::assemble_cmd();
 					end
 					
 					do_tlu_message(req_addr ,a_opcode,req_size,a_source,req_data,mask_tlu,a_param);
-
+          
 					req_addr_arry[a_source]  = req_addr;
 					req_dest_arry[a_source]  = req_dest;
 				  req_source_arry[a_source]  = req_source;
 				  req_cmd_arry[a_source]  = req_cmd;
+
+
 					`uvm_info(get_type_name(),$sformatf("rm amo processing,a_source=%0h, req_addr=%0h,req_dest=%0h,req_cmd=%0h,a_param=%0h",a_source,req_addr_arry[a_source],req_dest_arry[a_source],req_cmd_arry[a_source],a_param),UVM_NONE);
 
 
@@ -1087,10 +1150,10 @@ task dcache_refm::assemble_cmd();
 endtask
 
 
-task dcache_refm::query_block(input bit [6:0] set_index, input bit [18:0] tag, output bit[1:0] coh ,output bit [1:0] way,output bit [511:0] data);
+task dcache_refm::query_block(input bit [6:0] set_index, input bit [25:0] tag, output bit[1:0] coh ,output bit [1:0] way,output bit [511:0] data);
 
-	bit [127:0] meta_data;
-	bit [31:0] meta_tmp;
+	bit [39*4-1:0] meta_data;
+	bit [38:0] meta_tmp;
 	bit [2047:0] set_data;
 	bit [511:0] data_tmp;
 	bit data_exist;
@@ -1099,9 +1162,9 @@ task dcache_refm::query_block(input bit [6:0] set_index, input bit [18:0] tag, o
   meta_data = meta_arry[set_index];
   set_data  = data_arry[set_index];
   for(int i=0;i<4;i++)begin
-    meta_tmp = meta_data[i*32+:32];
+    meta_tmp = meta_data[i*39+:39];
     data_tmp = set_data[i*512+:512];
-    if(meta_tmp[31:13]==tag)begin  
+    if(meta_tmp[38:13]==tag)begin  
       data_exist =1;
 			coh = meta_tmp[1:0];
 			data = data_tmp;
