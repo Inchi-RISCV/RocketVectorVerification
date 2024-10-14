@@ -25,6 +25,8 @@ task tilelink_slave_probe_hazard_sequence::body();
 	bit [2:0]	size_t;
 	bit [4:0] cmd1, cmd2;
 	bit lr_valid;
+	bit isRefill;
+	int refill_cnt;
 	bit success;
 	int cycles;
 	string resp_status;
@@ -52,14 +54,18 @@ task tilelink_slave_probe_hazard_sequence::body();
 	success = std::randomize(addr_t, length1, length2) with {
 		solve length1, length2 before addr_t;
 			
-		//TODO:
-		if(resp_status == "hit"||cmd1 == 2||cmd1 == 3) {
-			length1 	== 20;
+		if(resp_status == "hit") {
+			length1 == 20;
 		}
 		else { 	//miss or lr
-			length1 	== 1;
+			length1 == 1;
 		}
-		length2 == 10;
+		if(cmd2 != 2) {
+			length2 == 20;
+		} 
+		else {
+			length2 == 1;
+		}
 		addr_t inside {['h8000_0000:'hffff_ffff]};
 		(addr_t%64) == 0;
 		(addr_t+64*(length1+length2)) inside {['h8000_0000:'hffff_ffff]};
@@ -68,58 +74,79 @@ task tilelink_slave_probe_hazard_sequence::body();
 	
 	backdoor_put_data(addr_t,6,{16{'h76543210}});
 
-	for(int i=0;i<length2;i++) begin
-		if(cmd2 == 3) begin 	//Replace
+	if(cmd2 == 3) begin 	//probe + replace
+		for(int i=0;i<5;i++) begin
 			dcache_load(addr_t+'h2000*i);
 		end
-	end
+		
+		forever begin
+			#1;
+			uvm_hdl_read("tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill", isRefill);
+			if(isRefill) 	begin
+				refill_cnt++;
+			end
+			if(refill_cnt == 4) begin 	//TODO
+				#2;
+				break;
+			end
+		end
 
-	for(int i=0;i<length1;i++)begin
-		if(cmd1 == 0) begin 	//LOAD
-			dcache_load(addr_t);
-		end
-		else if(cmd1 == 1) begin	//STORE
-			success = std::randomize(wdata) with { wdata <= (2**512-1);};
-			dcache_store(addr_t,wdata);
-		end
-		else if(cmd1 == 2) begin	//Probe
-			b_param = $urandom_range(2);
-			tilelink_chnlB_probeblock(addr_t,b_param);
-		end
-		else if(cmd1 == 3) begin 	//Replace
+		b_param = $urandom_range(2);
+		tilelink_chnlB_probeblock(addr_t,b_param);
+	end
+	else if(cmd1 == 3) begin 	//replace + probe
+		for(int i=0;i<5;i++) begin
 			dcache_load(addr_t+'h2000*i);
 		end
-		else if(cmd1 == 4) begin	//LR
-			size_t = $urandom_range(2,3);
-			dcache_lr(addr_t,size_t);
+
+		wait((tb_top.tilelink_slave_if[0].c_opcode[2:0] == 6)||(tb_top.tilelink_slave_if[0].c_opcode[2:0] == 7));
+
+		b_param = $urandom_range(2);
+		tilelink_chnlB_probeblock(addr_t,b_param);
+	end
+	else begin
+		for(int i=0;i<length1;i++)begin
+			if(cmd1 == 0) begin 	//LOAD
+				dcache_load(addr_t);
+			end
+			else if(cmd1 == 1) begin	//STORE
+				success = std::randomize(wdata) with { wdata <= (2**512-1);};
+				dcache_store(addr_t,wdata);
+			end
+			else if(cmd1 == 2) begin	//Probe
+				b_param = $urandom_range(2);
+				tilelink_chnlB_probeblock(addr_t,b_param);
+			end
+			else if(cmd1 == 4) begin	//LR
+				size_t = $urandom_range(2,3);
+				dcache_lr(addr_t,size_t);
+			end
+		end
+
+		for(int i=0;i<length2;i++)begin
+			if(cmd2 == 0) begin 	//LOAD
+				dcache_load(addr_t);
+			end
+			else if(cmd2 == 1) begin	//STORE
+				success = std::randomize(wdata) with { wdata <= (2**512-1);};
+				dcache_store(addr_t,wdata);
+			end
+			else if(cmd2 == 2) begin	//Probe
+				b_param = $urandom_range(2);
+				if(resp_status == "hit")
+					wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0);
+				else if(resp_status == "miss")
+					wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h1);
+		
+				//wait(tb_top.tilelink_slave_if[0].a_valid == 'h1); 	//TODO
+
+				if(cmd1 == 4) begin 	//LR
+					repeat(cycles) #1ns;
+				end
+				tilelink_chnlB_probeblock(addr_t,b_param);
+			end
 		end
 	end
-
-	for(int i=0;i<length2;i++)begin
-		if(cmd2 == 0) begin 	//LOAD
-			dcache_load(addr_t);
-		end
-		else if(cmd2 == 1) begin	//STORE
-			success = std::randomize(wdata) with { wdata <= (2**512-1);};
-			dcache_store(addr_t,wdata);
-		end
-		else if(cmd2 == 2) begin	//Probe
-			b_param = $urandom_range(2);
-			if(resp_status == "hit")
-				wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0);
-			else if(resp_status == "miss")
-				wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h1);
-	
-			if(cmd1 == 3) begin 	//replace
-				wait(tb_top.tilelink_slave_if[0].c_opcode[2:0] == 'h6);
-			end
-			else if(cmd1 == 4) begin 	//LR
-				repeat(cycles) #1ns;
-			end
-			tilelink_chnlB_probeblock(addr_t,b_param);
-		end
-	end
-
 	`uvm_info("body", "Exiting...", UVM_LOW)
 endtask
 
