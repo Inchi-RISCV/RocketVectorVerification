@@ -29,7 +29,7 @@ class dcache_release_sequence extends dcache_base_sequence;
 		cmd2 = vmm_opts::get_string("cmd2", "replace", "cmd2");
 		hazard_en = vmm_opts::get_int("hazard_en", 0, "hazard_en");
 
-		length	= $urandom_range(50, 100);
+		length	= $urandom_range(50, 500);
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 		
 		success = std::randomize(tag_idx_t,set_idx_t) with {

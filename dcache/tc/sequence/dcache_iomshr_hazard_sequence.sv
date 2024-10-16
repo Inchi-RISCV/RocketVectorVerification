@@ -13,7 +13,6 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 		bit [38:0]      addr_t;
 		bit [26:0]      tag_idx_t;
 		bit [6:0]       set_idx_t;
-		bit [7:0]       req_source;
 		bit [4:0]       req_cmd;
 		bit [4:0]       amo_cmd[];  
 		bit [2:0]       req_size_t;
@@ -30,8 +29,8 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 		is_mmio_range = vmm_opts::get_int("is_mmio_range",0,"is_mmio_range");
 		`uvm_info("RANDOM_CFG",$sformatf("is_mmio_range = %0d",is_mmio_range),UVM_LOW);
 
-		length = 100;
-		req_size_t = $urandom_range(2,3);
+		length 			= $urandom_range(50, 500);
+		req_size_t 	= $urandom_range(2,3);
 
 		if(is_mmio_range) begin
 			success = std::randomize(tag_idx_t,set_idx_t) with {
@@ -59,7 +58,7 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 		for(int i=0;i<length;i++) begin
 			success = std::randomize(wdata) with {wdata <= (2**512-1);};
 			if(is_mmio_range) begin    //mmio_range=1
-				cmd = $urandom_range(0,2);
+				cmd = $urandom_range(2);
 				if(cmd ==0) begin
 					dcache_load(addr_t);
 				end
@@ -71,10 +70,9 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 					dcache_amo_operation(req_cmd,addr_t,wdata,req_size_t);    
 		  	end
 			end
-							
 			else begin                 //mmio_range=0
-				success = std::randomize(cmd) with {cmd inside {0,3,4};};
-				//cmd = $urandom_range(0,4);
+				//success = std::randomize(cmd) with {cmd inside {0,3,4};};
+				cmd = $urandom_range(4);
 				if(cmd == 0) begin
 					dcache_load(addr_t,,,1);
 				end
@@ -87,11 +85,11 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 				end
 				else if(cmd == 3) begin
 					success = std::randomize(req_cmd) with {req_cmd inside amo_cmd;};
-					dcache_amo_operation(req_cmd,addr_t,wdata,req_size_t,1);   //bypass
+					dcache_amo_operation(req_cmd,addr_t,wdata,req_size_t,1);
 				end
 				else if(cmd == 4) begin
 					success = std::randomize(req_cmd) with {req_cmd inside amo_cmd;};
-					dcache_amo_operation(req_cmd,addr_t,wdata,req_size_t);           //amo
+					dcache_amo_operation(req_cmd,addr_t,wdata,req_size_t);
 				end
 			end
 	 end
