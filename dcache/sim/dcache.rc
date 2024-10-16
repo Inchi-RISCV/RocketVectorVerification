@@ -2,11 +2,11 @@ Magic 271485
 Revision Verdi_V-2023.12
 
 ; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
-viewPort 0 25 2221 516 394 218
+viewPort 0 25 2221 668 675 218
 
 ; File list:
 ; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
-openDirFile -d / "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/tilelink_probeblock_test_1.fsdb"
+openDirFile -d / "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_amo_operation_test_52285278.fsdb"
 
 ; file time scale:
 ; fileTimeScale ### s|ms|us|ns|ps
@@ -18,20 +18,20 @@ signalSpacing 5
 windowTimeUnit 1ns
 
 ; waveform viewport range
-zoom 337.395045 396.065428 1n
-cursor 353.000000
-marker 353.000000
+zoom 868.978815 900.058253 1n
+cursor 882.000000
+marker 882.000000
 
 ; user define markers
 ; userMarker time_pos marker_name color linestyle
 ; visible top row signal index
-top 20
+top 15
 ; marker line index
-markerPos 23
+markerPos 22
 
 ; rename signal list
 ; addRenameSig new_name org_name
-activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/tilelink_probeblock_test_1.fsdb"
+activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_amo_operation_test_52285278.fsdb"
 
 addRenameSig "/tb_top/m_lsu_if/paddr_tag[38:13]" "/tb_top/m_lsu_if/io_req_bits_paddr[38:13]" keep
 
@@ -79,7 +79,7 @@ curSTATUS ByValue
 
 
 addGroup "G1"
-activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/tilelink_probeblock_test_1.fsdb"
+activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_amo_operation_test_52285278.fsdb"
 addSignal -h 24 /tb_top/m_lsu_if/clk
 addSignal -h 24 -holdScope rst_n
 addSignal -h 24 -holdScope io_req_valid
@@ -101,6 +101,7 @@ addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_source[7:0]
 addSubGroup "dut syn"
 addSignal -c ID_RED5 -ls solid -lw 1 -h 20 /tb_top/U_GPCDCache/mainReqArb/io_out_valid
 addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -holdScope io_out_bits_isRefill
+addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -holdScope io_out_bits_isProbe
 addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -UNSIGNED -HEX -holdScope io_out_bits_paddr[38:0]
 addSignal -h 20 -holdScope io_out_bits_isProbe
 addSignal -c ID_RED6 -ls solid -lw 1 -h 20 /tb_top/U_GPCDCache/mshrs/mshrs/allocateArb/io_in_0_valid
@@ -121,6 +122,9 @@ addSignal -h 20 -holdScope io_in_6_valid
 addSignal -h 20 -holdScope io_in_7_valid
 addSignal -h 20 /tb_top/U_GPCDCache/probeQueue/io_mainPipeReq_valid
 addSignal -h 20 -UNSIGNED -HEX -holdScope io_mainPipeReq_bits_paddr[38:0]
+addSignal -c ID_RED5 -ls solid -lw 1 -h 20 /tb_top/U_GPCDCache/mshrs/iomshrs/io_resp_valid
+addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -holdScope io_resp_ready
+addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -UNSIGNED -HEX -holdScope io_resp_bits_dest[4:0]
 endSubGroup "dut syn"
 addGroup "G2"
 addSignal -h 24 /tb_top/m_lsu_if/clk
@@ -145,7 +149,7 @@ addSignal -h 24 -UNSIGNED -HEX -holdScope a_data[512:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope a_mask[127:0]
 addSignal -h 24 -holdScope a_corrupt
 endSubGroup "A"
-addSubGroup "B"
+addSubGroup "B" -e FALSE
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/b_ready
 addSignal -h 24 -holdScope b_valid
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_address[63:0]
@@ -157,7 +161,7 @@ addSignal -h 24 -UNSIGNED -HEX -holdScope b_mask[127:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_opcode[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_size[63:0]
 endSubGroup "B"
-addSubGroup "C"
+addSubGroup "C" -e FALSE
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/c_valid
 addSignal -h 24 -holdScope c_ready
 addSignal -h 24 -UNSIGNED -HEX -holdScope c_source[15:0]
@@ -189,7 +193,7 @@ addGroup "G4"
 
 ; getSignalForm Scope Hierarchy Status
 ; active file of getSignalForm
-activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/tilelink_probeblock_test_1.fsdb"
+activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_amo_operation_test_52285278.fsdb"
 
 GETSIGNALFORM_SCOPE_HIERARCHY_BEGIN
 getSignalForm close
