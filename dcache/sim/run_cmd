@@ -20,16 +20,32 @@ make ncrun tc=dcache_lr_sc_test cfg=init_state_B
 make ncrun tc=dcache_lr_sc_test cfg=init_state_Trunk
 make ncrun tc=dcache_lr_sc_test cfg=init_state_Dirty
 make ncrun tc=dcache_amo_operation_test cfg=amo_swap
+make ncrun tc=dcache_amo_operation_test cfg=amo_swap_mmio
+make ncrun tc=dcache_amo_operation_test cfg=amo_swap_noAlloc
 make ncrun tc=dcache_amo_operation_test cfg=amo_add
 make ncrun tc=dcache_amo_operation_test cfg=amo_add_mmio
 make ncrun tc=dcache_amo_operation_test cfg=amo_add_noAlloc
 make ncrun tc=dcache_amo_operation_test cfg=amo_xor
+make ncrun tc=dcache_amo_operation_test cfg=amo_xor_mmio
+make ncrun tc=dcache_amo_operation_test cfg=amo_xor_noAlloc
 make ncrun tc=dcache_amo_operation_test cfg=amo_or
+make ncrun tc=dcache_amo_operation_test cfg=amo_or_mmio
+make ncrun tc=dcache_amo_operation_test cfg=amo_or_noAlloc
 make ncrun tc=dcache_amo_operation_test cfg=amo_and
+make ncrun tc=dcache_amo_operation_test cfg=amo_and_mmio
+make ncrun tc=dcache_amo_operation_test cfg=amo_and_noAlloc
 make ncrun tc=dcache_amo_operation_test cfg=amo_min
+make ncrun tc=dcache_amo_operation_test cfg=amo_min_mmio
+make ncrun tc=dcache_amo_operation_test cfg=amo_min_noAlloc
 make ncrun tc=dcache_amo_operation_test cfg=amo_max
+make ncrun tc=dcache_amo_operation_test cfg=amo_max_mmio
+make ncrun tc=dcache_amo_operation_test cfg=amo_max_noAlloc
 make ncrun tc=dcache_amo_operation_test cfg=amo_minu
+make ncrun tc=dcache_amo_operation_test cfg=amo_minu_mmio
+make ncrun tc=dcache_amo_operation_test cfg=amo_minu_noAlloc
 make ncrun tc=dcache_amo_operation_test cfg=amo_maxu
+make ncrun tc=dcache_amo_operation_test cfg=amo_maxu_mmio
+make ncrun tc=dcache_amo_operation_test cfg=amo_maxu_noAlloc
 make ncrun tc=dcache_release_test cfg=init_state_B 														//load release
 make ncrun tc=dcache_release_test cfg=init_state_Trunk 												//lr release
 make ncrun tc=dcache_release_test cfg=init_state_Dirty												//store release
