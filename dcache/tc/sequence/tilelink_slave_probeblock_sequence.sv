@@ -31,9 +31,7 @@ task tilelink_slave_probeblock_sequence::body();
 	success = std::randomize(addr_t,length) with {
 		solve length before addr_t;
 			
-		//TODO:
-		//length inside {[1:100]};
-		length == 10;
+		length inside {[1:500]};
 		addr_t inside {['h8000_0000:'hffff_ffff]};
 		(addr_t%64) == 0;
 		(addr_t+64*length) inside {['h8000_0000:'hffff_ffff]};
@@ -56,7 +54,7 @@ task tilelink_slave_probeblock_sequence::body();
 		for(int i=0;i<length;i++)begin
 			dcache_load(addr_t+'h40*i);
 		end
-		#100ns;
+		#10us;
 		for(int i=0;i<length;i++)begin
 			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
 		end
@@ -65,7 +63,7 @@ task tilelink_slave_probeblock_sequence::body();
 		for(int i=0;i<length;i++)begin
 			dcache_lr(addr_t+'h40*i,3);
 		end
-		#300ns; 	//TODO
+		#10us;
 		for(int i=0;i<length;i++)begin
 			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
 		end
@@ -75,7 +73,7 @@ task tilelink_slave_probeblock_sequence::body();
 			success	= std::randomize(wdata) with {wdata <= (2**512-1);};
 			dcache_store(addr_t+'h40*i,wdata);
 		end
-		#100ns;
+		#10us;
 		for(int i=0;i<length;i++)begin
 			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
 		end
