@@ -942,9 +942,9 @@ task dcache_refm::assemble_cmd();
 				if(coh == lsu_trans::NOTHING )begin
           send_rsp(req_source ,req_dest ,lsu_trans::MISS,0,0);
           
-          //check if same addr req exist
+          //check if same addr req exist, 0-7 MSHR
 		      foreach (req_addr_arry[j])begin
-		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && !((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)) )begin
+		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && !((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)) && j<8 )begin
 				   	//load miss need refill resp
 					  //req_source_q.push_back(req_source);
             same_addr_info = {req_signed,req_cmd,req_addr,req_source,req_dest};
