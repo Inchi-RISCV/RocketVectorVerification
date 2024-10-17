@@ -197,16 +197,15 @@ task dcache_refm::do_probe();
   svt_tilelink_slave_transaction tr;
 	bit [4:0]    b_source;
 	bit [38:0]   b_addr,probe_addr;
-	bit [2:0]    b_param;
+	bit [2:0]    b_param[32];
 	bit [2:0]    b_opcode;
   bit [25:0]   ntag;
   bit [6:0]    nset ;
-  bit [1:0]    coh,coh_vic,coh_tmp[32];
+  bit [1:0]    coh,coh_vic,coh_tmp;
 	bit [1:0]    exist_way;
 	bit [511:0]  data,data_vic;
 	bit [38:0]   addr_vic;
 	bit [38:0]   probe_addr_arry[32];
-	bit [1:0]    probe_way[32];
 	bit [2:0]    c_param;
 	bit [2:0]    c_opcode;
 
@@ -220,55 +219,13 @@ task dcache_refm::do_probe();
       //`uvm_info(get_type_name(), {"get tl_chb_q item\n",tr.sprint}, UVM_NONE)
       b_opcode = tr.ch_b_msg_type;
       b_addr= tr.b_address;
-      b_param  = tr.b_param;
       b_source = tr.b_source;
+      b_param[b_source]  = tr.b_param;
 
-      nset = b_addr[12:6];
-		  ntag = b_addr[38:13];
+			`uvm_info(get_type_name(),$sformatf("rm get probe,b_addr=%0h,b_source=%0h,b_param=%0h,b_opcode=%0h,tl_chb_q_size=%0h",b_addr,b_source,b_param[b_source],b_opcode,tl_chb_q.size()),UVM_NONE);
 
-			`uvm_info(get_type_name(),$sformatf("rm get probe,b_addr=%0h,b_source=%0h,b_param=%0h,b_opcode=%0h,tl_chb_q_size=%0h",b_addr,b_source,b_param,b_opcode,tl_chb_q.size()),UVM_NONE);
-
-			query_block(nset,ntag,coh,exist_way,data);
-
-      //toN
-			if(b_param == 2)begin
-
-				//TtoB 0; TtoN 1; BtoN 2; TtoT 3; BtoB 4; NtoN 5;
-				case (coh)
-          lsu_trans::NOTHING : c_param = 5 ;// NtoN
-          lsu_trans::BRANCH  : c_param = 2 ;// BtoN
-          lsu_trans::TRUNK   : c_param = 1 ;// TtoN
-          lsu_trans::DIRTY   : c_param = 1 ;// TtoN
-		    endcase
-				coh_tmp[b_source] = lsu_trans::NOTHING;
-			end
-			else if(b_param == 1)begin//toB
-			  case (coh)
-          lsu_trans::NOTHING : c_param = 5 ;// NtoN	
-          lsu_trans::BRANCH  : c_param = 4 ;// BtoB
-          lsu_trans::TRUNK   : c_param = 0 ;// TtoB
-          lsu_trans::DIRTY   : c_param = 0 ;// TtoB
-		    endcase	
-				coh_tmp[b_source] = lsu_trans::BRANCH;
-			end
-			else begin//toT
-			  case (coh)
-          lsu_trans::NOTHING : c_param = 5 ;// NtoN	
-          lsu_trans::BRANCH  : c_param = 4 ;// BtoB
-          lsu_trans::TRUNK   : c_param = 3 ;// TtoT
-          lsu_trans::DIRTY   : c_param = 3 ;// TtoT					
-		    endcase	
-        coh_tmp[b_source] = lsu_trans::TRUNK;
-			end
-
-  
-			//cacheline DIRTY probeAckData
-			c_opcode = (coh == lsu_trans::DIRTY) ? 5 : 4;
-      do_release(b_addr,c_opcode,b_source,c_param,data,coh);
-      `uvm_info(get_type_name(),$sformatf("do probeack ,addr=%0h,c_source=%0h,source_coh=%0h,b_param=%0h,c_param=%0h",b_addr,b_source,coh,b_param,c_param),UVM_NONE);
-
+			
 	    probe_addr_arry[b_source]  = b_addr;
-	    probe_way[b_source]   = exist_way;
 
 		end
 
@@ -280,10 +237,53 @@ task dcache_refm::do_probe();
 			if(probe_addr_arry[i])begin
 				`uvm_info(get_type_name(),$sformatf("probe_addr_arry=%p,i=%0h", probe_addr_arry,i),UVM_NONE);
 		    probe_addr = probe_addr_arry[i];
+
+          
+        nset = probe_addr[12:6];
+		    ntag = probe_addr[38:13];        
+			  query_block(nset,ntag,coh,exist_way,data);
+
+        //toN
+		    if(b_param[i] == 2)begin
+
+		    	//TtoB 0; TtoN 1; BtoN 2; TtoT 3; BtoB 4; NtoN 5;
+		    	case (coh)
+            lsu_trans::NOTHING : c_param = 5 ;// NtoN
+            lsu_trans::BRANCH  : c_param = 2 ;// BtoN
+            lsu_trans::TRUNK   : c_param = 1 ;// TtoN
+            lsu_trans::DIRTY   : c_param = 1 ;// TtoN
+		      endcase
+		    	coh_tmp = lsu_trans::NOTHING;
+		    end
+		    else if(b_param[i] == 1)begin//toB
+		      case (coh)
+            lsu_trans::NOTHING : c_param = 5 ;// NtoN	
+            lsu_trans::BRANCH  : c_param = 4 ;// BtoB
+            lsu_trans::TRUNK   : c_param = 0 ;// TtoB
+            lsu_trans::DIRTY   : c_param = 0 ;// TtoB
+		      endcase	
+		    	coh_tmp = lsu_trans::BRANCH;
+		    end
+		    else begin//toT
+		      case (coh)
+            lsu_trans::NOTHING : c_param = 5 ;// NtoN	
+            lsu_trans::BRANCH  : c_param = 4 ;// BtoB
+            lsu_trans::TRUNK   : c_param = 3 ;// TtoT
+            lsu_trans::DIRTY   : c_param = 3 ;// TtoT					
+		      endcase	
+          coh_tmp = lsu_trans::TRUNK;
+		    end
+
 	      if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && !tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[38:6] == probe_addr[38:6] && tb_top.U_GPCDCache._mainReqArb_io_out_bits_isProbe))begin	
-				  update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp[i],probe_way[i],0,coh_vic,data_vic,addr_vic);
-          `uvm_info(get_type_name(),$sformatf("probe update cacheline,addr=%0h,c_source=%0h,way=%0h,coh=%0h",probe_addr,i,probe_way[i],coh_tmp[i]),UVM_NONE);
-					probe_addr_arry[i] = 0;
+				  update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp,exist_way,0,coh_vic,data_vic,addr_vic);
+          `uvm_info(get_type_name(),$sformatf("probe update cacheline,addr=%0h,c_source=%0h,way=%0h,coh=%0h",probe_addr,i,exist_way,coh_tmp),UVM_NONE);
+
+  			  //cacheline DIRTY probeAckData
+			    c_opcode = (coh == lsu_trans::DIRTY) ? 5 : 4;
+          do_release(b_addr,c_opcode,i,c_param,data,coh);
+          `uvm_info(get_type_name(),$sformatf("do probeack ,addr=%0h,c_source=%0h,source_coh=%0h,b_param=%0h,c_param=%0h",b_addr,i,coh,b_param[i],c_param),UVM_NONE);
+			    probe_addr_arry[i] = 0;				
+
 				end
 	    end
 		end
