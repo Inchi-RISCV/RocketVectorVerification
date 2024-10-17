@@ -42,8 +42,7 @@ class dcache_mshr_iomshr_hazard_sequence extends dcache_base_sequence;
 		else begin
 			length1 = 1;
 		end
-		length2 	= 20;		//TODO
-		//length2 	= $urandom_range(50, 500);
+		length2 	= $urandom_range(50, 500);
 		success 	= std::randomize(tag_idx_t,set_idx_t) with {
 			tag_idx_t inside {['h4_0000:'h7_ffff]};
 			set_idx_t inside {[0:127]};
