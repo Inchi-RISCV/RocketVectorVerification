@@ -44,10 +44,10 @@ class dcache_refm extends uvm_component;
   //bit [38:0]  req_source_q[$]; //addr+dest
   bit [58:0] same_addr_info_q[$];   //sign+cmd+addr+source+dest  1+5+39+8+6
 	bit [58:0] same_addr_info_tmp_q[$];
-	bit [5:0]  req_dest_arry[32];      
+	bit [5:0]  req_dest_arry[32];     
 	bit [7:0]  req_source_arry[32];
-	bit [2:0]  req_size_arry[32];
-	bit        req_signed_arry[32];
+	bit [2:0]  req_size_arry[1024];
+	bit        req_signed_arry[1024];
 	bit [2:0]  req_size_store_arry[32];
   bit [63:0] req_mask_arry[32];
 	bit [511:0] req_data_arry[32]; 
@@ -312,9 +312,10 @@ task dcache_refm::do_refill();
   bit [6:0]    nset ;
   bit [25:0]   ntag ;
   bit [38:0]   meta_tmp ;
-  bit [7:0]    req_source;
+  bit [7:0]    req_source,req_source_tmp;
   bit [38:0]   req_addr,addr_vic;	
   bit [5:0]    req_dest,req_dest_tmp,req_dest_1;
+	bit [1:0]    req_source_1;
 	bit [4:0]    req_cmd_same_addr,req_cmd;
 	bit [2:0]    req_size,req_size_store;
   bit          req_signed;
@@ -385,7 +386,7 @@ task dcache_refm::do_refill();
 			if(req_addr_arry[i])begin
 		    a_addr = req_addr_arry[i];
 				req_dest_1 = req_dest_arry[i];
-
+        req_source_1 = req_source_arry[i];
 				//wait dut mshr refill
 	      if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[38:6] == a_addr[38:6] && !tb_top.U_GPCDCache.mainReqArb.io_out_bits_isProbe))begin	
 					refill_valid[i]=1;
@@ -395,7 +396,7 @@ task dcache_refm::do_refill();
 	      end
         
 				//wait dut iomshr refill
-				if(tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_valid && tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_ready && (tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_bits_dest[4:0] == req_dest_1))begin
+				if(tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_valid && tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_ready && (tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_bits_dest[4:0] == req_dest_1) && (tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_bits_source[1:0] == req_source_1))begin
           // if isRefill && iomshr.resp.valid && ready , mshr need first
 					if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill)begin
             @(posedge tb_top.clock);
@@ -404,7 +405,7 @@ task dcache_refm::do_refill();
 					else begin
 					  iomshr_refill_valid[i]=1;
 				  end
-          `uvm_info(get_type_name(),$sformatf("rm wait dut iomshr refill done,a_addr=%0h,dest=%0h,d_source=%0h,valid=%0h,ready=%0h",a_addr,req_dest_1,i,tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_valid,tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_ready),UVM_NONE);
+          `uvm_info(get_type_name(),$sformatf("rm wait dut iomshr refill done,a_addr=%0h,req_dest=%0h,req_source=%0h,d_source=%0h,valid=%0h,ready=%0h",a_addr,req_dest_1,req_source_1,i,tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_valid,tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_ready),UVM_NONE);
 					`uvm_info(get_type_name(),$sformatf(" req_addr_arry=%p,iomshr_refill_valid=%p", req_addr_arry,iomshr_refill_valid),UVM_NONE);
 				end
 			end
@@ -420,9 +421,10 @@ task dcache_refm::do_refill();
        // if((d_opcode[i] == 1) || (d_opcode[i]==0) )begin
           if(d_opcode_arry[i] == 1)begin //AccessAckData
 		    	  req_dest_tmp = req_dest_arry[i];
-		    	  sign_extension(req_signed_arry[req_dest_tmp],req_size_arry[req_dest_tmp],d_data_arry[i],refill_data);
-		        send_rsp(req_source_arry[i] ,req_dest_tmp , lsu_trans::REFILL,1,refill_data);
-		        `uvm_info(get_type_name(),$sformatf("rm send iomsr refill resp,req_dest=%0h,req_addr=%0h,d_source=%0h,data=%0h",req_dest_arry[i],a_addr,i,refill_data),UVM_NONE);
+						req_source_tmp = req_source_arry[i];
+		    	  sign_extension(req_signed_arry[{req_source_tmp,req_dest_tmp}],req_size_arry[{req_source_tmp,req_dest_tmp}],d_data_arry[i],refill_data);
+		        send_rsp(req_source_tmp ,req_dest_tmp , lsu_trans::REFILL,1,refill_data);
+		        `uvm_info(get_type_name(),$sformatf("rm send iomsr refill resp,req_dest=%0h,req_source=%0h,req_addr=%0h,d_source=%0h,data=%0h",req_dest_arry[i],req_source_tmp,a_addr,i,refill_data),UVM_NONE);
 		      end
 		    	
 		      req_addr_arry[i]  = 0;
@@ -457,15 +459,17 @@ task dcache_refm::do_refill();
 
             // refill rsp sent to scb
 		        req_dest_tmp = req_dest_arry[d_source];
-		        req_size = req_size_arry[req_dest_tmp];
+						req_source_tmp = req_source_arry[d_source];
+
+		        req_size = req_size_arry[{req_source_tmp,req_dest_tmp}];
 		        addr_data_align(req_size,a_addr,d_data_arry[d_source],align_data);
 				    update_data = d_data_arry[d_source];
 
 				    //sign_extension
 		        if(req_cmd_arry[d_source] == lsu_trans::M_XRD)begin
-		          sign_extension(req_signed_arry[req_dest_tmp],req_size,align_data,refill_data);
+		          sign_extension(req_signed_arry[{req_source_tmp,req_dest_tmp}],req_size,align_data,refill_data);
 		          send_rsp(req_source_arry[d_source] ,req_dest_arry[d_source] , lsu_trans::REFILL,1,refill_data);
-		          `uvm_info(get_type_name(),$sformatf("rm send refill resp,req_dest=%0h,req_addr=%0h,req_source=%0h,data=%0h",req_dest_arry[d_source],a_addr,req_source_arry[d_source],refill_data),UVM_NONE);
+		          `uvm_info(get_type_name(),$sformatf("rm send refill resp,req_dest=%0h,req_source=%0h,req_addr=%0h,req_source=%0h,data=%0h",req_dest_arry[d_source],req_source_tmp,a_addr,req_source_arry[d_source],refill_data),UVM_NONE);
 		        end
 
 				    //same_addr_refill
@@ -481,7 +485,7 @@ task dcache_refm::do_refill();
 		        	  req_addr  = same_addr_info[52:14];
 		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_refill_num),UVM_NONE);
 		        	  if(req_addr[31:6] == a_addr[31:6])begin 
-  	        	  	addr_data_align(req_size_arry[req_dest],req_addr,d_data_arry[d_source],align_data);
+  	        	  	addr_data_align(req_size_arry[{req_source,req_dest}],req_addr,d_data_arry[d_source],align_data);
 		        		  sign_extension(req_signed,req_size,align_data,refill_data);
 
 		        		  if(req_cmd_arry[d_source] == lsu_trans::M_XRD)begin
@@ -875,7 +879,7 @@ task dcache_refm::assemble_cmd();
 	bit [2:0]   req_size;
 	bit [511:0] req_data;
 	bit [63:0]  req_wmask,mask,mask_tlu;
-	bit [5:0]   req_dest;
+	bit [5:0]   req_dest; 
 	bit         req_noAlloc;
  	bit [38:0]  req_addr,addr_vic;
 	bit [7:0]   req_source;
@@ -905,11 +909,11 @@ task dcache_refm::assemble_cmd();
 		  req_data   = req.io_req_bits_wdata;
 		  req_wmask  = req.io_req_bits_wmask;
 		  req_noAlloc= req.io_req_bits_noAlloc;
-		  req_dest   = req.io_req_bits_dest;
 		  req_size   = req.io_req_bits_size;
 			req_addr   = req.io_req_bits_paddr;
 			req_source = req.io_req_bits_source;
 			req_signed = req.io_req_bits_signed;
+		  req_dest   = req.io_req_bits_dest;
       
 			tag  = req_addr[38:13];
       nset = req_addr[12:6];
@@ -921,12 +925,13 @@ task dcache_refm::assemble_cmd();
 
 			end
 
-		      
-		  `uvm_info(get_type_name(),$sformatf("rm get cmd,rea_addr=%0h,set=%0h,req_cmd=%0h,req_dest=%0h,req_size=%0h",req_addr,nset,req_cmd,req_dest,req_size),UVM_NONE);
+     	req_size_arry[{req_source,req_dest}] = req_size;
+			req_signed_arry[{req_source,req_dest}] = req_signed;
+
+		  `uvm_info(get_type_name(),$sformatf("rm get cmd,rea_addr=%0h,set=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,req_size=%0h",req_addr,nset,req_cmd,req_dest,req_source,req_size_arry[{req_source,req_dest}]),UVM_NONE);
 			`uvm_info(get_type_name(),$sformatf("processing addr=%p", req_addr_arry),UVM_NONE);
       `uvm_info(get_type_name(),$sformatf("mshr_source_id_valid=%p,iomshr_source_id_valid=%p", mshr_source_id_valid,iomshr_source_id_valid),UVM_NONE);
-     	req_size_arry[req_dest] = req_size;
-			req_signed_arry[req_dest] = req_signed;
+
 
 			query_block(nset,tag,coh,way,data);
       `uvm_info(get_type_name(),$sformatf("query cache,addr=%0h,req_dest=%0h,set=%0h,way=%0h,tag=%0h,coh=%0h,data=%0h",req_addr,req_dest,nset,way,tag,coh,data),UVM_NONE);
@@ -1038,7 +1043,7 @@ task dcache_refm::assemble_cmd();
 						continue;
 					end
 					else begin
-						if(req_noAlloc || ((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)))begin
+						if((req_noAlloc && coh == lsu_trans::NOTHING)|| ((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)))begin
 						  //get iomshr valid sour_id
 						  wait (iomshr_source_id_valid.or >0);
 					    foreach (iomshr_source_id_valid[j])begin

@@ -21,8 +21,8 @@ class lsu_driver extends uvm_driver #(lsu_trans);
 
   virtual interface  lsu_if vif;
 	lsu_trans lsu_q[$];
-	bit destid_reuse [32];
-	rand bit [5:0] destid;
+	bit destid_reuse [1024];
+	rand bit [4:0] destid;
 	//bit [5:0] destid_last[32];
 
   extern function new(string name, uvm_component parent);
@@ -151,9 +151,9 @@ task lsu_driver::do_drive();
 
 			while(1)begin
         destid = $urandom_range(31);
-				`uvm_info("YRHU",$sformatf("destid = %0h",destid),UVM_LOW);
-				`uvm_info("YRHU",$sformatf("destid_reuse[destid] = %b",destid_reuse[destid]),UVM_LOW);
-			  if(!destid_reuse[destid])
+				//`uvm_info("YRHU",$sformatf("destid = %0h",destid),UVM_LOW);
+				`uvm_info("YRHU",$sformatf("destid_reuse = %0h,destid=%0h,source=%0h,realid=%0h,",destid_reuse[{req.io_req_bits_source,destid}],destid,req.io_req_bits_source,{req.io_req_bits_source,destid}),UVM_LOW);
+			  if(!destid_reuse[{req.io_req_bits_source,destid}])
 					break;
 			end
 			do begin
@@ -178,8 +178,8 @@ task lsu_driver::do_drive();
 
 			  //when has data, set destid_reuse 1
 		    if(req.io_req_bits_cmd == lsu_trans::M_XRD||req.io_req_bits_cmd == lsu_trans::M_XA_SWAP||req.io_req_bits_cmd == lsu_trans::M_XA_ADD||req.io_req_bits_cmd == lsu_trans::M_XA_XOR||req.io_req_bits_cmd == lsu_trans::M_XA_OR||req.io_req_bits_cmd == lsu_trans::M_XA_AND||req.io_req_bits_cmd == lsu_trans::M_XA_MIN||req.io_req_bits_cmd == lsu_trans::M_XA_MAX||req.io_req_bits_cmd == lsu_trans::M_XA_MINU||req.io_req_bits_cmd == lsu_trans::M_XA_MAXU) begin
-				  destid_reuse[destid] = 1;
-				  `uvm_info(get_type_name(),$sformatf("set destid_reuse , destid = %0h",destid),UVM_HIGH);	
+				  destid_reuse[{req.io_req_bits_source,destid}] = 1;
+				  `uvm_info(get_type_name(),$sformatf("set destid_reuse , destid = %0h,io_req_bits_source = %0h,realid=%0h",destid,req.io_req_bits_source,{req.io_req_bits_source,destid}),UVM_HIGH);	
 			  end
 				@(posedge vif.clk);
       end
@@ -201,8 +201,8 @@ task lsu_driver::release_destid();
 			//when rsp hit or hasdata,set destid_reuse 0
       //`uvm_info(get_type_name(),$sformatf("vif.io_resp_bits_hasData=%0h",vif.io_resp_bits_hasData),UVM_NONE);
 			if(!vif.io_resp_bits_status | vif.io_resp_bits_hasData ) begin
-				destid_reuse[vif.io_resp_bits_dest] = 0;
-				`uvm_info(get_type_name(),$sformatf("clear destid_reuse , destid = %0h",vif.io_resp_bits_dest),UVM_NONE);	
+				destid_reuse[{vif.io_resp_bits_source,vif.io_resp_bits_dest}] = 0;
+				`uvm_info(get_type_name(),$sformatf("clear destid_reuse , destid = %0h,source = %0h,realid=%0h",vif.io_resp_bits_dest,vif.io_resp_bits_source,{vif.io_resp_bits_source,vif.io_resp_bits_dest}),UVM_NONE);	
 			end
 
 		end
