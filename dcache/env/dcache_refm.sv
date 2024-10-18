@@ -978,6 +978,7 @@ task dcache_refm::assemble_cmd();
 				  	  end							
 
 							do_tlu_message(req_addr ,4,req_size,a_source,0,0);// get
+							req_addr_arry[a_source]  = req_addr;
 
 						end
 						else begin
