@@ -419,12 +419,14 @@ task dcache_refm::do_refill();
       if(iomshr_refill_valid[i])begin
 		    //get put or atomic
        // if((d_opcode[i] == 1) || (d_opcode[i]==0) )begin
+				 `uvm_info(get_type_name(),$sformatf("iomshr_refill_valid=%0h,d_opcode_arry=%0h",i,d_opcode_arry[i]),UVM_NONE);
+
           if(d_opcode_arry[i] == 1)begin //AccessAckData
 		    	  req_dest_tmp = req_dest_arry[i];
 						req_source_tmp = req_source_arry[i];
 		    	  sign_extension(req_signed_arry[{req_source_tmp,req_dest_tmp}],req_size_arry[{req_source_tmp,req_dest_tmp}],d_data_arry[i],refill_data);
 		        send_rsp(req_source_tmp ,req_dest_tmp , lsu_trans::REFILL,1,refill_data);
-		        `uvm_info(get_type_name(),$sformatf("rm send iomsr refill resp,req_dest=%0h,req_source=%0h,req_addr=%0h,d_source=%0h,data=%0h",req_dest_arry[i],req_source_tmp,a_addr,i,refill_data),UVM_NONE);
+		        `uvm_info(get_type_name(),$sformatf("rm send iomsr refill resp,req_dest=%0h,req_source=%0h,req_addr=%0h,d_source=%0h,data=%0h",req_dest_arry[i],req_source_tmp,req_addr_arry[i],i,refill_data),UVM_NONE);
 		      end
 		    	
 		      req_addr_arry[i]  = 0;
@@ -1033,8 +1035,8 @@ task dcache_refm::assemble_cmd();
 
 	        //check if same addr req exist
 		      foreach (req_addr_arry[j])begin
-		      	if(req_addr_arry[j][38:6] == req_addr[38:6])begin
-					  `uvm_info(get_type_name(),$sformatf("store has same addr load,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,j),UVM_NONE);
+		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && !req_noAlloc)begin
+					  `uvm_info(get_type_name(),$sformatf("store has same addr load,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,a_source=%0h,load_addr=%0h",req_addr,req_cmd,req_dest,req_source,j,req_addr_arry[j]),UVM_NONE);
 						same_addr_exist = 1;
 						break;
 		      	end	
