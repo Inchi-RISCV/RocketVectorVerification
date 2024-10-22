@@ -26,6 +26,7 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
+		lr_timeout = vmm_opts::get_int("lr_timeout", 0, "lr_timeout");
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 		size_t 			= $urandom_range(2,3);
@@ -68,15 +69,18 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		end
 	
 		for(int i=0;i<length;i++)begin
-			lr_timeout 	= $urandom_range(1);
 			success	= std::randomize(wdata) with {wdata <= (2**512-1);};
 			
 			dcache_sc(addr_t+(2**size_t)*i,wdata,size_t); 	//sc miss fail
+			#20ns;
 			dcache_lr(addr_t+(2**size_t)*i+'h2000,size_t);
+			#20ns;
 			dcache_lr(addr_t+(2**size_t)*i,size_t);
+			wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
+			#78ns;	//valid range
 			
-			if(lr_timeout) begin
-				#200ns;
+			if(lr_timeout) begin 	//invalid range
+				#1ns;
 			end
 			
 			dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);	//sc hit success

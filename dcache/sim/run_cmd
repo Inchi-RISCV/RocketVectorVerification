@@ -16,6 +16,7 @@ make ncrun tc=dcache_partial_mask_store_test cfg=init_state_Trunk
 make ncrun tc=dcache_partial_mask_store_test cfg=init_state_Dirty
 make ncrun tc=dcache_partial_mask_store_test cfg=noAlloc
 make ncrun tc=dcache_lr_sc_test
+make ncrun tc=dcache_lr_sc_test cfg=lr_timeout
 make ncrun tc=dcache_lr_sc_test cfg=init_state_B
 make ncrun tc=dcache_lr_sc_test cfg=init_state_Trunk
 make ncrun tc=dcache_lr_sc_test cfg=init_state_Dirty
@@ -168,3 +169,4 @@ make ncrun tc=tilelink_probe_hazard_test cfg=lr_valid_probe_hazard
 make ncrun tc=tilelink_probe_hazard_test cfg=lr_invalid_probe_hazard
 make ncrun tc=tilelink_probe_hazard_test cfg=probe_replace_hazard
 make ncrun tc=tilelink_probe_hazard_test cfg=replace_probe_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=acquire_probe_hazard

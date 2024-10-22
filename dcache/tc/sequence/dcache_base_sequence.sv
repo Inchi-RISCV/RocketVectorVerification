@@ -220,7 +220,7 @@ task dcache_base_sequence::dcache_lr(
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   		<= 	3;
+		seq.io_req_bits_source   		<= 	1; 	//only support scalar
 		seq.io_req_bits_cmd      		==	lsu_trans::M_XLR;
 		seq.io_req_bits_paddr			 	==	addr;
     seq.io_req_bits_size     		==	req_size;
@@ -240,7 +240,7 @@ task dcache_base_sequence::dcache_sc(
 	lsu_seq   seq;
 
 	`uvm_do_on_with(seq,p_sequencer.lsu_sqr,{
-		seq.io_req_bits_source   		<= 	3;
+		seq.io_req_bits_source   		<= 	1; 	//only support scalar
 		seq.io_req_bits_cmd      		==	lsu_trans::M_XSC;
 		seq.io_req_bits_paddr			 	==	addr;
 		seq.io_req_bits_wdata    		==	req_wdata;

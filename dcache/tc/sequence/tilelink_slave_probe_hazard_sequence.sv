@@ -74,6 +74,18 @@ task tilelink_slave_probe_hazard_sequence::body();
 	
 	backdoor_put_data(addr_t,6,{16{'h76543210}});
 
+	//for debug only: replace + probe random
+	//fork
+	//	for(int i=0;i<5;i++) begin
+	//		dcache_load(addr_t+'h2000*i);
+	//	end
+	//		
+	//	for(int i=0;i<20;i++) begin
+	//		b_param = $urandom_range(2);
+	//		tilelink_chnlB_probeblock(addr_t,b_param);
+	//	end
+	//join
+	
 	if(cmd2 == 3) begin 	//probe + replace
 		for(int i=0;i<5;i++) begin
 			dcache_load(addr_t+'h2000*i);
@@ -106,7 +118,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 	end
 	else begin
 		for(int i=0;i<length1;i++)begin
-			if(cmd1 == 0) begin 	//LOAD
+			if(cmd1 == 0||cmd1 == 5) begin 	//LOAD or Acquire
 				dcache_load(addr_t);
 			end
 			else if(cmd1 == 1) begin	//STORE
@@ -137,16 +149,19 @@ task tilelink_slave_probe_hazard_sequence::body();
 					wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0);
 				else if(resp_status == "miss")
 					wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h1);
-		
-				//wait(tb_top.tilelink_slave_if[0].a_valid == 'h1); 	//TODO
-
+	
 				if(cmd1 == 4) begin 	//LR
+					wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
 					repeat(cycles) #1ns;
+				end
+				else if(cmd1 == 5) begin
+					wait(tb_top.tilelink_slave_if[0].a_valid == 'h1);
 				end
 				tilelink_chnlB_probeblock(addr_t,b_param);
 			end
 		end
 	end
+	
 	`uvm_info("body", "Exiting...", UVM_LOW)
 endtask
 
