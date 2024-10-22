@@ -943,7 +943,7 @@ task dcache_refm::assemble_cmd();
 	    same_addr_exist= 0;
 
 			//****Read****
-			if(req_cmd == lsu_trans::M_XRD || req_cmd == lsu_trans::M_PFR )begin
+			if(req_cmd == lsu_trans::M_XRD || req_cmd == lsu_trans::M_PFR || req_cmd == lsu_trans::M_XLR)begin
 
 				//miss
 				if(coh == lsu_trans::NOTHING )begin
@@ -1035,7 +1035,7 @@ task dcache_refm::assemble_cmd();
 
 	        //check if same addr req exist
 		      foreach (req_addr_arry[j])begin
-		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && !req_noAlloc)begin
+		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && !req_noAlloc && !((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)))begin
 					  `uvm_info(get_type_name(),$sformatf("store has same addr load,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,a_source=%0h,load_addr=%0h",req_addr,req_cmd,req_dest,req_source,j,req_addr_arry[j]),UVM_NONE);
 						same_addr_exist = 1;
 						break;

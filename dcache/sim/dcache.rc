@@ -2,11 +2,11 @@ Magic 271485
 Revision Verdi_V-2023.12
 
 ; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
-viewPort 0 25 2221 668 675 218
+viewPort 0 25 2221 588 675 218
 
 ; File list:
 ; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
-openDirFile -d / "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_amo_operation_test_52285278.fsdb"
+openDirFile -d / "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_lr_sc_test_1.fsdb"
 
 ; file time scale:
 ; fileTimeScale ### s|ms|us|ns|ps
@@ -18,20 +18,20 @@ signalSpacing 5
 windowTimeUnit 1ns
 
 ; waveform viewport range
-zoom 868.978815 900.058253 1n
-cursor 882.000000
-marker 882.000000
+zoom 346.491965 389.508075 1n
+cursor 352.000000
+marker 352.000000
 
 ; user define markers
 ; userMarker time_pos marker_name color linestyle
 ; visible top row signal index
-top 15
+top 40
 ; marker line index
-markerPos 22
+markerPos 46
 
 ; rename signal list
 ; addRenameSig new_name org_name
-activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_amo_operation_test_52285278.fsdb"
+activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_lr_sc_test_1.fsdb"
 
 addRenameSig "/tb_top/m_lsu_if/paddr_tag[38:13]" "/tb_top/m_lsu_if/io_req_bits_paddr[38:13]" keep
 
@@ -79,7 +79,7 @@ curSTATUS ByValue
 
 
 addGroup "G1"
-activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_amo_operation_test_52285278.fsdb"
+activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_lr_sc_test_1.fsdb"
 addSignal -h 24 /tb_top/m_lsu_if/clk
 addSignal -h 24 -holdScope rst_n
 addSignal -h 24 -holdScope io_req_valid
@@ -125,6 +125,8 @@ addSignal -h 20 -UNSIGNED -HEX -holdScope io_mainPipeReq_bits_paddr[38:0]
 addSignal -c ID_RED5 -ls solid -lw 1 -h 20 /tb_top/U_GPCDCache/mshrs/iomshrs/io_resp_valid
 addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -holdScope io_resp_ready
 addSignal -c ID_RED5 -ls solid -lw 1 -h 20 -UNSIGNED -HEX -holdScope io_resp_bits_dest[4:0]
+addSignal -h 20 -UNSIGNED -HEX /tb_top/U_GPCDCache/lrscCount[6:0]
+addSignal -h 20 -UNSIGNED -HEX -holdScope lrscAddr[26:0]
 endSubGroup "dut syn"
 addGroup "G2"
 addSignal -h 24 /tb_top/m_lsu_if/clk
@@ -193,7 +195,7 @@ addGroup "G4"
 
 ; getSignalForm Scope Hierarchy Status
 ; active file of getSignalForm
-activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_amo_operation_test_52285278.fsdb"
+activeDirFile "" "/datahdd/riscv/huangxiaogang/cache/RocketVectorVerification/dcache/sim/base_func/wave/dcache_lr_sc_test_1.fsdb"
 
 GETSIGNALFORM_SCOPE_HIERARCHY_BEGIN
 getSignalForm close
@@ -215,6 +217,7 @@ SCOPE_LIST_BEGIN
 "/tb_top/tilelink_master_if[0]"
 "/tb_top/tilelink_slave_if[0]"
 "/uvm_pkg"
+"/tb_top"
 SCOPE_LIST_END
 
 GETSIGNALFORM_SCOPE_HIERARCHY_END
