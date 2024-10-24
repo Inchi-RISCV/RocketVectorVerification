@@ -16,6 +16,8 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 		bit [4:0]       req_cmd;
 		bit [4:0]       amo_cmd[];  
 		bit [2:0]       req_size_t;
+		bit [2:0] 			size_t;
+		bit 						is_signed;
 		bit [511:0]     wdata;
 		bit [63:0]      wmask;
 		bit [4:0]       cmd;
@@ -57,13 +59,16 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 
 		for(int i=0;i<length;i++) begin
 			success = std::randomize(wdata) with {wdata <= (2**512-1);};
+			size_t = $urandom_range(6);
+			is_signed = $urandom_range(1);
+
 			if(is_mmio_range) begin    //mmio_range=1
 				cmd = $urandom_range(2);
 				if(cmd ==0) begin
-					dcache_load(addr_t);
+					dcache_load(addr_t,size_t,is_signed);
 				end
 				else if(cmd == 1) begin
-					dcache_store(addr_t,wdata);
+					dcache_store(addr_t,wdata,size_t);
 				end
 				else if(cmd == 2) begin
 					success = std::randomize(req_cmd) with {req_cmd inside amo_cmd;};
@@ -74,10 +79,10 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 				//success = std::randomize(cmd) with {cmd inside {0,3,4};};
 				cmd = $urandom_range(4);
 				if(cmd == 0) begin
-					dcache_load(addr_t,,,1);
+					dcache_load(addr_t,size_t,is_signed,1);
 				end
 				else if(cmd == 1) begin
-					dcache_store(addr_t,wdata,,1);
+					dcache_store(addr_t,wdata,size_t,1);
 				end
 				else if(cmd == 2) begin
 					success = std::randomize(wmask) with {wmask <= (2**64-1);};

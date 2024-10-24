@@ -43,7 +43,7 @@ task tilelink_probeblock_test::main_phase(uvm_phase phase);
     phase.raise_objection(this);
 		`uvm_info(get_type_name(), "start m_vsqr", UVM_NONE)
     tl_seq.start(m_vsqr);
-		#1000ns;
+		#50000ns;
     phase.drop_objection(this);
 endtask : main_phase
 

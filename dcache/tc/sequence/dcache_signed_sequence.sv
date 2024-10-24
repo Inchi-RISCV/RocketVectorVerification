@@ -16,6 +16,7 @@ class dcache_signed_sequence extends dcache_base_sequence;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
 		bit [511:0] wdata;
+		bit [2:0] size_t;
 		bit store_en;
 		bit is_mmio_range;
 		bit noAlloc;
@@ -51,15 +52,16 @@ class dcache_signed_sequence extends dcache_base_sequence;
 		
 		for(int i=0;i<length;i++)begin
 			success	= std::randomize(wdata) with {wdata <= (2**512-1);};
+			size_t = $urandom_range(6);
 
 			if(store_en) begin
-				dcache_store(addr_t+'h40*i,wdata,,noAlloc); 	//not extend bits
+				dcache_store(addr_t+'h40*i,wdata,size_t,noAlloc); 	//not extend bits
 			end
 			else begin
 				backdoor_put_data(addr_t+'h40*i,6,'hffff_ff00+i);		//extend bits
 			end
 			
-			dcache_load(addr_t+'h40*i,2,1,noAlloc);
+			dcache_load(addr_t+'h40*i,size_t,1,noAlloc);
 		end
   endtask
 endclass : dcache_signed_sequence

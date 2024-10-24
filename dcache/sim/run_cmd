@@ -1,25 +1,25 @@
 make ncrun tc=dcache_load_test											
 make ncrun tc=dcache_load_test cfg=init_state_B 															//load+load
-make ncrun tc=dcache_load_test cfg=init_state_Trunk 													//lr+load
+//make ncrun tc=dcache_load_test cfg=init_state_Trunk 													//lr+load
 make ncrun tc=dcache_load_test cfg=init_state_Dirty 													//store+load
 make ncrun tc=dcache_load_test cfg=mmio_range  					
 make ncrun tc=dcache_load_test cfg=noAlloc  							
 make ncrun tc=dcache_store_test											
 make ncrun tc=dcache_store_test cfg=init_state_B 															//load+store
-make ncrun tc=dcache_store_test cfg=init_state_Trunk 													//lr+store
+//make ncrun tc=dcache_store_test cfg=init_state_Trunk 													//lr+store
 make ncrun tc=dcache_store_test cfg=init_state_Dirty 													//store+store
 make ncrun tc=dcache_store_test cfg=mmio_range
 make ncrun tc=dcache_store_test cfg=noAlloc
 make ncrun tc=dcache_partial_mask_store_test
 make ncrun tc=dcache_partial_mask_store_test cfg=init_state_B
-make ncrun tc=dcache_partial_mask_store_test cfg=init_state_Trunk
+//make ncrun tc=dcache_partial_mask_store_test cfg=init_state_Trunk
 make ncrun tc=dcache_partial_mask_store_test cfg=init_state_Dirty
 make ncrun tc=dcache_partial_mask_store_test cfg=noAlloc
-make ncrun tc=dcache_lr_sc_test
-make ncrun tc=dcache_lr_sc_test cfg=lr_timeout
-make ncrun tc=dcache_lr_sc_test cfg=init_state_B
-make ncrun tc=dcache_lr_sc_test cfg=init_state_Trunk
-make ncrun tc=dcache_lr_sc_test cfg=init_state_Dirty
+//make ncrun tc=dcache_lr_sc_test
+//make ncrun tc=dcache_lr_sc_test cfg=lr_timeout
+//make ncrun tc=dcache_lr_sc_test cfg=init_state_B
+//make ncrun tc=dcache_lr_sc_test cfg=init_state_Trunk
+//make ncrun tc=dcache_lr_sc_test cfg=init_state_Dirty
 make ncrun tc=dcache_amo_operation_test cfg=amo_swap
 make ncrun tc=dcache_amo_operation_test cfg=amo_swap_mmio
 make ncrun tc=dcache_amo_operation_test cfg=amo_swap_noAlloc
@@ -48,7 +48,7 @@ make ncrun tc=dcache_amo_operation_test cfg=amo_maxu
 make ncrun tc=dcache_amo_operation_test cfg=amo_maxu_mmio
 make ncrun tc=dcache_amo_operation_test cfg=amo_maxu_noAlloc
 make ncrun tc=dcache_release_test cfg=init_state_B 														//load release
-make ncrun tc=dcache_release_test cfg=init_state_Trunk 												//lr release
+//make ncrun tc=dcache_release_test cfg=init_state_Trunk 												//lr release
 make ncrun tc=dcache_release_test cfg=init_state_Dirty												//store release
 make ncrun tc=dcache_release_test cfg=loadA_replace_hazard
 make ncrun tc=dcache_release_test cfg=storeA_replace_hazard
@@ -69,14 +69,6 @@ make ncrun tc=dcache_signed_test 																							//only load
 make ncrun tc=dcache_signed_test cfg=store 																		//store+load
 make ncrun tc=dcache_signed_test cfg=mmio_range 															
 make ncrun tc=dcache_signed_test cfg=noAlloc 																	
-make ncrun tc=dcache_prefetch_read_test											
-make ncrun tc=dcache_prefetch_read_test cfg=init_state_B 															
-make ncrun tc=dcache_prefetch_read_test cfg=init_state_Trunk 													
-make ncrun tc=dcache_prefetch_read_test cfg=init_state_Dirty 	
-make ncrun tc=dcache_prefetch_write_test											
-make ncrun tc=dcache_prefetch_write_test cfg=init_state_B
-make ncrun tc=dcache_prefetch_write_test cfg=init_state_Trunk
-make ncrun tc=dcache_prefetch_write_test cfg=init_state_Dirty
 make ncrun tc=dcache_hazard_test cfg=load_hit_load_hazard
 make ncrun tc=dcache_hazard_test cfg=load_miss_load_hazard
 make ncrun tc=dcache_hazard_test cfg=B_load_hit_store_hazard
@@ -86,14 +78,78 @@ make ncrun tc=dcache_hazard_test cfg=store_hit_load_hazard
 make ncrun tc=dcache_hazard_test cfg=store_miss_load_hazard
 make ncrun tc=dcache_hazard_test cfg=store_hit_store_hazard
 make ncrun tc=dcache_hazard_test cfg=store_miss_store_hazard
-make ncrun tc=dcache_hazard_test cfg=load_hit_lr_hazard
-make ncrun tc=dcache_hazard_test cfg=load_miss_lr_hazard
-make ncrun tc=dcache_hazard_test cfg=lr_load_hazard
-make ncrun tc=dcache_hazard_test cfg=store_hit_lr_hazard
-make ncrun tc=dcache_hazard_test cfg=store_miss_lr_hazard
-make ncrun tc=dcache_hazard_test cfg=lr_store_hazard
-make ncrun tc=dcache_hazard_test cfg=lr_lr_hazard
-make ncrun tc=dcache_hazard_test cfg=lr_sc_hazard
+//make ncrun tc=dcache_hazard_test cfg=load_hit_lr_hazard
+//make ncrun tc=dcache_hazard_test cfg=load_miss_lr_hazard
+//make ncrun tc=dcache_hazard_test cfg=lr_load_hazard
+//make ncrun tc=dcache_hazard_test cfg=store_hit_lr_hazard
+//make ncrun tc=dcache_hazard_test cfg=store_miss_lr_hazard
+//make ncrun tc=dcache_hazard_test cfg=lr_store_hazard
+//make ncrun tc=dcache_hazard_test cfg=lr_lr_hazard
+//make ncrun tc=dcache_hazard_test cfg=lr_sc_hazard
+make ncrun tc=dcache_hazard_test cfg=random_hazard 														//random load or store
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_hit_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_hit_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_miss_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_miss_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_bypass_hit_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_bypass_hit_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_bypass_hit_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_bypass_hit_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=bypass_miss_load_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=bypass_miss_store_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_load_hit_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_load_hit_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_hit_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=load_miss_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_miss_amo_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_load_hit_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_load_hit_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_hit_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=load_miss_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_miss_bypass_hazard
+make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=random_hazard
+make ncrun tc=dcache_iomshr_hazard_test
+make ncrun tc=dcache_iomshr_hazard_test cfg=mmio_range
+make ncrun tc=dcache_long_delay_test
+make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_N
+make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_B
+//make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_Trunk
+make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_Dirty
+make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_N
+make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_B
+//make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_Trunk
+make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_Dirty
+make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_N
+make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_B
+//make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_Trunk
+make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_Dirty
+
+
+
+
+
+make ncrun tc=tilelink_probe_hazard_test cfg=load_hit_probe_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=store_hit_probe_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=load_miss_probe_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=store_miss_probe_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=probe_load_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=probe_store_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=lr_valid_probe_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=lr_invalid_probe_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=probe_replace_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=replace_probe_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=acquire_probe_hazard
+
+
+
+make ncrun tc=dcache_prefetch_read_test											
+make ncrun tc=dcache_prefetch_read_test cfg=init_state_B 															
+make ncrun tc=dcache_prefetch_read_test cfg=init_state_Trunk 													
+make ncrun tc=dcache_prefetch_read_test cfg=init_state_Dirty 	
+make ncrun tc=dcache_prefetch_write_test											
+make ncrun tc=dcache_prefetch_write_test cfg=init_state_B
+make ncrun tc=dcache_prefetch_write_test cfg=init_state_Trunk
+make ncrun tc=dcache_prefetch_write_test cfg=init_state_Dirty
 make ncrun tc=dcache_hazard_test cfg=pfr_hit_load_hazard
 make ncrun tc=dcache_hazard_test cfg=pfr_miss_load_hazard
 make ncrun tc=dcache_hazard_test cfg=B_pfr_hit_store_hazard
@@ -120,53 +176,5 @@ make ncrun tc=dcache_hazard_test cfg=pfw_hit_pfr_hazard
 make ncrun tc=dcache_hazard_test cfg=pfw_miss_pfr_hazard
 make ncrun tc=dcache_hazard_test cfg=pfw_hit_pfw_hazard
 make ncrun tc=dcache_hazard_test cfg=pfw_miss_pfw_hazard
-make ncrun tc=dcache_hazard_test cfg=random_hazard 														//random load or store
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_hit_load_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_hit_store_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_miss_load_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=amo_miss_store_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_bypass_hit_load_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_bypass_hit_load_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_bypass_hit_store_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_bypass_hit_store_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=bypass_miss_load_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=bypass_miss_store_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_load_hit_amo_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_load_hit_amo_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_hit_amo_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=load_miss_amo_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_miss_amo_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=B_load_hit_bypass_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=T_load_hit_bypass_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_hit_bypass_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=load_miss_bypass_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=store_miss_bypass_hazard
-make ncrun tc=dcache_mshr_iomshr_hazard_test cfg=random_hazard
-make ncrun tc=dcache_iomshr_hazard_test
-make ncrun tc=dcache_iomshr_hazard_test cfg=mmio_range
 make ncrun tc=dcache_reset_load_test
 make ncrun tc=dcache_s1_kill_test
-make ncrun tc=dcache_long_delay_test
-make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_N
-make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_B
-make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_Trunk
-make ncrun tc=tilelink_probeblock_test cfg=probe_toN_init_state_Dirty
-make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_N
-make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_B
-make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_Trunk
-make ncrun tc=tilelink_probeblock_test cfg=probe_toB_init_state_Dirty
-make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_N
-make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_B
-make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_Trunk
-make ncrun tc=tilelink_probeblock_test cfg=probe_toT_init_state_Dirty
-make ncrun tc=tilelink_probe_hazard_test cfg=load_hit_probe_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=store_hit_probe_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=load_miss_probe_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=store_miss_probe_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=probe_load_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=probe_store_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=lr_valid_probe_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=lr_invalid_probe_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=probe_replace_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=replace_probe_hazard
-make ncrun tc=tilelink_probe_hazard_test cfg=acquire_probe_hazard

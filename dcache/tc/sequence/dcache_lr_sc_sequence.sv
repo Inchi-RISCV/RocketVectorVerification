@@ -17,6 +17,7 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		bit [6:0] set_idx_t;
 		bit [511:0] wdata;
 		bit [2:0]	size_t;
+		bit is_signed;
 		bit is_mmio_range;
 		bit lr_timeout;
 		string init_state;
@@ -29,8 +30,8 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		lr_timeout = vmm_opts::get_int("lr_timeout", 0, "lr_timeout");
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
-		size_t 			= $urandom_range(2,3);
-		length 			= $urandom_range(1, 500);
+		size_t = $urandom_range(2,3);
+		length = $urandom_range(1, 500);
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 
 		if(is_mmio_range) begin
@@ -56,9 +57,10 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 
 		for(int i=0;i<length;i++)begin
 			success	= std::randomize(wdata) with {wdata <= (2**512-1);};
+			is_signed = $urandom_range(1);
 
 			if(init_state == "B") begin
-				dcache_load(addr_t+(2**size_t)*i,size_t);
+				dcache_load(addr_t+(2**size_t)*i,size_t,is_signed);
 			end
 			else if(init_state == "Trunk") begin
 				dcache_lr(addr_t+(2**size_t)*i,size_t);
@@ -88,7 +90,9 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		end
   
 		for(int i=0;i<length;i++)begin
-			dcache_load(addr_t+(2**size_t)*i,size_t);
+			is_signed = $urandom_range(1);
+			
+			dcache_load(addr_t+(2**size_t)*i,size_t,is_signed);
 		end
 	endtask
 endclass : dcache_lr_sc_sequence

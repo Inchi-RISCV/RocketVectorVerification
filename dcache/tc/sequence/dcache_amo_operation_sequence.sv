@@ -16,6 +16,7 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
 		bit [2:0]	size_t;
+		bit is_signed;
 		bit [511:0] wdata;
 		bit is_mmio_range;
 		bit noAlloc;
@@ -29,8 +30,8 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		req_cmd = vmm_opts::get_int("req_cmd", 0, "req_cmd");
 		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 
-		size_t 			= $urandom_range(2,3);
-		length 			= $urandom_range(1, 500);
+		size_t = $urandom_range(2,3);
+		length = $urandom_range(1, 500);
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 
 		if(is_mmio_range) begin
@@ -53,12 +54,13 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		
 		for(int i=0;i<length;i++)begin
 			success	= std::randomize(wdata) with {wdata <= (2**512-1);};
+			is_signed = $urandom_range(1);
 
 			backdoor_put_data(addr_t+(2**size_t)*i,size_t,{16{'hffff_1111}}+i);
 			dcache_amo_operation(req_cmd,addr_t+(2**size_t)*i,wdata,size_t,noAlloc); 	//init state: N
 			
 			if((!is_mmio_range)&&(!noAlloc)) begin
-				dcache_load(addr_t+(2**size_t)*i,size_t);
+				dcache_load(addr_t+(2**size_t)*i,size_t,is_signed);
 				dcache_amo_operation(req_cmd,addr_t+(2**size_t)*i,wdata,size_t); 	//init state: B
 
 				dcache_store(addr_t+(2**size_t)*i,wdata,size_t);
@@ -67,7 +69,9 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		end
 
 		for(int i=0;i<length;i++)begin
-			dcache_load(addr_t+(2**size_t)*i,size_t);
+			is_signed = $urandom_range(1);
+
+			dcache_load(addr_t+(2**size_t)*i,size_t,is_signed);
 		end
   endtask
 endclass : dcache_amo_operation_sequence

@@ -16,6 +16,7 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 		bit [511:0] wdata_t;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
+		bit is_signed;
 		bit is_mmio_range;
 		bit noAlloc;
 	 	bit success;
@@ -54,7 +55,8 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 			end
 
 			for(int i=0;i<(64/2**j);i++)begin
-				dcache_load(addr_t+2**j*i,j,,noAlloc);
+				is_signed = $urandom_range(1);
+				dcache_load(addr_t+2**j*i,j,is_signed,noAlloc);
 			end
 		end
 	endtask

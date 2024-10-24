@@ -23,6 +23,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 	bit [1:0]  b_param;
 	bit [511:0] wdata;
 	bit [2:0]	size_t;
+	bit is_signed;
 	bit [4:0] cmd1, cmd2;
 	bit lr_valid;
 	bit isRefill;
@@ -77,7 +78,8 @@ task tilelink_slave_probe_hazard_sequence::body();
 	//for debug only: replace + probe random
 	//fork
 	//	for(int i=0;i<5;i++) begin
-	//		dcache_load(addr_t+'h2000*i);
+	//		is_signed = $urandom_range(1);
+	//		dcache_load(addr_t+'h2000*i,,is_signed);
 	//	end
 	//		
 	//	for(int i=0;i<20;i++) begin
@@ -88,7 +90,8 @@ task tilelink_slave_probe_hazard_sequence::body();
 	
 	if(cmd2 == 3) begin 	//probe + replace
 		for(int i=0;i<5;i++) begin
-			dcache_load(addr_t+'h2000*i);
+			is_signed = $urandom_range(1);
+			dcache_load(addr_t+'h2000*i,,is_signed);
 		end
 		
 		forever begin
@@ -108,7 +111,8 @@ task tilelink_slave_probe_hazard_sequence::body();
 	end
 	else if(cmd1 == 3) begin 	//replace + probe
 		for(int i=0;i<5;i++) begin
-			dcache_load(addr_t+'h2000*i);
+			is_signed = $urandom_range(1);
+			dcache_load(addr_t+'h2000*i,,is_signed);
 		end
 
 		wait((tb_top.tilelink_slave_if[0].c_opcode[2:0] == 6)||(tb_top.tilelink_slave_if[0].c_opcode[2:0] == 7));
@@ -119,7 +123,8 @@ task tilelink_slave_probe_hazard_sequence::body();
 	else begin
 		for(int i=0;i<length1;i++)begin
 			if(cmd1 == 0||cmd1 == 5) begin 	//LOAD or Acquire
-				dcache_load(addr_t);
+				is_signed = $urandom_range(1);
+				dcache_load(addr_t,,is_signed);
 			end
 			else if(cmd1 == 1) begin	//STORE
 				success = std::randomize(wdata) with { wdata <= (2**512-1);};
@@ -137,7 +142,8 @@ task tilelink_slave_probe_hazard_sequence::body();
 
 		for(int i=0;i<length2;i++)begin
 			if(cmd2 == 0) begin 	//LOAD
-				dcache_load(addr_t);
+				is_signed = $urandom_range(1);
+				dcache_load(addr_t,,is_signed);
 			end
 			else if(cmd2 == 1) begin	//STORE
 				success = std::randomize(wdata) with { wdata <= (2**512-1);};

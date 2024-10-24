@@ -15,6 +15,8 @@ class dcache_s1_kill_sequence extends dcache_base_sequence;
 		bit [38:0] addr_t;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
+		bit [2:0] size_t;
+		bit is_signed;
 		bit success;
 
 	 	super.body(); 
@@ -37,9 +39,12 @@ class dcache_s1_kill_sequence extends dcache_base_sequence;
 	  end
 
 		for(int i=0;i<length;i++)begin
-			dcache_load(addr_t+'h40*i);
-			dcache_load(addr_t+'h40*i,,,,1); 	//s1_kill = 1
-			dcache_load(addr_t+'h40*i);
+			size_t = $urandom_range(6);
+			is_signed = $urandom_range(1);
+
+			dcache_load(addr_t+'h40*i,size_t,is_signed);
+			dcache_load(addr_t+'h40*i,size_t,is_signed,,1); 	//s1_kill = 1
+			dcache_load(addr_t+'h40*i,size_t,is_signed);
 		end
   endtask
 endclass : dcache_s1_kill_sequence

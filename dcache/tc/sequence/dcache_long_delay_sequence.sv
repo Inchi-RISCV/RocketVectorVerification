@@ -16,6 +16,8 @@ class dcache_long_delay_sequence extends dcache_base_sequence;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
 		bit [511:0] wdata;
+		bit [2:0] size_t;
+		bit is_signed;
 		bit success;
 		bit is_mmio_range;
 		bit noAlloc;
@@ -51,7 +53,10 @@ class dcache_long_delay_sequence extends dcache_base_sequence;
 	  end
 
 		for(int i=0;i<length;i++)begin
-			dcache_load(addr_t+'h40*i,,,noAlloc);
+			size_t = $urandom_range(6);
+			is_signed = $urandom_range(1);
+
+			dcache_load(addr_t+'h40*i,size_t,is_signed,noAlloc);
 		end
   endtask
 endclass : dcache_long_delay_sequence

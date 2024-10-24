@@ -15,13 +15,15 @@ class dcache_reset_load_sequence extends dcache_base_sequence;
 		bit [38:0] addr_t;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
+		bit [2:0] size_t;
+		bit is_signed;
 		bit success;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 		
-		//length 			= $urandom_range(1, 500);
-		length 			= 10; 	//TODO
+		//length = $urandom_range(1, 500);
+		length = 10; 	//TODO
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 		
 		success 	= std::randomize(tag_idx_t,set_idx_t) with {
@@ -38,7 +40,10 @@ class dcache_reset_load_sequence extends dcache_base_sequence;
 	  end
 
 		for(int i=0;i<length;i++)begin
-			dcache_load(addr_t+'h40*i);
+			size_t = $urandom_range(6);
+			is_signed = $urandom_range(1);
+
+			dcache_load(addr_t+'h40*i,size_t,is_signed);
 		end
 		#200ns;
 
@@ -49,7 +54,10 @@ class dcache_reset_load_sequence extends dcache_base_sequence;
 		#200ns;
 
 		for(int i=0;i<length;i++)begin
-			dcache_load(addr_t+'h40*i);
+			size_t = $urandom_range(6);
+			is_signed = $urandom_range(1);
+
+			dcache_load(addr_t+'h40*i,size_t,is_signed);
 		end
   endtask
 endclass : dcache_reset_load_sequence
