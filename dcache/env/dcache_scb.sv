@@ -136,7 +136,7 @@ task dcache_scb::end_sim_check();
     while(1) begin
     	@(posedge tb_top.clock);
     	if(time_cnt>=1000)begin
-				`uvm_info(get_type_name(),$sformatf(" DUT  donot has data for 10000 cycle , finish!"),UVM_NONE);
+				`uvm_info(get_type_name(),$sformatf(" DUT  donot has data for 1000 cycle , finish!"),UVM_NONE);
     	break;
       end
     end

@@ -79,13 +79,14 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 			#20ns;
 			dcache_lr(addr_t+(2**size_t)*i,size_t);
 			wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
-			#78ns;	//valid range
 			
-			if(lr_timeout) begin 	//invalid range
-				#1ns;
+			wait(tb_top.U_GPCDCache.lrscCount[6:0] == 6); 		//valid range, sc hit success
+			
+			if(lr_timeout) begin
+				wait(tb_top.U_GPCDCache.lrscCount[6:0] == 5); 	//invalid range, sc hit fail
 			end
 			
-			dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);	//sc hit success
+			dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);
 			dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);	//sc hit fail
 		end
   

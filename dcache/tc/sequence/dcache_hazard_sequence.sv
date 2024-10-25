@@ -144,7 +144,6 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 				else if(cmd2 == 5) begin	//SC
 					size_t = $urandom_range(2,3);
 					success = std::randomize(wdata) with { wdata <= (2**512-1);};
-
 					dcache_sc(addr_t,wdata,size_t);
 				end
 			end

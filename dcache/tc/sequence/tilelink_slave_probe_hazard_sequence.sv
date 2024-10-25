@@ -29,9 +29,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 	bit isRefill;
 	int refill_cnt;
 	bit success;
-	int cycles;
 	string resp_status;
-	string init_state;
 
 	super.body();
 	`uvm_info("body", "Entering...", UVM_LOW)
@@ -39,18 +37,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 	cmd1 = vmm_opts::get_int("cmd1", 0, "cmd1");
 	cmd2 = vmm_opts::get_int("cmd2", 0, "cmd2");
 	lr_valid = vmm_opts::get_int("lr_valid", 1, "lr_valid");
-	//init_state = vmm_opts::get_string("init_state", "N", "init_state");
 	resp_status = vmm_opts::get_string("resp_status", "hit", "resp_status");
-
-	success = std::randomize(cycles) with {
-		if(lr_valid) {
-			cycles inside {[0:77]};
-		}
-		else {
-			cycles inside {[78:100]};
-		}
-	};
-	`uvm_info("RANDOM_CFG",$sformatf("cycles = %0d", cycles),UVM_LOW);
 
 	success = std::randomize(addr_t, length1, length2) with {
 		solve length1, length2 before addr_t;
@@ -158,7 +145,12 @@ task tilelink_slave_probe_hazard_sequence::body();
 	
 				if(cmd1 == 4) begin 	//LR
 					wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
-					repeat(cycles) #1ns;
+					if(lr_valid) begin
+						wait(tb_top.U_GPCDCache.lrscCount[6:0] == 7); 	//probe block
+					end
+					else begin
+						wait(tb_top.U_GPCDCache.lrscCount[6:0] == 6); 	//probe unblock
+					end
 				end
 				else if(cmd1 == 5) begin
 					wait(tb_top.tilelink_slave_if[0].a_valid == 'h1);
