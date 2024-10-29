@@ -494,10 +494,10 @@ task dcache_refm::do_refill();
 		        	  req_cmd_same_addr = same_addr_info[57:53];
 		        	  req_signed = same_addr_info[58:58];
 		        	  req_addr  = same_addr_info[52:14];
-		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_refill_num),UVM_NONE);
+		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h, req_size=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,req_size_arry[{req_source,req_dest}],refill_data,same_addr_refill_num),UVM_NONE);
 		        	  if(req_addr[31:6] == a_addr[31:6])begin 
   	        	  	addr_data_align(req_size_arry[{req_source,req_dest}],req_addr,d_data_arry[d_source],align_data);
-		        		  sign_extension(req_signed,req_size,align_data,refill_data);
+		        		  sign_extension(req_signed,req_size_arry[{req_source,req_dest}],align_data,refill_data);
 
 		        		  if(req_cmd_arry[d_source] == lsu_trans::M_XRD)begin
 		                send_rsp(req_source ,req_dest , lsu_trans::REFILL,1,refill_data);
