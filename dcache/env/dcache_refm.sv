@@ -17,6 +17,7 @@
 `define _DCACHE_REFM_SV_
 
 `uvm_analysis_imp_decl(_slave_trans_rx)
+`uvm_analysis_imp_decl(_slave_trans_chb)
 
 class dcache_refm extends uvm_component;
   `uvm_component_utils(dcache_refm)
@@ -26,6 +27,8 @@ class dcache_refm extends uvm_component;
   uvm_analysis_port  #(svt_tilelink_slave_transaction) rm2sb_tlc_port;
 
 	`SVT_XVM(analysis_imp_slave_trans_rx)      #(svt_tilelink_slave_transaction,  dcache_refm) tl2rm_tlrx_port;
+
+	`SVT_XVM(analysis_imp_slave_trans_chb)     #(svt_tilelink_slave_transaction,  dcache_refm) tl2rm_tlchb_port;
 
   lsu_trans lsu_tr_q[$];
 	lsu_trans rsp;
@@ -86,12 +89,22 @@ class dcache_refm extends uvm_component;
 			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port tl_chd_q \n",slave_trans.sprint}, UVM_HIGH)
 	  end
 
-		if(slave_trans.drive_chnl_B)begin
-   	  tl_chb_q.push_back(slave_trans);
-			`uvm_info(get_type_name(), {"get tl2rm_tlrx_port tl_chb_q\n",slave_trans.sprint}, UVM_HIGH)
-	  end
+	//if(slave_trans.drive_chnl_B)begin
+  //  tl_chb_q.push_back(slave_trans);
+	//	`uvm_info(get_type_name(), {"get tl2rm_tlrx_port tl_chb_q\n",slave_trans.sprint}, UVM_HIGH)
+	//end
 
   endfunction : write_slave_trans_rx
+
+  /**  write for tilelink monitor */
+  virtual function void write_slave_trans_chb(svt_tilelink_slave_transaction slave_trans);
+
+		if(slave_trans.drive_chnl_B)begin
+   	  tl_chb_q.push_back(slave_trans);
+			`uvm_info(get_type_name(), {"get tl2rm_tlchb_port tl_chb_q\n",slave_trans.sprint}, UVM_HIGH)
+	  end
+
+  endfunction : write_slave_trans_chb
 
 
 
@@ -105,7 +118,7 @@ function dcache_refm::new(string name, uvm_component parent);
   tl2rm_tlrx_port = new("tl2rm_tlrx_port",this);
 	rm2sb_rsp_port = new("rm2sb_rsp_port",this);
   rm2sb_tlc_port = new("rm2sb_tlc_port",this);
-
+  tl2rm_tlchb_port = new("tl2rm_tlchb_port",this);
 
 endfunction : new
 

@@ -102,6 +102,7 @@ function void dcache_env::connect_phase(uvm_phase phase);
 
 	tl_env.sys_env.slave[0].slave_mon.rx_xact_observed_port.connect(m_refm.tl2rm_tlrx_port);
 	tl_env.sys_env.slave[0].slave_mon.tx_xact_observed_port.connect(m_scb.tl2sb_tlc_port);
+	tl_env.sys_env.slave[0].slave_mon.tx_chb_observed_port.connect(m_refm.tl2rm_tlchb_port);
  // tl_env.sys_env.slave[0].slave_mon.status_xact_observed_port.connect(tl2rm_tltx_fifo.analysis_export);
  //m_refm.tl2rm_tltx_port.connect(tl2rm_tltx_fifo.blocking_get_export);
 

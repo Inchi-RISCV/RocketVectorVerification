@@ -22,6 +22,7 @@
 `uvm_analysis_imp_decl(_master_trans_status) // for master mon write for status
  `uvm_analysis_imp_decl(_slave_trans_tx)  // for slave mon tx
 
+
 class dcache_scb extends uvm_scoreboard;
   `uvm_component_utils(dcache_scb)
 
