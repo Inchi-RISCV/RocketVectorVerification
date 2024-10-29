@@ -1034,7 +1034,7 @@ task dcache_refm::assemble_cmd();
 
 					a_param =  (coh == lsu_trans::NOTHING) ? 1 : 2 ;//NOTHING NtoT,BRANCH BtoT
 										
-					if(!req_cmd == lsu_trans::M_XLR)begin
+					if(req_cmd != lsu_trans::M_XLR)begin
 						if(req_cmd == lsu_trans::M_XSC)begin
               send_rsp(req_source ,req_dest ,lsu_trans::MISS,1,1);// sc hasdata=1;sc success data=0;sc fail data=1;
 						end
