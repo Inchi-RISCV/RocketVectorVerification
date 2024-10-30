@@ -2,7 +2,7 @@ Magic 271485
 Revision Verdi_V-2023.12
 
 ; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
-viewPort 0 25 1920 888 412 141
+viewPort 0 25 1920 888 460 141
 
 ; File list:
 ; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
@@ -18,16 +18,16 @@ signalSpacing 5
 windowTimeUnit 1ns
 
 ; waveform viewport range
-zoom 329.861487 481.384238 1n
-cursor 486.000000
-marker 491.000000
+zoom 300.717209 412.114003 1n
+cursor 355.010000
+marker 359.010000
 
 ; user define markers
 ; userMarker time_pos marker_name color linestyle
 ; visible top row signal index
 top 0
 ; marker line index
-markerPos 50
+markerPos 101
 
 ; rename signal list
 ; addRenameSig new_name org_name
@@ -60,6 +60,11 @@ addRenameSig "/tb_top/m_lsu_if/paddr_row_offset[2:0]" "/tb_top/m_lsu_if/io_req_b
 
 addExprSig -b 1 -n UU logical_expression_2 "/tb_top/m_lsu_if/io_req_valid"& "/tb_top/m_lsu_if/io_req_ready"
 
+; logical expression list
+; addExprSig expr_name expression_string
+
+addExprSig -b 1 -n UU req_hs "/tb_top/m_lsu_if/io_req_valid"& "/tb_top/m_lsu_if/io_req_ready"
+
 ; event list
 ; addEvent event_name event_expression
 ; curEvent event_name
@@ -84,7 +89,8 @@ addSignal -h 24 /tb_top/m_lsu_if/clk
 addSignal -h 24 -holdScope rst_n
 addSignal -h 24 -holdScope io_req_valid
 addSignal -h 24 -holdScope io_req_ready
-addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_cmd[4:0]
+addSignal -c ID_ORANGE5 -ls solid -lw 1 -h 22 /req_hs
+addSignal -h 24 -UNSIGNED -HEX /tb_top/m_lsu_if/io_req_bits_cmd[4:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_dest[4:0]
 addSignal -expanded -c ID_YELLOW5 -ls solid -lw 1 -h 24 -UNSIGNED -HEX -holdScope io_req_bits_paddr[38:0]
 addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 24 -UNSIGNED -HEX -holdScope paddr_tag[38:13]
@@ -98,7 +104,7 @@ addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_wdata[511:0]
 addSignal -h 24 -holdScope io_req_bits_noAlloc
 addSignal -h 24 -holdScope io_req_bits_signed
 addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_source[7:0]
-addSubGroup "dut syn" -e FALSE
+addSubGroup "dut syn"
 addSignal -c ID_RED5 -ls solid -lw 1 -h 21 /tb_top/U_GPCDCache/mainReqArb/io_out_valid
 addSignal -c ID_RED5 -ls solid -lw 1 -h 21 -holdScope io_out_bits_isRefill
 addSignal -c ID_RED5 -ls solid -lw 1 -h 21 -holdScope io_out_bits_isProbe
@@ -125,13 +131,13 @@ addSignal -h 21 -UNSIGNED -HEX -holdScope io_mainPipeReq_bits_paddr[38:0]
 addSignal -c ID_RED5 -ls solid -lw 1 -h 21 /tb_top/U_GPCDCache/mshrs/iomshrs/io_resp_valid
 addSignal -c ID_RED5 -ls solid -lw 1 -h 21 -holdScope io_resp_ready
 addSignal -c ID_RED5 -ls solid -lw 1 -h 21 -UNSIGNED -HEX -holdScope io_resp_bits_dest[4:0]
+addSignal -c ID_ORANGE5 -ls solid -lw 1 -h 22 -UNSIGNED -HEX /tb_top/U_GPCDCache/lrscCount[6:0]
+addSignal -c ID_ORANGE5 -ls solid -lw 1 -h 22 -holdScope s0_valid
+addSignal -c ID_ORANGE5 -ls solid -lw 1 -h 22 -holdScope s1_valid
 endSubGroup "dut syn"
 addGroup "G2"
 addSignal -h 24 /tb_top/m_lsu_if/clk
-addSignal -h 22 -UNSIGNED -HEX /tb_top/U_GPCDCache/lrscCount[6:0]
-addSignal -h 22 -holdScope s0_valid
-addSignal -h 22 -holdScope s1_valid
-addSignal -h 24 /tb_top/m_lsu_if/io_resp_valid
+addSignal -h 24 -holdScope io_resp_valid
 addSignal -c ID_PURPLE5 -ls solid -lw 1 -h 24 -UNSIGNED -HEX -holdScope io_resp_bits_dest[4:0]
 addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 24 -UNSIGNED -HEX -holdScope io_resp_bits_status[1:0]
 addSignal -h 24 -holdScope io_nextCycleWb
@@ -140,7 +146,6 @@ addSignal -h 24 -UNSIGNED -HEX -holdScope io_resp_bits_data[511:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope io_resp_bits_source[7:0]
 addGroup "tilelink"
 addSubGroup "A"
-addSignal -h 22 -UNSIGNED -HEX /tb_top/U_GPCDCache/lrscCount[6:0]
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/tl_clock
 addSignal -h 24 -holdScope a_valid
 addSignal -h 24 -holdScope a_ready
@@ -154,16 +159,16 @@ addSignal -h 24 -UNSIGNED -HEX -holdScope a_mask[127:0]
 addSignal -h 24 -holdScope a_corrupt
 endSubGroup "A"
 addSubGroup "B"
-addSignal -h 24 /tb_top/tilelink_slave_if[0]/b_ready
-addSignal -h 24 -holdScope b_valid
-addSignal -h 24 -UNSIGNED -HEX -holdScope b_address[63:0]
+addSignal -h 24 /tb_top/tilelink_slave_if[0]/b_valid
+addSignal -h 24 -holdScope b_ready
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_source[15:0]
+addSignal -h 24 -UNSIGNED -HEX -holdScope b_opcode[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_param[2:0]
-addSignal -h 24 -holdScope b_corrupt
+addSignal -h 24 -UNSIGNED -HEX -holdScope b_address[63:0]
+addSignal -h 24 -UNSIGNED -HEX -holdScope b_size[63:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_data[1023:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_mask[127:0]
-addSignal -h 24 -UNSIGNED -HEX -holdScope b_opcode[2:0]
-addSignal -h 24 -UNSIGNED -HEX -holdScope b_size[63:0]
+addSignal -h 24 -holdScope b_corrupt
 endSubGroup "B"
 addSubGroup "C"
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/c_valid
@@ -184,9 +189,9 @@ addSignal -h 24 -UNSIGNED -HEX -holdScope d_opcode[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope d_param[1:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope d_size[63:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope d_data[511:0]
+addSignal -h 24 -UNSIGNED -HEX -holdScope d_sink[2:0]
 addSignal -h 24 -holdScope d_denied
 addSignal -h 24 -holdScope d_corrupt
-addSignal -h 24 -UNSIGNED -HEX -holdScope d_sink[2:0]
 endSubGroup "D"
 addSubGroup "E"
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/e_valid

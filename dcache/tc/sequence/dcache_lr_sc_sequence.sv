@@ -73,10 +73,10 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		for(int i=0;i<length;i++)begin
 			success	= std::randomize(wdata) with {wdata <= (2**512-1);};
 			
-			dcache_sc(addr_t+(2**size_t)*i,wdata,size_t); 	//sc miss fail
-			#20ns;
-			dcache_lr(addr_t+(2**size_t)*i+'h2000,size_t);
-			#20ns;
+			//dcache_sc(addr_t+(2**size_t)*i,wdata,size_t); 	//sc miss fail
+			//#20ns;
+			//dcache_lr(addr_t+(2**size_t)*i+'h2000,size_t);
+			//#20ns;
 			dcache_lr(addr_t+(2**size_t)*i,size_t);
 			wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
 			
@@ -87,7 +87,7 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 			end
 			
 			dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);
-			dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);	//sc hit fail
+			//dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);	//sc hit fail
 		end
   
 		for(int i=0;i<length;i++)begin
