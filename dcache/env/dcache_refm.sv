@@ -560,7 +560,7 @@ task dcache_refm::do_refill();
 
 			    end
 
-					//same addr load refill
+					//same addr check, load need refill,store need merge data
 		        same_addr_refill_num = same_addr_info_q.size();
 		        if(same_addr_refill_num>0)begin
 		          for(int i=0 ;i<same_addr_refill_num;i++)begin
@@ -580,6 +580,7 @@ task dcache_refm::do_refill();
 		                send_rsp(req_source ,req_dest , lsu_trans::REFILL,1,refill_data);
 		        	      `uvm_info(get_type_name(),$sformatf("rm send same addr refill resp ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_refill_num),UVM_NONE);
 		        	    end
+
 		            end
 		        	  else begin
                   same_addr_info_tmp_q.push_back(same_addr_info);
@@ -1037,7 +1038,7 @@ task dcache_refm::assemble_cmd();
 					  //req_source_q.push_back(req_source);
             same_addr_info = {req_signed,req_cmd,req_addr,req_source,req_dest};
             same_addr_info_q.push_back(same_addr_info);
-					  `uvm_info(get_type_name(),$sformatf("load same addr,waiting for refill resp,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,rsp_num=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,same_addr_info_q.size(),j),UVM_NONE);
+					  `uvm_info(get_type_name(),$sformatf("same addr load info,waiting for refill resp,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,rsp_num=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,same_addr_info_q.size(),j),UVM_NONE);
 						same_addr_exist = 1;
 						break;
 		      	end	
@@ -1125,10 +1126,13 @@ task dcache_refm::assemble_cmd();
 						 `uvm_info(get_type_name(),$sformatf("write miss release cache, set=%0h, q_size=%0h,way=%0h",nset,replace_q[nset].size(),way),UVM_NONE);
 					end
 
-	        //check if same addr req exist
+	        //check if same addr store exist
 		      foreach (req_addr_arry[j])begin
 		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && (!req_noAlloc || (req_noAlloc && !req_noalloc_arry[j]))&& !((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)))begin
-					  `uvm_info(get_type_name(),$sformatf("store has same addr load,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,a_source=%0h,load_addr=%0h",req_addr,req_cmd,req_dest,req_source,j,req_addr_arry[j]),UVM_NONE);
+            
+						data_mask_merge(req_size, req_addr,mask, req_data_arry[j],req_data,merge_data);
+					  `uvm_info(get_type_name(),$sformatf("same addr store info,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,a_source=%0h,store_addr=%0h,req_size=%0h\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_cmd,req_dest,req_source,j,req_addr_arry[j],req_size,req_data_arry[j],req_data,merge_data),UVM_NONE);
+						req_data_arry[j]       = merge_data;
 						same_addr_exist = 1;
 						break;
 		      	end	
@@ -1185,13 +1189,20 @@ task dcache_refm::assemble_cmd();
 				end
 				else begin // write hit
 					if(req_cmd == lsu_trans::M_XLR)begin //LR
-					  sign_extension(req_signed,req_size,align_data,refill_data);
-					  send_rsp(req_source ,req_dest ,lsu_trans::HIT,1,refill_data);
-					  replace_plru(nset,coh,way,victim_way,victim_way_valid);
 
-						lrsc_count = 'h4f + 2;
-						lrsc_addr = req_addr;
-						`uvm_info(get_type_name(),$sformatf("LR hit ,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,lrsc_count=%0h,data=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,lrsc_count,req_wmask,data,req_data,refill_data),UVM_NONE);	
+						if(lrsc_count >= (1+2) && lrsc_count <=(3+2))begin
+              continue;
+						end
+						else begin
+					    sign_extension(req_signed,req_size,align_data,refill_data);
+					    send_rsp(req_source ,req_dest ,lsu_trans::HIT,1,refill_data);
+					    replace_plru(nset,coh,way,victim_way,victim_way_valid);
+
+						  lrsc_count = 'h4f + 2;
+						  lrsc_addr = req_addr;
+						  `uvm_info(get_type_name(),$sformatf("LR hit ,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,lrsc_count=%0h,data=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,lrsc_count,req_wmask,data,req_data,refill_data),UVM_NONE);
+						end
+	
 					end
 					else if(req_cmd == lsu_trans::M_XSC)begin//SC
 
@@ -1200,8 +1211,9 @@ task dcache_refm::assemble_cmd();
 					    replace_plru(nset,coh,way,victim_way,victim_way_valid);
 					    update_cache(nset,tag,lsu_trans::DIRTY,way ,merge_data,coh_vic,data_vic,addr_vic);
 					    send_rsp(req_source ,req_dest , lsu_trans::HIT,1,0);
+							lrsc_count = 3;
 						  `uvm_info(get_type_name(),$sformatf("SC success ,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,lrsc_count=%0h,lrsc_addr=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,lrsc_count,lrsc_addr,req_wmask,data,req_data,merge_data),UVM_NONE);
-							lrsc_count = 0;
+							
 
 						end
 						else begin //sc fail
