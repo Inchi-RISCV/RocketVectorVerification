@@ -18,16 +18,16 @@ signalSpacing 5
 windowTimeUnit 1ns
 
 ; waveform viewport range
-zoom 300.717209 412.114003 1n
-cursor 355.010000
-marker 359.010000
+zoom 348.989323 372.186557 1n
+cursor 353.000000
+marker 380.000000
 
 ; user define markers
 ; userMarker time_pos marker_name color linestyle
 ; visible top row signal index
-top 0
+top 45
 ; marker line index
-markerPos 101
+markerPos 111
 
 ; rename signal list
 ; addRenameSig new_name org_name
@@ -64,6 +64,36 @@ addExprSig -b 1 -n UU logical_expression_2 "/tb_top/m_lsu_if/io_req_valid"& "/tb
 ; addExprSig expr_name expression_string
 
 addExprSig -b 1 -n UU req_hs "/tb_top/m_lsu_if/io_req_valid"& "/tb_top/m_lsu_if/io_req_ready"
+
+; logical expression list
+; addExprSig expr_name expression_string
+
+addExprSig -b 1 -n UU a_hs "/tb_top/tilelink_slave_if[0]/a_valid"& "/tb_top/tilelink_slave_if[0]/\
+a_ready"
+
+; logical expression list
+; addExprSig expr_name expression_string
+
+addExprSig -b 1 -n UU b_hs "/tb_top/tilelink_slave_if[0]/b_valid"& "/tb_top/tilelink_slave_if[0]/\
+b_ready"
+
+; logical expression list
+; addExprSig expr_name expression_string
+
+addExprSig -b 1 -n UU c_hs "/tb_top/tilelink_slave_if[0]/c_valid"& "/tb_top/tilelink_slave_if[0]/\
+c_ready"
+
+; logical expression list
+; addExprSig expr_name expression_string
+
+addExprSig -b 1 -n UU d_hs "/tb_top/tilelink_slave_if[0]/d_valid"& "/tb_top/tilelink_slave_if[0]/\
+d_ready"
+
+; logical expression list
+; addExprSig expr_name expression_string
+
+addExprSig -b 1 -n UU e_hs "/tb_top/tilelink_slave_if[0]/e_valid"& "/tb_top/tilelink_slave_if[0]/\
+e_ready"
 
 ; event list
 ; addEvent event_name event_expression
@@ -149,7 +179,8 @@ addSubGroup "A"
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/tl_clock
 addSignal -h 24 -holdScope a_valid
 addSignal -h 24 -holdScope a_ready
-addSignal -h 24 -UNSIGNED -HEX -holdScope a_source[15:0]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 /a_hs
+addSignal -h 24 -UNSIGNED -HEX /tb_top/tilelink_slave_if[0]/a_source[15:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope a_opcode[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope a_param[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope a_address[63:0]
@@ -161,7 +192,8 @@ endSubGroup "A"
 addSubGroup "B"
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/b_valid
 addSignal -h 24 -holdScope b_ready
-addSignal -h 24 -UNSIGNED -HEX -holdScope b_source[15:0]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 /b_hs
+addSignal -h 24 -UNSIGNED -HEX /tb_top/tilelink_slave_if[0]/b_source[15:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_opcode[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_param[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope b_address[63:0]
@@ -173,7 +205,8 @@ endSubGroup "B"
 addSubGroup "C"
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/c_valid
 addSignal -h 24 -holdScope c_ready
-addSignal -h 24 -UNSIGNED -HEX -holdScope c_source[15:0]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 /c_hs
+addSignal -h 24 -UNSIGNED -HEX /tb_top/tilelink_slave_if[0]/c_source[15:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope c_opcode[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope c_param[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope c_address[63:0]
@@ -184,7 +217,8 @@ endSubGroup "C"
 addSubGroup "D"
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/d_valid
 addSignal -h 24 -holdScope d_ready
-addSignal -h 24 -UNSIGNED -HEX -holdScope d_source[15:0]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 /d_hs
+addSignal -h 24 -UNSIGNED -HEX /tb_top/tilelink_slave_if[0]/d_source[15:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope d_opcode[2:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope d_param[1:0]
 addSignal -h 24 -UNSIGNED -HEX -holdScope d_size[63:0]
@@ -196,7 +230,8 @@ endSubGroup "D"
 addSubGroup "E"
 addSignal -h 24 /tb_top/tilelink_slave_if[0]/e_valid
 addSignal -h 24 -holdScope e_ready
-addSignal -h 24 -UNSIGNED -HEX -holdScope e_sink[2:0]
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 22 /e_hs
+addSignal -h 24 -UNSIGNED -HEX /tb_top/tilelink_slave_if[0]/e_sink[2:0]
 endSubGroup "E"
 addGroup "G4"
 
