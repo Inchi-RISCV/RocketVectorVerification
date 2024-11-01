@@ -20,6 +20,7 @@ endfunction : new
 function void tilelink_probe_hazard_test::build_phase(uvm_phase phase);
   super.build_phase(phase);
 	tl_seq       = tilelink_slave_probe_hazard_sequence::type_id::create("tl_seq", this);
+	set_inst_override("m_env.tl_env.cfg", "cust_svt_tilelink_system_configuration", "new_tilelink_system_configuration");
 endfunction : build_phase
 
 
@@ -28,7 +29,7 @@ task tilelink_probe_hazard_test::main_phase(uvm_phase phase);
     phase.raise_objection(this);
 		`uvm_info(get_type_name(), "start m_vsqr", UVM_NONE)
     tl_seq.start(m_vsqr);
-		#3000ns;
+		#5000ns;
     phase.drop_objection(this);
 endtask : main_phase
 

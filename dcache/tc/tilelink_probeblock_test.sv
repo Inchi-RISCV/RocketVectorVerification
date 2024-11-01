@@ -34,6 +34,7 @@ endfunction : new
 function void tilelink_probeblock_test::build_phase(uvm_phase phase);
   super.build_phase(phase);
 	tl_seq       = tilelink_slave_probeblock_sequence::type_id::create("tl_seq", this);
+	set_inst_override("m_env.tl_env.cfg", "cust_svt_tilelink_system_configuration", "new_tilelink_system_configuration");
 endfunction : build_phase
 
 
