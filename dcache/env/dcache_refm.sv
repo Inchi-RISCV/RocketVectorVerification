@@ -1189,8 +1189,8 @@ task dcache_refm::assemble_cmd();
 				end
 				else begin // write hit
 					if(req_cmd == lsu_trans::M_XLR)begin //LR
-
-						if(lrsc_count >= (1+2) && lrsc_count <=(3+2))begin
+            //lr resp need replay
+						if(lrsc_count >= (1+2) && lrsc_count <=(3+2) || tb_top.U_GPCDCache.io_resp_bits_status[1:0] == 2)begin
               continue;
 						end
 						else begin
