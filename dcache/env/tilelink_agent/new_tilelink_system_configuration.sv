@@ -43,7 +43,7 @@ function void new_tilelink_system_configuration::set_tilelink_cfg();
       this.slave_cfg[i].data_width = 512;   
 
       this.slave_cfg[i].min_a_vld_a_rdy_assert_delay = 0;
-      this.slave_cfg[i].max_a_vld_a_rdy_assert_delay = 3;
+      this.slave_cfg[i].max_a_vld_a_rdy_assert_delay = 0; 	//TODO: model not support
       this.slave_cfg[i].min_a_vld_d_vld_cross_chnl_delay = 1000; 	//TODO: 50 cycles
       this.slave_cfg[i].max_a_vld_d_vld_cross_chnl_delay = 2000; 	//TODO: 100 cycles
 			this.slave_cfg[i].min_d_vld_d_vld_assert_delay = 1000;
@@ -53,7 +53,7 @@ function void new_tilelink_system_configuration::set_tilelink_cfg();
       this.slave_cfg[i].min_c_vld_c_rdy_assert_delay = 0;
       this.slave_cfg[i].max_c_vld_c_rdy_assert_delay = 3;
 			this.slave_cfg[i].min_e_vld_e_rdy_assert_delay = 0;
-      this.slave_cfg[i].max_e_vld_e_rdy_assert_delay = 3;
+      this.slave_cfg[i].max_e_vld_e_rdy_assert_delay = 0; 	//TODO: vip monitor delay
 			this.slave_cfg[i].enable_tracing = 1;
       this.slave_cfg[i].enable_chk_fail_cov= 1;
       this.slave_cfg[i].enable_chk_pass_cov= 1;

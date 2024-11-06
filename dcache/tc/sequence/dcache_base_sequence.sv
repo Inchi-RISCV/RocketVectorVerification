@@ -43,15 +43,15 @@ class dcache_base_sequence extends uvm_sequence;
 		input bit [38:0]  addr,
 		input bit [2:0]   req_size = 6,
   	input bit         req_signed = 0,
-  	input bit         req_noAlloc = 0,
-  	input bit         s1_kill = 0
+  	input bit         req_noAlloc = 0
 	);
 
 	extern task dcache_store(
 		input bit [38:0]  addr,
 		input bit [511:0] req_wdata,
 		input bit [2:0]   req_size = 6,
-  	input bit         req_noAlloc = 0
+  	input bit         req_noAlloc = 0,
+		input bit         s1_kill = 0
 	);
 
 	extern task dcache_partial_mask_store(
@@ -151,8 +151,7 @@ task dcache_base_sequence::dcache_load(
 	input bit [38:0]  addr,
 	input bit [2:0]   req_size = 6,
   input bit         req_signed = 0,
-  input bit         req_noAlloc = 0,
-	input bit         s1_kill = 0
+  input bit         req_noAlloc = 0
 	);
  
 	lsu_seq   seq;
@@ -164,7 +163,7 @@ task dcache_base_sequence::dcache_load(
     seq.io_req_bits_size     			==	req_size;	
     seq.io_req_bits_signed   			== 	req_signed;
     seq.io_req_bits_noAlloc  			==	req_noAlloc;
-  	seq.io_s1_kill								== 	s1_kill;
+  	seq.io_s1_kill								== 	0;
 		})
 
 endtask
@@ -173,7 +172,8 @@ task dcache_base_sequence::dcache_store(
 	input bit [38:0]  addr,
 	input bit [511:0] req_wdata,
 	input bit [2:0]   req_size = 6,
-  input bit         req_noAlloc = 0
+  input bit         req_noAlloc = 0,
+	input bit         s1_kill = 0
 	);
  
 	lsu_seq   seq;
@@ -185,7 +185,7 @@ task dcache_base_sequence::dcache_store(
 		seq.io_req_bits_wdata    		==	req_wdata;
     seq.io_req_bits_size     		==	req_size;	
     seq.io_req_bits_noAlloc  		==	req_noAlloc;
-  	seq.io_s1_kill							== 	'h0;	
+  	seq.io_s1_kill							== 	s1_kill;	
 		})
 		
 endtask
