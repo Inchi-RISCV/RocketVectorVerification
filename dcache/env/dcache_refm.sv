@@ -1133,9 +1133,9 @@ task dcache_refm::assemble_cmd();
 						 `uvm_info(get_type_name(),$sformatf("write miss release cache, set=%0h, q_size=%0h,way=%0h",nset,replace_q[nset].size(),way),UVM_NONE);
 					end
 
-	        //check if same addr store exist
+	        //check if same addr exist , same addr must not iomshr, not mmio 
 		      foreach (req_addr_arry[j])begin
-		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && (!req_noAlloc || (req_noAlloc && !req_noalloc_arry[j]))&& !((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)))begin
+		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && !((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)) && j<8)begin
 
             same_addr_info = {req_signed,req_cmd,req_addr,req_source,req_dest};
             same_addr_info_q.push_back(same_addr_info);
