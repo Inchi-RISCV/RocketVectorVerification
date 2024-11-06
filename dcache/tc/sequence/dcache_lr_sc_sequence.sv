@@ -79,7 +79,6 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 			//#20ns;
 			dcache_lr(addr_t+(2**size_t)*i,size_t);
 			wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
-			
 			wait(tb_top.U_GPCDCache.lrscCount[6:0] == 6); 		//valid range, sc hit success
 			
 			if(lr_timeout) begin
@@ -91,9 +90,7 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		end
   
 		for(int i=0;i<length;i++)begin
-			is_signed = $urandom_range(1);
-			
-			dcache_load(addr_t+(2**size_t)*i,size_t,is_signed);
+			dcache_load(addr_t+64*i,,1);
 		end
 	endtask
 endclass : dcache_lr_sc_sequence

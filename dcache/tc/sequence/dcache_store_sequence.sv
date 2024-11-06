@@ -77,10 +77,7 @@ class dcache_store_sequence extends dcache_base_sequence;
 		end
 		
 		for(int i=0;i<length;i++)begin
-			size_t = $urandom_range(6);
-			is_signed = $urandom_range(1);
-
-			dcache_load(addr_t+'h40*i,size_t,is_signed);
+			dcache_load(addr_t+'h40*i,,1);
 		end
   endtask
 endclass : dcache_store_sequence

@@ -17,7 +17,6 @@ class dcache_s1_kill_sequence extends dcache_base_sequence;
 		bit [6:0] set_idx_t;
 		bit [511:0] wdata;
 		bit [2:0] size_t;
-		bit is_signed;
 		bit success;
 
 	 	super.body(); 
@@ -41,11 +40,13 @@ class dcache_s1_kill_sequence extends dcache_base_sequence;
 
 		for(int i=0;i<length;i++)begin
 			size_t = $urandom_range(6);
-			is_signed = $urandom_range(1);
 			success = std::randomize(wdata) with { wdata <= (2**512-1);};
 		
 			dcache_store(addr_t+'h40*i,wdata,size_t,,1); 	//s1_kill = 1
-			dcache_load(addr_t+'h40*i,size_t,is_signed);
+		end
+	
+		for(int i=0;i<length;i++)begin
+			dcache_load(addr_t+'h40*i,,1);
 		end
   endtask
 endclass : dcache_s1_kill_sequence
