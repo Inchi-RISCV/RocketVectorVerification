@@ -18,36 +18,32 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		bit [511:0] wdata;
 		bit [2:0]	size_t;
 		bit is_signed;
-		bit is_mmio_range;
-		bit lr_timeout;
+		string resp_status;
 		string init_state;
+		int sc_fail_scene;
 		bit success;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
-		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
-		lr_timeout = vmm_opts::get_int("lr_timeout", 0, "lr_timeout");
+		sc_fail_scene = vmm_opts::get_int("sc_fail_scene", 0, "sc_fail_scene");
+		resp_status = vmm_opts::get_string("resp_status", "hit", "resp_status");
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 		size_t = $urandom_range(2,3);
-		length = $urandom_range(1, 500);
-		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
-
-		if(is_mmio_range) begin
-			success 	= std::randomize(tag_idx_t,set_idx_t) with {
-				tag_idx_t inside {['h3_0000:'h3_ffff]};
-				set_idx_t inside {[0:127]};
-				((tag_idx_t<<13)+(set_idx_t<<6)+64*length) inside {['h6000_0000:'h7fff_ffff]};
-			};
+		if(resp_status == "hit") begin
+			length = $urandom_range(20, 500);
 		end
 		else begin
-			success 	= std::randomize(tag_idx_t,set_idx_t) with {
-				tag_idx_t inside {['h4_0000:'h7_ffff]};
-				set_idx_t inside {[0:127]};
-				((tag_idx_t<<13)+(set_idx_t<<6)+64*length) inside {['h8000_0000:'hffff_ffff]};
-			};
+			length = 1;
 		end
+		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
+
+		success 	= std::randomize(tag_idx_t,set_idx_t) with {
+			tag_idx_t inside {['h4_0000:'h7_ffff]};
+			set_idx_t inside {[0:127]};
+			((tag_idx_t<<13)+(set_idx_t<<6)+64*length) inside {['h8000_0000:'hffff_ffff]};
+		};
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);
 
@@ -73,20 +69,35 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		for(int i=0;i<length;i++)begin
 			success	= std::randomize(wdata) with {wdata <= (2**512-1);};
 			
-			//dcache_sc(addr_t+(2**size_t)*i,wdata,size_t); 	//sc miss fail
-			//#20ns;
-			//dcache_lr(addr_t+(2**size_t)*i+'h2000,size_t);
-			//#20ns;
-			dcache_lr(addr_t+(2**size_t)*i,size_t);
-			wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
-			wait(tb_top.U_GPCDCache.lrscCount[6:0] == 6); 		//valid range, sc hit success
-			
-			if(lr_timeout) begin
-				wait(tb_top.U_GPCDCache.lrscCount[6:0] == 5); 	//invalid range, sc hit fail
+			if(!sc_fail_scene) begin 	//sc success
+				dcache_lr(addr_t+(2**size_t)*i,size_t);
+				wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
+				wait(tb_top.U_GPCDCache.lrscCount[6:0] == (4+2)); 			//lr valid range
+				dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);
 			end
-			
-			dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);
-			//dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);	//sc hit fail
+			else begin 	//sc fail
+				case(sc_fail_scene)
+					1: begin
+						dcache_lr(addr_t+(2**size_t)*i,size_t);
+						wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
+						wait(tb_top.U_GPCDCache.lrscCount[6:0] == (3+2)); 	//lr invalid range
+						dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);
+					end
+					2: begin
+						dcache_lr(addr_t+(2**size_t)*i,size_t);
+						dcache_load(addr_t+(2**size_t)*i,size_t,1);
+						dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);
+					end
+					3: begin
+						dcache_lr(addr_t+(2**size_t)*i,size_t);
+						dcache_lr(addr_t+(2**size_t)*i+'h2000,size_t);
+						dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);
+					end
+					4: begin
+						dcache_sc(addr_t+(2**size_t)*i,wdata,size_t);
+					end
+				endcase
+			end
 		end
   
 		for(int i=0;i<length;i++)begin

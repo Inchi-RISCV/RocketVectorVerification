@@ -16,10 +16,17 @@ make ncrun tc=dcache_partial_mask_store_test cfg=init_state_Trunk
 make ncrun tc=dcache_partial_mask_store_test cfg=init_state_Dirty
 make ncrun tc=dcache_partial_mask_store_test cfg=noAlloc
 make ncrun tc=dcache_lr_sc_test
-make ncrun tc=dcache_lr_sc_test cfg=lr_timeout
 make ncrun tc=dcache_lr_sc_test cfg=init_state_B
 make ncrun tc=dcache_lr_sc_test cfg=init_state_Trunk
 make ncrun tc=dcache_lr_sc_test cfg=init_state_Dirty
+make ncrun tc=dcache_lr_sc_test cfg=sc_fail_scene1
+make ncrun tc=dcache_lr_sc_test cfg=sc_fail_scene2
+make ncrun tc=dcache_lr_sc_test cfg=sc_fail_scene3
+make ncrun tc=dcache_lr_sc_test cfg=sc_fail_scene4_N
+make ncrun tc=dcache_lr_sc_test cfg=sc_fail_scene4_hit_B
+make ncrun tc=dcache_lr_sc_test cfg=sc_fail_scene4_hit_T
+make ncrun tc=dcache_lr_sc_test cfg=sc_fail_scene4_miss_B
+make ncrun tc=dcache_lr_sc_test cfg=sc_fail_scene4_miss_T
 make ncrun tc=dcache_amo_operation_test cfg=amo_swap
 make ncrun tc=dcache_amo_operation_test cfg=amo_swap_mmio
 make ncrun tc=dcache_amo_operation_test cfg=amo_swap_noAlloc
