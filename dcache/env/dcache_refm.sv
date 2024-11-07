@@ -1008,7 +1008,7 @@ task dcache_refm::assemble_cmd();
       nset = req_addr[12:6];
 
       #0.1
-			if(tb_top.U_GPCDCache.io_resp_bits_status[1:0] == 2 && req_cmd!=lsu_trans::M_XLR )begin
+			if(tb_top.U_GPCDCache.io_resp_bits_status[1:0] == 2 && req_cmd!=lsu_trans::M_XLR && !(req_cmd == lsu_trans::M_XA_SWAP || req_cmd == lsu_trans::M_XA_ADD || req_cmd == lsu_trans::M_XA_XOR || req_cmd == lsu_trans::M_XA_OR  || req_cmd == lsu_trans::M_XA_AND  || req_cmd == lsu_trans::M_XA_MIN || req_cmd == lsu_trans::M_XA_MAX || req_cmd == lsu_trans::M_XA_MINU ||req_cmd == lsu_trans::M_XA_MAXU))begin
 			 `uvm_info(get_type_name(),$sformatf("replay cmd rm donot accept ,addr=%0h,dest=%0h,cmd=%0h",req_addr,req_dest,req_cmd),UVM_NONE)
        continue;
 
@@ -1249,86 +1249,91 @@ task dcache_refm::assemble_cmd();
 
 				 //miss
 				if(coh == lsu_trans::NOTHING || coh == lsu_trans::BRANCH)begin
-				
-					send_rsp(req_source ,req_dest ,lsu_trans::MISS,0,0);
+									 
+          //check if same addr req exist, iomsr need replay,mshr need replay until mshr deallocate, B still need replay until release 
+		      foreach (req_addr_arry[j] )begin
+		      	if(req_addr_arry[j][38:6] == req_addr[38:6] )begin
+					  `uvm_info(get_type_name(),$sformatf("amo same addr,need replay,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,rsp_num=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,same_addr_info_q.size(),j),UVM_NONE);
+						same_addr_exist = 1;
+						break;
+		      	end	
+		      end
 
-					//B need release
-					if(coh == lsu_trans::BRANCH)begin
-		        update_cache(nset,0,lsu_trans::NOTHING,way ,0,coh_vic,data_vic,addr_vic);
-						do_release({req_addr[38:6],6'h0},6,8,2,data,coh);
-						`uvm_info(get_type_name(),$sformatf("AMO B miss release cache, addr=%0h,set=%0h, q_size=%0h,way=%0h",req_addr,nset,replace_q[nset].size(),way),UVM_NONE);
-						
+          if(same_addr_exist)begin
+						continue;
 					end
-					 
+					else begin
+						if(coh == lsu_trans::BRANCH )begin  //B need release		      
+							update_cache(nset,0,lsu_trans::NOTHING,way ,0,coh_vic,data_vic,addr_vic);
+						  do_release({req_addr[38:6],6'h0},6,8,2,data,coh);
+						  `uvm_info(get_type_name(),$sformatf("AMO B miss release cache, addr=%0h,set=%0h, q_size=%0h,way=%0h",req_addr,nset,replace_q[nset].size(),way),UVM_NONE);
+						end
 
-					//same addr hazard todo
+						// replay
+						if(tb_top.U_GPCDCache.io_resp_bits_status[1:0] == 2) begin
+              continue;
+						end
 
-					//get iomshr valid sour_id
-					wait (iomshr_source_id_valid.or >0);
+						send_rsp(req_source ,req_dest ,lsu_trans::MISS,0,0);
+
+						//get iomshr valid sour_id
+					  wait (iomshr_source_id_valid.or >0);
 					  foreach (iomshr_source_id_valid[j])begin
 						  if(iomshr_source_id_valid[j])begin
                 a_source = j+16;
 							  iomshr_source_id_valid[j]=0;
 							  break;
 						  end  
-				  	end	
-					a_opcode = (req_cmd == lsu_trans::M_XA_SWAP || req_cmd == lsu_trans::M_XA_XOR || req_cmd == lsu_trans::M_XA_OR || req_cmd == lsu_trans::M_XA_AND  ) ? 3 : 2 ;
+				  	end									
+					  a_opcode = (req_cmd == lsu_trans::M_XA_SWAP || req_cmd == lsu_trans::M_XA_XOR || req_cmd == lsu_trans::M_XA_OR || req_cmd == lsu_trans::M_XA_AND  ) ? 3 : 2 ;
           
-					if(a_opcode == 3)begin //logicaldata
-						case (req_cmd)
-              lsu_trans::M_XA_XOR : a_param = 0;
-              lsu_trans::M_XA_OR  : a_param = 1;
-              lsu_trans::M_XA_AND : a_param = 2;
-						  lsu_trans::M_XA_SWAP: a_param = 3;
-		        endcase
-					end
-					else begin
-					  case (req_cmd)
-              lsu_trans::M_XA_MIN : a_param = 0;
-              lsu_trans::M_XA_MAX : a_param = 1;
-              lsu_trans::M_XA_MINU: a_param = 2;
-						  lsu_trans::M_XA_MAXU: a_param = 3;
-					    lsu_trans::M_XA_ADD : a_param = 4;							
-		        endcase
-					end
-					
-					do_tlu_message(req_addr ,a_opcode,req_size,a_source,req_data,mask_tlu,a_param);
+					  if(a_opcode == 3)begin //logicaldata
+						  case (req_cmd)
+                lsu_trans::M_XA_XOR : a_param = 0;
+                lsu_trans::M_XA_OR  : a_param = 1;
+                lsu_trans::M_XA_AND : a_param = 2;
+						    lsu_trans::M_XA_SWAP: a_param = 3;
+		          endcase
+					  end
+					  else begin
+					    case (req_cmd)
+                lsu_trans::M_XA_MIN : a_param = 0;
+                lsu_trans::M_XA_MAX : a_param = 1;
+                lsu_trans::M_XA_MINU: a_param = 2;
+						    lsu_trans::M_XA_MAXU: a_param = 3;
+					      lsu_trans::M_XA_ADD : a_param = 4;							
+		          endcase
+					  end
+					  
+					  do_tlu_message(req_addr ,a_opcode,req_size,a_source,req_data,mask_tlu,a_param);
           
-					req_addr_arry[a_source]  = req_addr;
-					req_dest_arry[a_source]  = req_dest;
-				  req_source_arry[a_source]  = req_source;
-				  req_cmd_arry[a_source]  = req_cmd;
-					req_noalloc_arry[a_source] = req_noAlloc;
+					  req_addr_arry[a_source]  = req_addr;
+					  req_dest_arry[a_source]  = req_dest;
+				    req_source_arry[a_source]  = req_source;
+				    req_cmd_arry[a_source]  = req_cmd;
+					  req_noalloc_arry[a_source] = req_noAlloc;
+					  `uvm_info(get_type_name(),$sformatf("rm amo processing,a_source=%0h, req_addr=%0h,req_dest=%0h,req_cmd=%0h,a_param=%0h",a_source,req_addr_arry[a_source],req_dest_arry[a_source],req_cmd_arry[a_source],a_param),UVM_NONE);
 
-
-					`uvm_info(get_type_name(),$sformatf("rm amo processing,a_source=%0h, req_addr=%0h,req_dest=%0h,req_cmd=%0h,a_param=%0h",a_source,req_addr_arry[a_source],req_dest_arry[a_source],req_cmd_arry[a_source],a_param),UVM_NONE);
-
+				  end
 
         end
 				else begin
 					amoalu(req_cmd, req_size ,align_data,req_data,amo_data);
 
+          data_mask_merge(req_size, req_addr,0, data,amo_data,merge_data);
 					replace_plru(nset,coh,way,victim_way,victim_way_valid);
-					update_cache(nset,tag,lsu_trans::DIRTY,way ,amo_data,coh_vic,data_vic,addr_vic);
-
+					update_cache(nset,tag,lsu_trans::DIRTY,way ,merge_data,coh_vic,data_vic,addr_vic);
 
 					sign_extension(req_signed,req_size,align_data,refill_data);
 					send_rsp(req_source ,req_dest , lsu_trans::HIT,1,align_data);
-          `uvm_info(get_type_name(),$sformatf("amo hit merge data,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,way=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,way,req_wmask,data,req_data,merge_data),UVM_NONE);
-
-
+          `uvm_info(get_type_name(),$sformatf("amo hit merge data,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,way=%0h,\nsource_data=%0h,\nreq_data=%0h,\namo_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,way,data,req_data,amo_data,merge_data),UVM_NONE);
 
 				end
 
+			end//end amo
 
-
-
-			end
-
-
-
-		end
-  end
+		end//lsu_tr_q
+  end//forver
 endtask
 
 
