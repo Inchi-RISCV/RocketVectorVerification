@@ -2,11 +2,11 @@ Magic 271485
 Revision Verdi_V-2023.12
 
 ; Window Layout <x> <y> <width> <height> <signalwidth> <valuewidth>
-viewPort 0 25 1920 888 460 141
+viewPort 0 25 1920 888 324 141
 
 ; File list:
 ; openDirFile [-d delimiter] [-s time_offset] [-rf auto_bus_rule_file] path_name file_name
-openDirFile -d / "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_hazard_test_1.fsdb"
+openDirFile -d / "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_s1_kill_test_1.fsdb"
 
 ; file time scale:
 ; fileTimeScale ### s|ms|us|ns|ps
@@ -18,20 +18,20 @@ signalSpacing 5
 windowTimeUnit 1ns
 
 ; waveform viewport range
-zoom 348.989323 372.186557 1n
-cursor 353.000000
-marker 380.000000
+zoom 0.000000 2611.860000 1n
+cursor 375.000000
+marker 363.010000
 
 ; user define markers
 ; userMarker time_pos marker_name color linestyle
 ; visible top row signal index
-top 45
+top 81
 ; marker line index
-markerPos 111
+markerPos 20
 
 ; rename signal list
 ; addRenameSig new_name org_name
-activeDirFile "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_hazard_test_1.fsdb"
+activeDirFile "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_s1_kill_test_1.fsdb"
 
 addRenameSig "/tb_top/m_lsu_if/paddr_tag[38:13]" "/tb_top/m_lsu_if/io_req_bits_paddr[38:13]" keep
 
@@ -114,7 +114,7 @@ curSTATUS ByValue
 
 
 addGroup "G1"
-activeDirFile "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_hazard_test_1.fsdb"
+activeDirFile "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_s1_kill_test_1.fsdb"
 addSignal -h 24 /tb_top/m_lsu_if/clk
 addSignal -h 24 -holdScope rst_n
 addSignal -h 24 -holdScope io_req_valid
@@ -134,10 +134,11 @@ addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_wdata[511:0]
 addSignal -h 24 -holdScope io_req_bits_noAlloc
 addSignal -h 24 -holdScope io_req_bits_signed
 addSignal -h 24 -UNSIGNED -HEX -holdScope io_req_bits_source[7:0]
-addSubGroup "dut syn"
+addSignal -h 22 /tb_top/U_GPCDCache/io_s1_kill
+addSubGroup "dut syn" -e FALSE
 addSignal -c ID_RED5 -ls solid -lw 1 -h 21 /tb_top/U_GPCDCache/mainReqArb/io_out_valid
 addSignal -c ID_RED5 -ls solid -lw 1 -h 21 -holdScope io_out_bits_isRefill
-addSignal -c ID_RED5 -ls solid -lw 1 -h 21 -holdScope io_out_bits_isProbe
+addSignal -c ID_YELLOW5 -ls solid -lw 1 -h 21 -holdScope io_out_bits_isProbe
 addSignal -c ID_RED5 -ls solid -lw 1 -h 21 -UNSIGNED -HEX -holdScope io_out_bits_paddr[38:0]
 addSignal -h 21 -holdScope io_out_bits_isProbe
 addSignal -c ID_RED6 -ls solid -lw 1 -h 21 /tb_top/U_GPCDCache/mshrs/mshrs/allocateArb/io_in_0_valid
@@ -237,7 +238,7 @@ addGroup "G4"
 
 ; getSignalForm Scope Hierarchy Status
 ; active file of getSignalForm
-activeDirFile "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_hazard_test_1.fsdb"
+activeDirFile "" "/datahdd/riscv/huyiru/RocketVectorVerification/dcache/sim/base_func/wave/dcache_s1_kill_test_1.fsdb"
 
 GETSIGNALFORM_SCOPE_HIERARCHY_BEGIN
 getSignalForm close

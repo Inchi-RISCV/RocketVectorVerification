@@ -97,7 +97,8 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 					dcache_amo_operation(req_cmd,addr_t,wdata,req_size_t);
 				end
 			end
-	 end
+	 	end
+	 	dcache_load(addr_t,,1);
 	endtask:body
 
 endclass :dcache_iomshr_hazard_sequence

@@ -69,9 +69,7 @@ class dcache_amo_operation_sequence extends dcache_base_sequence;
 		end
 
 		for(int i=0;i<length;i++)begin
-			is_signed = $urandom_range(1);
-
-			dcache_load(addr_t+(2**size_t)*i,size_t,is_signed);
+			dcache_load(addr_t+64*i,,1);
 		end
   endtask
 endclass : dcache_amo_operation_sequence

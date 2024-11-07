@@ -16,7 +16,6 @@ class dcache_addr_random_sequence extends dcache_base_sequence;
 		bit [6:0] set_idx_t;
 		bit [511:0] wdata;
 		bit [2:0] size_t;
-		bit is_signed;
 		bit store_en;
 		bit is_mmio_range;
 		bit noAlloc;
@@ -62,9 +61,7 @@ class dcache_addr_random_sequence extends dcache_base_sequence;
 
 		for(int j=0;j<4;j++)begin 	//4 way
 			for(int i=0;i<128;i++)begin	//128 set
-				size_t = $urandom_range(6);
-				is_signed = $urandom_range(1);
-				dcache_load(addr_t+'h40*i+'h2000*j,size_t,is_signed,noAlloc);
+				dcache_load(addr_t+'h40*i+'h2000*j,,1,noAlloc);
 			end
 		end
   endtask

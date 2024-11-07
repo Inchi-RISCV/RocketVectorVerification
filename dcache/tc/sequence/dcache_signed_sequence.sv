@@ -60,8 +60,10 @@ class dcache_signed_sequence extends dcache_base_sequence;
 			else begin
 				backdoor_put_data(addr_t+'h40*i,6,'hffff_ff00+i);		//extend bits
 			end
-			
-			dcache_load(addr_t+'h40*i,size_t,1,noAlloc);
+		end
+	
+		for(int i=0;i<length;i++)begin
+			dcache_load(addr_t+'h40*i,,1,noAlloc);
 		end
   endtask
 endclass : dcache_signed_sequence

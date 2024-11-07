@@ -43,7 +43,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 		solve length1, length2 before addr_t;
 			
 		if(resp_status == "hit") {
-			length1 == 20;
+			length1 == 50;
 		}
 		else { 	//miss or lr
 			length1 == 1;

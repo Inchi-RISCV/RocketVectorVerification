@@ -76,6 +76,7 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 					end
 				end
 			end
+			dcache_load(addr_t,,1);
 		end 
 		else begin			
 			if(init_state == "T") begin
@@ -148,6 +149,7 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 				end
 			end
 		end	
+		dcache_load(addr_t,,1);
   endtask
 endclass : dcache_hazard_sequence
 

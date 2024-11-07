@@ -97,6 +97,7 @@ class dcache_mshr_iomshr_hazard_sequence extends dcache_base_sequence;
 					end
 				join
 			end	
+			dcache_load(addr_t,,1);
 		end 
 		else begin		
 			for(int i=0;i<20;i++)begin
@@ -179,6 +180,7 @@ class dcache_mshr_iomshr_hazard_sequence extends dcache_base_sequence;
 					end
 				end
 			end
+			dcache_load(addr_t,,1);
 		end	
   endtask
 endclass : dcache_mshr_iomshr_hazard_sequence

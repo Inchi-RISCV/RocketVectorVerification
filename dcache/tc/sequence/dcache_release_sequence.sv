@@ -62,6 +62,7 @@ class dcache_release_sequence extends dcache_base_sequence;
 					dcache_store(addr_t+'h2000*i,wdata,size_t);
 				end
 			end
+			dcache_load(addr_t,,1);
 		end 
 		else begin
 			if(cmd1 == "replace") begin
@@ -137,6 +138,7 @@ class dcache_release_sequence extends dcache_base_sequence;
 				end
 			end
 		end
+		dcache_load(addr_t,,1);
   endtask
 endclass : dcache_release_sequence
 
