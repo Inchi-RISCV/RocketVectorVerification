@@ -148,7 +148,7 @@ task dcache_refm::get_lsu_port();
   lsu_trans tr;
 	forever begin
     lsu_port.get(tr);
-    `uvm_info(get_type_name(), {"rm get lsu_port item\n",tr.sprint}, UVM_NONE)
+    `uvm_info(get_type_name(), {"rm get lsu_port item\n",tr.sprint}, UVM_HIGH)
 		lsu_tr_q.push_back(tr);
 	end
 
@@ -233,6 +233,7 @@ task dcache_refm::do_probe();
 	bit [38:0]   probe_addr_arry[32];
 	bit [2:0]    c_param;
 	bit [2:0]    c_opcode;
+	bit          mshr_refill_first[32];
 
   
 	fork
@@ -263,7 +264,23 @@ task dcache_refm::do_probe();
 				`uvm_info(get_type_name(),$sformatf("probe_addr_arry=%p,i=%0h", probe_addr_arry,i),UVM_NONE);
 		    probe_addr = probe_addr_arry[i];
 
-          
+         
+        //check if same addr req in MSHR,do MSHR refill first
+		    foreach (req_addr_arry[j])begin
+		      	if(req_addr_arry[j][38:6] == probe_addr && j<8 )begin
+					  `uvm_info(get_type_name(),$sformatf("probe has same addr in mshr ,addr=%0h,j=%0h",req_addr_arry[j],j),UVM_NONE);
+						mshr_refill_first[j] = 1;
+		      	end	
+		    end
+        
+       
+
+				if(mshr_refill_first[i])begin
+          wait ( !tb_top.U_GPCDCache.s1_req_isRefill && (tb_top.U_GPCDCache.s1_req_paddr[38:6] == probe_addr[38:6] && tb_top.U_GPCDCache.s1_req_isProbe));
+          `uvm_info(get_type_name(),$sformatf("same addr in mshr refill done,addr=%0h,i=%0h",probe_addr_arry[i],i),UVM_NONE);
+					mshr_refill_first[i] = 0;
+				end
+
         nset = probe_addr[12:6];
 		    ntag = probe_addr[38:13];        
 			  query_block(nset,ntag,coh,exist_way,data);
@@ -287,7 +304,7 @@ task dcache_refm::do_probe();
             lsu_trans::TRUNK   : c_param = 0 ;// TtoB
             lsu_trans::DIRTY   : c_param = 0 ;// TtoB
 		      endcase	
-		    	coh_tmp = lsu_trans::BRANCH;
+		    	coh_tmp = (c_param == 5) ? lsu_trans::NOTHING : lsu_trans::BRANCH;
 		    end
 		    else begin//toT
 		      case (coh)
@@ -296,12 +313,18 @@ task dcache_refm::do_probe();
             lsu_trans::TRUNK   : c_param = 3 ;// TtoT
             lsu_trans::DIRTY   : c_param = 3 ;// TtoT					
 		      endcase	
-          coh_tmp = lsu_trans::TRUNK;
+
+		      case (c_param)
+            5 :  coh_tmp = lsu_trans::NOTHING ;
+            4 :  coh_tmp = lsu_trans::BRANCH  ;
+            3 :  coh_tmp = lsu_trans::TRUNK   ;			
+		      endcase						
 		    end
 
-	      if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && !tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[38:6] == probe_addr[38:6] && tb_top.U_GPCDCache._mainReqArb_io_out_bits_isProbe))begin	
-				  update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp,exist_way,0,coh_vic,data_vic,addr_vic);
-          `uvm_info(get_type_name(),$sformatf("probe update cacheline,addr=%0h,c_source=%0h,way=%0h,coh=%0h",probe_addr,i,exist_way,coh_tmp),UVM_NONE);
+          if(c_param != 5)begin//NtoN donot update cache
+				    update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp,exist_way,0,coh_vic,data_vic,addr_vic);
+            `uvm_info(get_type_name(),$sformatf("probe update cacheline,addr=%0h,c_source=%0h,way=%0h,coh=%0h",probe_addr,i,exist_way,coh_tmp),UVM_NONE);
+			 	  end
 
   			  //cacheline DIRTY probeAckData
 			    c_opcode = (coh == lsu_trans::DIRTY) ? 5 : 4;
@@ -309,8 +332,7 @@ task dcache_refm::do_probe();
           `uvm_info(get_type_name(),$sformatf("do probeack ,addr=%0h,c_source=%0h,source_coh=%0h,b_param=%0h,c_param=%0h",b_addr,i,coh,b_param[i],c_param),UVM_NONE);
 			    probe_addr_arry[i] = 0;				
 
-				end
-	    end
+		  end
 		end
 	end			
 
@@ -414,9 +436,10 @@ task dcache_refm::do_refill();
 				req_dest_1 = req_dest_arry[i];
         req_source_1 = req_source_arry[i];
 				//wait dut mshr refill
-	      if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[38:6] == a_addr[38:6] && !tb_top.U_GPCDCache.mainReqArb.io_out_bits_isProbe))begin	
+	      //if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill && (tb_top.U_GPCDCache.mainReqArb.io_out_bits_paddr[38:6] == a_addr[38:6] && !tb_top.U_GPCDCache.mainReqArb.io_out_bits_isProbe))begin
+				if(tb_top.U_GPCDCache.s1_req_isRefill && tb_top.U_GPCDCache.s1_canDoRefill && (tb_top.U_GPCDCache.s1_req_paddr[38:6] == a_addr[38:6]) && !tb_top.U_GPCDCache.s1_req_isProbe)begin
 					refill_valid[i]=1;
-          `uvm_info(get_type_name(),$sformatf("rm wait dut refill done,a_addr=%0h,valid=%0h,isrefill=%0h",a_addr,tb_top.U_GPCDCache.mainReqArb.io_out_valid,tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill),UVM_NONE);
+          `uvm_info(get_type_name(),$sformatf("rm wait dut refill done,a_addr=%0h,canDoRefill=%0h,isrefill=%0h",a_addr,tb_top.U_GPCDCache.s1_canDoRefill,tb_top.U_GPCDCache.s1_req_isRefill),UVM_NONE);
 					`uvm_info(get_type_name(),$sformatf(" req_addr_arry=%p,refill_valid=%p", req_addr_arry,refill_valid),UVM_NONE);
 	        //break;
 	      end
@@ -1007,7 +1030,7 @@ task dcache_refm::assemble_cmd();
 			tag  = req_addr[38:13];
       nset = req_addr[12:6];
 
-      #0.1
+      #0.4
 			if(tb_top.U_GPCDCache.io_resp_bits_status[1:0] == 2 && req_cmd!=lsu_trans::M_XLR && !(req_cmd == lsu_trans::M_XA_SWAP || req_cmd == lsu_trans::M_XA_ADD || req_cmd == lsu_trans::M_XA_XOR || req_cmd == lsu_trans::M_XA_OR  || req_cmd == lsu_trans::M_XA_AND  || req_cmd == lsu_trans::M_XA_MIN || req_cmd == lsu_trans::M_XA_MAX || req_cmd == lsu_trans::M_XA_MINU ||req_cmd == lsu_trans::M_XA_MAXU))begin
 			 `uvm_info(get_type_name(),$sformatf("replay cmd rm donot accept ,addr=%0h,dest=%0h,cmd=%0h",req_addr,req_dest,req_cmd),UVM_NONE)
        continue;
