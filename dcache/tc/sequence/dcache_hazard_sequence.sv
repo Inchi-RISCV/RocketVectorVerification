@@ -11,7 +11,7 @@ class dcache_hazard_sequence extends dcache_base_sequence;
   endfunction
 
   virtual task body();
-		bit [31:0] length1, length2;
+		bit [31:0] length1, length2, length3;
 		bit [38:0] addr_t;
 		bit [26:0] tag_idx_t;
 		bit [6:0] set_idx_t;
@@ -20,30 +20,35 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 		bit is_signed;
 		bit [63:0]  wmask;
 		bit [2:0]	size_t;
-		bit [4:0] cmd, cmd1, cmd2;
+		bit [4:0] cmd, cmd1, cmd2, cmd3;
 		string resp_status;
 		string init_state;
 		bit random_hazard;
 		bit write_cmd_random;
+		bit lr_valid;
 		bit success;
 
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 		
+		lr_valid = vmm_opts::get_int("lr_valid", 1, "lr_valid");
 		cmd1 = vmm_opts::get_int("cmd1", 0, "cmd1");
 		cmd2 = vmm_opts::get_int("cmd2", 0, "cmd2");
+		cmd3 = vmm_opts::get_int("cmd3", 0, "cmd3");
 		random_hazard = vmm_opts::get_int("random_hazard", 0, "random_hazard");
 		resp_status = vmm_opts::get_string("resp_status", "hit", "resp_status");
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 		if(resp_status == "hit") begin
 			length1 			= 50;
+			length2 			= $urandom_range(50, 500);
 		end
 		else begin 	//miss or lr
 			length1 			= 1;
+			length2 			= 1;
 		end
-		length2 			= $urandom_range(50, 500);
-		
+		length3 			= $urandom_range(50, 500);
+
 		success 	= std::randomize(tag_idx_t,set_idx_t) with {
 			tag_idx_t inside {['h4_0000:'h7_ffff]};
 			set_idx_t inside {[0:127]};
@@ -111,6 +116,9 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 				else if(cmd1 == 4) begin	//LR
 					size_t = $urandom_range(2,3);
 					dcache_lr(addr_t,size_t);
+					if(!lr_valid) begin
+						wait(tb_top.U_GPCDCache.lrscCount[6:0] == (2+2)); 	//lrscCounter < 3 at S1 stage
+					end
 				end
 			end
 
@@ -146,6 +154,20 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 					size_t = $urandom_range(2,3);
 					success = std::randomize(wdata) with { wdata <= (2**512-1);};
 					dcache_sc(addr_t,wdata,size_t);
+				end
+			end
+
+			if(cmd3) begin
+				for(int i=0;i<length3;i++)begin
+					success = std::randomize(wdata) with { wdata <= (2**512-1);};
+					success = std::randomize (wmask) with {wmask <= (2**(2**6))-1;};
+
+					if(!write_cmd_random) begin
+						dcache_store(addr_t,wdata,size_t);
+					end
+					else begin
+						dcache_partial_mask_store(addr_t,wdata,wmask);
+					end
 				end
 			end
 		end	
