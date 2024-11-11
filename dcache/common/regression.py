@@ -53,10 +53,18 @@ def get_list_path(list_path):
     regr_list_path = os.path.realpath(list_path)
     return regr_list_path
 
+def generate_unique_seed(existing_seed):
+    while True:
+        seed = random.randint(10000000,99999999)
+        if seed not in existing_seed:
+            existing_seed.add(seed)
+            return seed
+
 def run_sim(dict_list):
     jobs_cnt = 0
     regr_num = 0
     all_regr_list = []
+    seed_list = []
     # deal comp, sim log
     #print dict_list
     for p_idx in dict_list:
@@ -69,9 +77,10 @@ def run_sim(dict_list):
             os.mkdir(tmp_mode_name + '/logs')
         else:
             for i in os.listdir(tmp_mode_dir + '/logs'):
-                pth_fi = tmp_mode_dir + '/logs/' + i
-                if i != 'vcs_compiler.log':
-                    os.remove(pth_fi)
+                if 'log' in i:
+                    pth_fi = tmp_mode_dir + '/logs/' + i
+                    if i != 'vcs_compiler.log':
+                        os.remove(pth_fi)
     # submit regression jobs
     for para in dict_list:
         mode_name  = para['mode']
@@ -93,7 +102,12 @@ def run_sim(dict_list):
             # seed = random .randint (10000000,99999999)
             # os.system ("bsub -J 'regression' make run mode=%s seed=%s %s" %(mode_ name,seed,cmd_str))
             # #jobs_cnt = jobs_cnt + 1
-    seed_list = random.sample(range(10000000, 99999999), regr_num)
+    #seed_list = random.sample(range(10000000, 99999999), regr_num)
+    existing_seed = set()
+    for i in range(regr_num):
+        seed= generate_unique_seed(existing_seed)
+        seed_list.append(seed)
+    print seed_list
     if len(seed_list) != len(all_regr_list):
         print("ERROR! seed list len not equal all_regr_list len")
     for seed,run_cmd in zip(seed_list, all_regr_list):
@@ -130,7 +144,7 @@ def judge_cfg(input_file,cfg_str):
     with open(input_file,'r') as f:
         line = f.readline()
         for i in cfg_str:
-            if i in line:
+            if (i + '.cfg') in line:
                 cfg_match = 1
                 return cfg_match
             else:
@@ -144,7 +158,7 @@ def get_last_nline(input_file):
         return None
     else:
         with open(input_file,'rb') as fp:
-            offset = -50
+            offset = -200
             while -offset < filesize:
                 fp.seek(offset,2)
                 lines = fp.readlines()
