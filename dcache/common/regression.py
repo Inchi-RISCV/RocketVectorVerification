@@ -8,6 +8,7 @@ import random
 import getopt
 import time
 import subprocess
+import glob
 
 def usage():
     print('------------------------------------------------------------------')
@@ -65,8 +66,11 @@ def run_sim(dict_list):
     regr_num = 0
     all_regr_list = []
     seed_list = []
+    user = os.getenv('USER')
     # deal comp, sim log
     #print dict_list
+    if not (os.path.exists('/datahdd/riscv/' + user + '/data/')):
+        os.mkdir('/datahdd/riscv/' + user + '/data/')
     for p_idx in dict_list:
         tmp_mode_name = p_idx['mode']
         tmp_cov_en    = p_idx['cov']
@@ -81,6 +85,10 @@ def run_sim(dict_list):
                     pth_fi = tmp_mode_dir + '/logs/' + i
                     if i != 'vcs_compiler.log':
                         os.remove(pth_fi)
+    for file in glob.glob("/datahdd/riscv/{}/data/slurm*".format(user)):
+        os.remove(file)
+    for file in glob.glob("/datahdd/riscv/{}/data/result*".format(user)):
+        os.remove(file)
     # submit regression jobs
     for para in dict_list:
         mode_name  = para['mode']
@@ -107,7 +115,6 @@ def run_sim(dict_list):
     for i in range(regr_num):
         seed= generate_unique_seed(existing_seed)
         seed_list.append(seed)
-    print seed_list
     if len(seed_list) != len(all_regr_list):
         print("ERROR! seed list len not equal all_regr_list len")
     for seed,run_cmd in zip(seed_list, all_regr_list):
@@ -120,7 +127,8 @@ def run_sim(dict_list):
 
 def write_bash_script(write_options,number):
     num = number
-    regression_path = ("/datahdd/riscv/xiefei/data/slurm%d.sh" %num)
+    user_name = os.getenv('USER')
+    regression_path = ("/datahdd/riscv/{}/data/slurm{}.sh".format(user_name, num))
     with open(regression_path,'w+') as fs:
         fs.write("#!/bin/bash\n")
         fs.write("#SBATCH -J %d\n" %num)
@@ -131,7 +139,7 @@ def write_bash_script(write_options,number):
         fs.write("#SBATCH --cpus-per-task=1\n")
         fs.write("#SBATCH --oversubscribe\n")
         fs.write("#SBATCH -t 1:0:0\n")
-        fs.write("#SBATCH -o /datahdd/riscv/xiefei/data/result%d\n" %num)
+        fs.write("#SBATCH -o /datahdd/riscv/{}/data/result{}\n".format(user_name, num))
         fs.write("\n")
         fs.write("\n")
         fs.write("\n")
@@ -144,7 +152,7 @@ def judge_cfg(input_file,cfg_str):
     with open(input_file,'r') as f:
         line = f.readline()
         for i in cfg_str:
-            if (i + '.cfg') in line:
+            if i in line:
                 cfg_match = 1
                 return cfg_match
             else:
@@ -330,7 +338,8 @@ def judge_run_state():
     running = "R"
     pending = "PD"
     command = "squeue -u $USER"
-    user = os.getenv('USER')
+    name = os.getenv('USER')
+    user = name[:8]
     print("waiting for the program finish")
     try:
         while True:
