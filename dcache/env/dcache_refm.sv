@@ -277,7 +277,7 @@ task dcache_refm::do_probe();
        
 
 				if(mshr_refill_first[i])begin
-          wait ( !tb_top.U_GPCDCache.s1_req_isRefill && (tb_top.U_GPCDCache.s1_req_paddr[38:6] == probe_addr[38:6] && tb_top.U_GPCDCache.s1_req_isProbe));
+          wait ( !(tb_top.U_GPCDCache.s1_validRefill&tb_top.U_GPCDCache.s1_req_isRefill) && (tb_top.U_GPCDCache.s1_req_paddr[38:6] == probe_addr[38:6] && tb_top.U_GPCDCache.s1_req_isProbe));
           `uvm_info(get_type_name(),$sformatf("same addr in mshr refill done,addr=%0h,i=%0h",probe_addr_arry[i],i),UVM_NONE);
 					mshr_refill_first[i] = 0;
 				end
@@ -437,7 +437,7 @@ task dcache_refm::do_refill();
 				req_dest_1 = req_dest_arry[i];
         req_source_1 = req_source_arry[i];
 				//wait dut mshr refill
-				if(tb_top.U_GPCDCache.s1_req_isRefill && tb_top.U_GPCDCache.s1_canDoRefill && (tb_top.U_GPCDCache.s1_req_paddr[38:6] == a_addr[38:6]) && !tb_top.U_GPCDCache.s1_req_isProbe)begin
+				if(tb_top.U_GPCDCache.s1_validRefill && tb_top.U_GPCDCache.s1_req_isRefill && tb_top.U_GPCDCache.s1_canDoRefill && (tb_top.U_GPCDCache.s1_req_paddr[38:6] == a_addr[38:6]) && !tb_top.U_GPCDCache.s1_req_isProbe)begin
 					refill_valid[i]=1;
           `uvm_info(get_type_name(),$sformatf("rm wait dut refill done,a_addr=%0h,canDoRefill=%0h,isrefill=%0h",a_addr,tb_top.U_GPCDCache.s1_canDoRefill,tb_top.U_GPCDCache.s1_req_isRefill),UVM_NONE);
 					`uvm_info(get_type_name(),$sformatf(" req_addr_arry=%p,refill_valid=%p", req_addr_arry,refill_valid),UVM_NONE);
@@ -464,7 +464,7 @@ task dcache_refm::do_refill();
 				 if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill)begin
 				   repeat(2)@(posedge tb_top.clock);
 			   end
-				 else if(tb_top.U_GPCDCache.s1_req_isRefill)begin
+				 else if(tb_top.U_GPCDCache.s1_validRefill&&tb_top.U_GPCDCache.s1_req_isRefill)begin
           @(posedge tb_top.clock);
 				 end				 
 				 `uvm_info(get_type_name(),$sformatf("iomshr_refill_valid=%0h,d_opcode_arry=%0h",i,d_opcode_arry[i]),UVM_NONE);
@@ -1291,7 +1291,7 @@ task dcache_refm::assemble_cmd();
 									 
           //check if same addr req exist, iomsr need replay,mshr need replay until mshr deallocate, B still need replay until release 
 		      foreach (req_addr_arry[j] )begin
-		      	if(req_addr_arry[j][38:6] == req_addr[38:6] )begin
+		      	if((req_addr_arry[j][38:6] == req_addr[38:6] && j<8)  ||  (req_addr_arry[j][38:2] == req_addr[38:2] && req_size==2 && j>=8) || (req_addr_arry[j][38:3] == req_addr[38:3] && req_size==3 && j>=8) )begin
 					  `uvm_info(get_type_name(),$sformatf("amo same addr,need replay,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,rsp_num=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,same_addr_info_q.size(),j),UVM_NONE);
 						same_addr_exist = 1;
 						break;
