@@ -153,9 +153,10 @@ task lsu_driver::do_drive();
         destid = $urandom_range(31);
 				//`uvm_info("YRHU",$sformatf("destid = %0h",destid),UVM_LOW);
 				`uvm_info("YRHU",$sformatf("destid_reuse = %0h,destid=%0h,source=%0h,realid=%0h,",destid_reuse[{req.io_req_bits_source,destid}],destid,req.io_req_bits_source,{req.io_req_bits_source,destid}),UVM_LOW);
-			  if(!destid_reuse[{req.io_req_bits_source,destid}])
+			  if(!destid_reuse[{req.io_req_bits_source,destid}] && !(req.io_req_bits_source==0 && destid ==0))
 					break;
 			end
+
 			do begin
 
         vif.io_req_valid          <= #`DELAY 1;
