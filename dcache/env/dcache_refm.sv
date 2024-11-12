@@ -480,7 +480,7 @@ task dcache_refm::do_refill();
 		      req_addr_arry_f[i]   <= 0;
 		      req_source_arry[i] <= 0;
 		      req_dest_arry[i]   <= 0;	
-					iomshr_refill_valid[i] <= 0;
+					iomshr_refill_valid[i] = 0;
 					req_noalloc_arry[i] <=0;
 		    //end
 			end
@@ -658,10 +658,10 @@ task dcache_refm::do_refill();
           
 					//clear info for source index
 		      req_addr_arry_f[d_source]   <= 0;
-		      req_source_arry[d_source] = 0;
-		      req_dest_arry[d_source]   = 0;	
+		      req_source_arry[d_source]  <= 0;
+		      req_dest_arry[d_source]   <= 0;	
 					refill_valid[d_source]    = 0;
-					req_noalloc_arry[d_source]= 0;
+					req_noalloc_arry[d_source]<= 0;
 
 
         end//endif
