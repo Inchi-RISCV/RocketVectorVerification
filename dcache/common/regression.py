@@ -152,7 +152,9 @@ def judge_cfg(input_file,cfg_str):
     with open(input_file,'r') as f:
         line = f.readline()
         for i in cfg_str:
-            if i in line:
+            #if (i + '.cfg') in line:
+            pattern = re.compile(r'\b' + re.escape(i) + r'\.cfg\b')
+            if pattern.search(line):
                 cfg_match = 1
                 return cfg_match
             else:

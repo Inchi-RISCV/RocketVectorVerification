@@ -1,17 +1,3 @@
-//============================================================================
-// Copyright(c) 2022 , Inchi Technology Inc, All right reserved
-// Company           : Inchi Technology .Inc
-//============================================================================
-// Project           :dcache
-// File Name         :tilelink_probeblock_test.sv
-// Author            :huangxiaogang
-// Email             :huangxiaogang@inchitech.com
-// Called by         :
-// Reversion History :2024-07-01 16:31:41
-// Reversion:        1.0
-//============================================================================
-// Description       :
-//============================================================================
 
 `ifndef _tilelink_probeblock_test_SV_
 `define _tilelink_probeblock_test_SV_
@@ -34,7 +20,7 @@ endfunction : new
 function void tilelink_probeblock_test::build_phase(uvm_phase phase);
   super.build_phase(phase);
 	tl_seq       = tilelink_slave_probeblock_sequence::type_id::create("tl_seq", this);
-	set_inst_override("m_env.tl_env.cfg", "cust_svt_tilelink_system_configuration", "new_tilelink_system_configuration");
+	//set_inst_override("m_env.tl_env.cfg", "cust_svt_tilelink_system_configuration", "new_tilelink_system_configuration");
 endfunction : build_phase
 
 

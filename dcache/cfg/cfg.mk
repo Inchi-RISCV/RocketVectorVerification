@@ -35,11 +35,9 @@ ifeq ($(cov),on)
   cov_dir  := ./$(mode)/cov/simv
   coverage := line+cond+tgl+fsm+branch+assert
   cov_nmae := $(tc)_$(seed)
+	USER_COMP_OPTS += -cm $(coverage) -cm_dir $(cov_dir) -cm_hier ../cfg/cov.cfg
   USER_RUN_OPTS  += -cm $(coverage) -cm_name $(cov_nmae) 
 endif
-
-USER_COMP_OPTS += -cm $(coverage) -cm_dir $(cov_dir) -cm_hier ../cfg/cov.cfg
-
 
 USER_RUN_OPTS += +UVM_TESTNAME=$(tc) +UVM_VERBOSITY=${pl} +ntb_random_seed=${seed}
 USER_RUN_OPTS += +vmm_opts_file+../tc/cfg/$(cfg).cfg
