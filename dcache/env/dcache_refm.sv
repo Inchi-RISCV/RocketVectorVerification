@@ -44,6 +44,7 @@ class dcache_refm extends uvm_component;
   bit        mshr_source_id_valid[8] = {1,1,1,1,1,1,1,1};
 	bit        iomshr_source_id_valid[8] = {1,1,1,1,1,1,1,1};
 	bit [38:0] req_addr_arry[32];
+	bit [38:0] req_addr_arry_f[32];
 	bit [1:0]  req_noalloc_arry[32];
   //bit [38:0]  req_source_q[$]; //addr+dest
   bit [58:0] same_addr_info_q[$];   //sign+cmd+addr+source+dest  1+5+39+8+6
@@ -412,10 +413,10 @@ task dcache_refm::do_refill();
 
       //AccessAck
       if(d_opcode == 0)begin
-		    req_addr_arry[d_source]  = 0;
-		    req_source_arry[d_source]= 0;
-		    req_dest_arry[d_source]  = 0;
-				req_noalloc_arry[d_source] =0;
+		    req_addr_arry_f[d_source]  <= 0;
+		    req_source_arry[d_source]  <= 0;
+		    req_dest_arry[d_source]    <= 0;
+				req_noalloc_arry[d_source] <= 0;
      end
  
 
@@ -476,11 +477,11 @@ task dcache_refm::do_refill();
 		        `uvm_info(get_type_name(),$sformatf("rm send iomsr refill resp,req_dest=%0h,req_source=%0h,req_addr=%0h,d_source=%0h,data=%0h",req_dest_arry[i],req_source_tmp,req_addr_arry[i],i,refill_data),UVM_NONE);
 		      end
 		    	
-		      req_addr_arry[i]  = 0;
-		      req_source_arry[i]= 0;
-		      req_dest_arry[i]  = 0;	
-					iomshr_refill_valid[i] = 0;
-					req_noalloc_arry[i] =0;
+		      req_addr_arry_f[i]   <= 0;
+		      req_source_arry[i] <= 0;
+		      req_dest_arry[i]   <= 0;	
+					iomshr_refill_valid[i] <= 0;
+					req_noalloc_arry[i] <=0;
 		    //end
 			end
 		end
@@ -656,15 +657,22 @@ task dcache_refm::do_refill();
 
           
 					//clear info for source index
-		      req_addr_arry[d_source]   <= 0;
+		      req_addr_arry_f[d_source]   <= 0;
 		      req_source_arry[d_source] = 0;
 		      req_dest_arry[d_source]   = 0;	
 					refill_valid[d_source]    = 0;
 					req_noalloc_arry[d_source]= 0;
 
+
         end//endif
 		  end//end forecah
   end
+
+	while(1)begin
+			@(posedge tb_top.clock);
+			req_addr_arry[d_source]   <= 	req_addr_arry_f[d_source];
+	end
+
 
   join  
 
@@ -1092,6 +1100,7 @@ task dcache_refm::assemble_cmd();
 							do_tlu_message(req_addr ,4,req_size,a_source,0,0);// get
 							req_addr_arry[a_source]  = req_addr;
 							req_noalloc_arry[a_source] = req_noAlloc;
+							req_addr_arry_f[a_source] = req_addr_arry[a_source];
 
 						end
 						else begin
@@ -1108,12 +1117,14 @@ task dcache_refm::assemble_cmd();
 					    do_tlc_message(req_addr,a_source,0);//NtoB
 							req_addr_arry[a_source]  = req_addr;
 						  req_noalloc_arry[a_source] = req_noAlloc;
+							req_addr_arry_f[a_source] = req_addr_arry[a_source];
 
 						end
 
 					  req_dest_arry[a_source]  = req_dest;
 				    req_source_arry[a_source]  = req_source;
 						req_cmd_arry[a_source]  = req_cmd;
+
 					  `uvm_info(get_type_name(),$sformatf("rm load processing,a_source=%0h, req_addr=%0h,req_dest=%0h,req_cmd=%0h",a_source,req_addr_arry[a_source],req_dest_arry[a_source],req_cmd_arry[a_source]),UVM_NONE);
 					end
 									
@@ -1209,6 +1220,7 @@ task dcache_refm::assemble_cmd();
 							do_tlc_message(req_addr,a_source,a_param);
 							req_addr_arry[a_source]  = req_addr;
 						  req_noalloc_arry[a_source] = req_noAlloc;
+							req_addr_arry_f[a_source] = req_addr_arry[a_source];
 
 				  	end
 
@@ -1339,6 +1351,7 @@ task dcache_refm::assemble_cmd();
 				    req_source_arry[a_source]  = req_source;
 				    req_cmd_arry[a_source]  = req_cmd;
 					  req_noalloc_arry[a_source] = req_noAlloc;
+						req_addr_arry_f[a_source] = req_addr_arry[a_source];
 					  `uvm_info(get_type_name(),$sformatf("rm amo processing,a_source=%0h, req_addr=%0h,req_dest=%0h,req_cmd=%0h,a_param=%0h",a_source,req_addr_arry[a_source],req_dest_arry[a_source],req_cmd_arry[a_source],a_param),UVM_NONE);
 
 				  end
