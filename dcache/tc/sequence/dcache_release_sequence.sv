@@ -17,9 +17,9 @@ class dcache_release_sequence extends dcache_base_sequence;
 		bit [6:0] set_idx_t;
 		bit [511:0] wdata;
 		bit [2:0] size_t;
-		bit is_signed;
+		int delay_cycles;
 		string init_state;
-		string cmd1, cmd2;
+		string cmd;
 		bit hazard_en;
 		bit success;
 
@@ -27,10 +27,9 @@ class dcache_release_sequence extends dcache_base_sequence;
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
-		cmd1 = vmm_opts::get_string("cmd1", "replace", "cmd1");
-		cmd2 = vmm_opts::get_string("cmd2", "replace", "cmd2");
+		cmd = vmm_opts::get_string("cmd", "replace", "cmd");
 		hazard_en = vmm_opts::get_int("hazard_en", 0, "hazard_en");
-
+		delay_cycles	= 12; 	//TODO: 1 cycle for hazard
 		length	= $urandom_range(50, 500);
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 		
@@ -49,11 +48,10 @@ class dcache_release_sequence extends dcache_base_sequence;
 		if(!hazard_en) begin
 			for(int i=0;i<length;i++)begin
 				size_t = $urandom_range(6);
-				is_signed = $urandom_range(1);
 				success	= std::randomize(wdata) with {wdata <= (2**512-1);};
 
 				if(init_state == "B") begin
-					dcache_load(addr_t+'h2000*i,size_t,is_signed);
+					dcache_load(addr_t+'h2000*i,size_t,1);
 				end
 				else if(init_state == "Trunk") begin
 					dcache_lr(addr_t+'h2000*i,2);
@@ -62,83 +60,55 @@ class dcache_release_sequence extends dcache_base_sequence;
 					dcache_store(addr_t+'h2000*i,wdata,size_t);
 				end
 			end
-			dcache_load(addr_t,,1);
+			
+			for(int i=0;i<length;i++)begin
+				dcache_load(addr_t+'h2000*i,,1);
+			end
 		end 
 		else begin
-			if(cmd1 == "replace") begin
-				for(int i=0;i<5;i++)begin
-					size_t = $urandom_range(6);
-					is_signed = $urandom_range(1);
-					dcache_load(addr_t+'h2000*i,size_t,is_signed);
-				end
-			end
-			else if(cmd1 == "loadA") begin
-				for(int i=0;i<length;i++)begin
-					size_t = $urandom_range(6);
-					is_signed = $urandom_range(1);
-					dcache_load(addr_t,size_t,is_signed);
-				end
-			end
-			else if(cmd1 == "loadB") begin
+			for(int i=0;i<4;i++)begin
 				size_t = $urandom_range(6);
-				is_signed = $urandom_range(1);
-				dcache_load(addr_t,size_t,is_signed);
-			end
-			else if(cmd1 == "storeA") begin
-				for(int i=0;i<length;i++)begin
-					success	= std::randomize(wdata) with {wdata <= (2**512-1);};
-					size_t = $urandom_range(6);
-					dcache_store(addr_t,wdata,size_t);
-				end
-			end
-			else if(cmd1 == "storeB") begin
-				success	= std::randomize(wdata) with {wdata <= (2**512-1);};
-				size_t = $urandom_range(6);
-				dcache_store(addr_t,wdata,size_t);
+				dcache_load(addr_t+'h2000*i,size_t,1);
+				#200ns;
 			end
 
-			if(cmd2 == "replace") begin
-				for(int i=1;i<4;i++)begin
-					size_t = $urandom_range(6);
-					is_signed = $urandom_range(1);
-					dcache_load(addr_t+'h2000*i,size_t,is_signed);
+			fork
+				if(cmd == "loadA") begin
+					repeat(delay_cycles) #1;
+					
+					for(int i=0;i<length;i++)begin
+						size_t = $urandom_range(6);
+						dcache_load(addr_t,size_t,1);
+					end
 				end
-				for(int i=0;i<length;i++)begin
-					size_t = $urandom_range(6);
-					is_signed = $urandom_range(1);
-					dcache_load(addr_t+'h8000,size_t,is_signed);
+				else if(cmd == "storeA") begin
+					repeat(delay_cycles) #1;
+					
+					for(int i=0;i<length;i++)begin
+						success	= std::randomize(wdata) with {wdata <= (2**512-1);};
+						size_t = $urandom_range(6);
+						dcache_store(addr_t,wdata,size_t);
+					end
 				end
-			end
-			else if(cmd2 == "loadA") begin
-				for(int i=0;i<length;i++)begin
-					size_t = $urandom_range(6);
-					is_signed = $urandom_range(1);
-					dcache_load(addr_t,size_t,is_signed);
+				else if(cmd == "loadB") begin
+					for(int i=0;i<length;i++)begin
+						size_t = $urandom_range(6);
+						dcache_load(addr_t+'h8000,size_t,1);
+					end
 				end
-			end
-			else if(cmd2 == "loadB") begin
-				for(int i=0;i<length;i++)begin
-					size_t = $urandom_range(6);
-					is_signed = $urandom_range(1);
-					dcache_load(addr_t+'h8000,size_t,is_signed);
+				else if(cmd == "storeB") begin
+					for(int i=0;i<length;i++)begin
+						success	= std::randomize(wdata) with {wdata <= (2**512-1);};
+						size_t = $urandom_range(6);
+						dcache_store(addr_t+'h8000,wdata,size_t);
+					end
 				end
-			end
-			else if(cmd2 == "storeA") begin
-				for(int i=0;i<length;i++)begin
-					success	= std::randomize(wdata) with {wdata <= (2**512-1);};
-					size_t = $urandom_range(6);
-					dcache_store(addr_t,wdata,size_t);
+
+				begin 	//replace
+					dcache_load(addr_t+'h8000,,1);
 				end
-			end
-			else if(cmd2 == "storeB") begin
-				for(int i=0;i<length;i++)begin
-					success	= std::randomize(wdata) with {wdata <= (2**512-1);};
-					size_t = $urandom_range(6);
-					dcache_store(addr_t+'h8000,wdata,size_t);
-				end
-			end
+			join
 		end
-		dcache_load(addr_t,,1);
   endtask
 endclass : dcache_release_sequence
 

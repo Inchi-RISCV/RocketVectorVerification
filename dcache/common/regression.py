@@ -8,6 +8,7 @@ import random
 import getopt
 import time
 import subprocess
+import glob
 
 def usage():
     print('------------------------------------------------------------------')
@@ -53,12 +54,23 @@ def get_list_path(list_path):
     regr_list_path = os.path.realpath(list_path)
     return regr_list_path
 
+def generate_unique_seed(existing_seed):
+    while True:
+        seed = random.randint(10000000,99999999)
+        if seed not in existing_seed:
+            existing_seed.add(seed)
+            return seed
+
 def run_sim(dict_list):
     jobs_cnt = 0
     regr_num = 0
     all_regr_list = []
+    seed_list = []
+    user = os.getenv('USER')
     # deal comp, sim log
     #print dict_list
+    if not (os.path.exists('/datahdd/riscv/' + user + '/data/')):
+        os.mkdir('/datahdd/riscv/' + user + '/data/')
     for p_idx in dict_list:
         tmp_mode_name = p_idx['mode']
         tmp_cov_en    = p_idx['cov']
@@ -69,9 +81,14 @@ def run_sim(dict_list):
             os.mkdir(tmp_mode_name + '/logs')
         else:
             for i in os.listdir(tmp_mode_dir + '/logs'):
-                pth_fi = tmp_mode_dir + '/logs/' + i
-                if i != 'vcs_compiler.log':
-                    os.remove(pth_fi)
+                if 'log' in i:
+                    pth_fi = tmp_mode_dir + '/logs/' + i
+                    if i != 'vcs_compiler.log':
+                        os.remove(pth_fi)
+    for file in glob.glob("/datahdd/riscv/{}/data/slurm*".format(user)):
+        os.remove(file)
+    for file in glob.glob("/datahdd/riscv/{}/data/result*".format(user)):
+        os.remove(file)
     # submit regression jobs
     for para in dict_list:
         mode_name  = para['mode']
@@ -93,7 +110,11 @@ def run_sim(dict_list):
             # seed = random .randint (10000000,99999999)
             # os.system ("bsub -J 'regression' make run mode=%s seed=%s %s" %(mode_ name,seed,cmd_str))
             # #jobs_cnt = jobs_cnt + 1
-    seed_list = random.sample(range(10000000, 99999999), regr_num)
+    #seed_list = random.sample(range(10000000, 99999999), regr_num)
+    existing_seed = set()
+    for i in range(regr_num):
+        seed= generate_unique_seed(existing_seed)
+        seed_list.append(seed)
     if len(seed_list) != len(all_regr_list):
         print("ERROR! seed list len not equal all_regr_list len")
     for seed,run_cmd in zip(seed_list, all_regr_list):
@@ -106,7 +127,8 @@ def run_sim(dict_list):
 
 def write_bash_script(write_options,number):
     num = number
-    regression_path = ("/datahdd/riscv/xiefei/data/slurm%d.sh" %num)
+    user_name = os.getenv('USER')
+    regression_path = ("/datahdd/riscv/{}/data/slurm{}.sh".format(user_name, num))
     with open(regression_path,'w+') as fs:
         fs.write("#!/bin/bash\n")
         fs.write("#SBATCH -J %d\n" %num)
@@ -117,7 +139,7 @@ def write_bash_script(write_options,number):
         fs.write("#SBATCH --cpus-per-task=1\n")
         fs.write("#SBATCH --oversubscribe\n")
         fs.write("#SBATCH -t 1:0:0\n")
-        fs.write("#SBATCH -o /datahdd/riscv/xiefei/data/result%d\n" %num)
+        fs.write("#SBATCH -o /datahdd/riscv/{}/data/result{}\n".format(user_name, num))
         fs.write("\n")
         fs.write("\n")
         fs.write("\n")
@@ -144,7 +166,7 @@ def get_last_nline(input_file):
         return None
     else:
         with open(input_file,'rb') as fp:
-            offset = -50
+            offset = -200
             while -offset < filesize:
                 fp.seek(offset,2)
                 lines = fp.readlines()
@@ -316,7 +338,8 @@ def judge_run_state():
     running = "R"
     pending = "PD"
     command = "squeue -u $USER"
-    user = os.getenv('USER')
+    name = os.getenv('USER')
+    user = name[:8]
     print("waiting for the program finish")
     try:
         while True:

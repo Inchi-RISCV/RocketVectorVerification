@@ -62,50 +62,25 @@ task tilelink_slave_probe_hazard_sequence::body();
 	
 	backdoor_put_data(addr_t,6,{16{'h76543210}});
 
-	//for debug only: replace + probe random
-	//fork
-	//	for(int i=0;i<5;i++) begin
-	//		is_signed = $urandom_range(1);
-	//		dcache_load(addr_t+'h2000*i,,is_signed);
-	//	end
-	//		
-	//	for(int i=0;i<20;i++) begin
-	//		b_param = $urandom_range(2);
-	//		tilelink_chnlB_probeblock(addr_t,b_param);
-	//	end
-	//join
-	
-	if(cmd2 == 3) begin 	//probe + replace
-		for(int i=0;i<5;i++) begin
-			is_signed = $urandom_range(1);
-			dcache_load(addr_t+'h2000*i,,is_signed);
+	if(cmd1 == 3||cmd2 == 3) begin
+		for(int i=0;i<4;i++)begin
+			size_t = $urandom_range(6);
+			dcache_load(addr_t+'h2000*i,size_t,1);
+			#1000ns;
 		end
-		
-		forever begin
-			#1;
-			uvm_hdl_read("tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill", isRefill);
-			if(isRefill) 	begin
-				refill_cnt++;
+
+		fork
+			begin 	//replace
+				dcache_load(addr_t+'h8000,,1);
 			end
-			if(refill_cnt == 4) begin 	//TODO
-				#2;
-				break;
+			
+			for(int i=0;i<100;i++) begin
+				b_param = $urandom_range(1); 	//probe not to N
+				tilelink_chnlB_probeblock(addr_t,b_param);
+				wait((tb_top.tilelink_slave_if[0].c_valid) && (tb_top.tilelink_slave_if[0].c_ready) && (tb_top.tilelink_slave_if[0].c_opcode[2:0] == 'h4));
+				#1;
 			end
-		end
-
-		b_param = $urandom_range(2);
-		tilelink_chnlB_probeblock(addr_t,b_param);
-	end
-	else if(cmd1 == 3) begin 	//replace + probe
-		for(int i=0;i<5;i++) begin
-			is_signed = $urandom_range(1);
-			dcache_load(addr_t+'h2000*i,,is_signed);
-		end
-
-		wait((tb_top.tilelink_slave_if[0].c_opcode[2:0] == 6)||(tb_top.tilelink_slave_if[0].c_opcode[2:0] == 7));
-
-		b_param = $urandom_range(2);
-		tilelink_chnlB_probeblock(addr_t,b_param);
+		join
 	end
 	else begin
 		for(int i=0;i<length1;i++)begin
@@ -146,10 +121,10 @@ task tilelink_slave_probe_hazard_sequence::body();
 				if(cmd1 == 4) begin 	//LR
 					wait(tb_top.m_lsu_if.io_resp_bits_status[1:0] == 'h0); 	//LR hit
 					if(lr_valid) begin
-						wait(tb_top.U_GPCDCache.lrscCount[6:0] == 7); 	//probe block
+						wait(tb_top.U_GPCDCache.lrscCount[6:0] == (4+2+1)); 	//probe block
 					end
 					else begin
-						wait(tb_top.U_GPCDCache.lrscCount[6:0] == 6); 	//probe unblock
+						wait(tb_top.U_GPCDCache.lrscCount[6:0] == (3+2+1)); 	//probe unblock
 					end
 				end
 				else if(cmd1 == 5) begin
