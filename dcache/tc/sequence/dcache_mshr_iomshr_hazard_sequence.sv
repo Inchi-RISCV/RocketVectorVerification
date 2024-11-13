@@ -38,12 +38,12 @@ class dcache_mshr_iomshr_hazard_sequence extends dcache_base_sequence;
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 		if((resp_status == "hit")&&((cmd1 == 0)||(cmd1 == 1))) begin
-			length1 = 20;
+			length1 = 50;
 		end
 		else begin
 			length1 = 1;
 		end
-		length2 	= $urandom_range(50, 500);
+		length2 	= $urandom_range(1,1000);
 		success 	= std::randomize(tag_idx_t,set_idx_t) with {
 			tag_idx_t inside {['h4_0000:'h7_ffff]};
 			set_idx_t inside {[0:127]};

@@ -31,7 +31,7 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 		is_mmio_range = vmm_opts::get_int("is_mmio_range",0,"is_mmio_range");
 		`uvm_info("RANDOM_CFG",$sformatf("is_mmio_range = %0d",is_mmio_range),UVM_LOW);
 
-		length 			= $urandom_range(50, 500);
+		length 			= $urandom_range(1,1000);
 		req_size_t 	= $urandom_range(2,3);
 
 		if(is_mmio_range) begin

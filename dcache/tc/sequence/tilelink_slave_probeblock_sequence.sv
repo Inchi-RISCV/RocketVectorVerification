@@ -33,7 +33,7 @@ task tilelink_slave_probeblock_sequence::body();
 	success = std::randomize(addr_t,length) with {
 		solve length before addr_t;
 			
-		length inside {[1:500]};
+		length inside {[1:1000]};
 		addr_t inside {['h8000_0000:'hffff_ffff]};
 		(addr_t%64) == 0;
 		(addr_t+64*length) inside {['h8000_0000:'hffff_ffff]};
@@ -58,7 +58,7 @@ task tilelink_slave_probeblock_sequence::body();
 			is_signed = $urandom_range(1);
 			dcache_load(addr_t+'h40*i,size_t,is_signed);
 		end
-		#500ns;
+		#50us;
 		for(int i=0;i<length;i++)begin
 			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
 		end
@@ -67,7 +67,7 @@ task tilelink_slave_probeblock_sequence::body();
 		for(int i=0;i<length;i++)begin
 			dcache_lr(addr_t+'h40*i,3);
 		end
-		#500ns;
+		#50us;
 		for(int i=0;i<length;i++)begin
 			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
 		end
@@ -78,7 +78,7 @@ task tilelink_slave_probeblock_sequence::body();
 			size_t = $urandom_range(6);
 			dcache_store(addr_t+'h40*i,wdata,size_t);
 		end
-		#500ns;
+		#50us;
 		for(int i=0;i<length;i++)begin
 			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
 		end

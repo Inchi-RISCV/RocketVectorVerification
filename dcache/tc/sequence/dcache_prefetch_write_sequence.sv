@@ -24,7 +24,7 @@ class dcache_prefetch_write_sequence extends dcache_base_sequence;
 
 		init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
-		length 			= $urandom_range(1, 500);
+		length 			= $urandom_range(1,1000);
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 		
 		success 	= std::randomize(tag_idx_t,set_idx_t) with {

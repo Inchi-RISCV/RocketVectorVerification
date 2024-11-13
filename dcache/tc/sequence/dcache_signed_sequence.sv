@@ -29,7 +29,7 @@ class dcache_signed_sequence extends dcache_base_sequence;
 		is_mmio_range = vmm_opts::get_int("is_mmio_range", 0, "is_mmio_range");
 		noAlloc = vmm_opts::get_int("noAlloc", 0, "noAlloc");
 
-		length 			= $urandom_range(1, 500);
+		length 			= $urandom_range(1,1000);
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 
 		if(is_mmio_range) begin
