@@ -33,7 +33,7 @@ task tilelink_slave_probeblock_sequence::body();
 	success = std::randomize(addr_t,length) with {
 		solve length before addr_t;
 			
-		length inside {[1:500]};
+		length inside {[1:1000]};
 		addr_t inside {['h8000_0000:'hffff_ffff]};
 		(addr_t%64) == 0;
 		(addr_t+64*length) inside {['h8000_0000:'hffff_ffff]};

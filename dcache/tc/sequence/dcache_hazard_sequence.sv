@@ -41,13 +41,13 @@ class dcache_hazard_sequence extends dcache_base_sequence;
 
 		if(resp_status == "hit") begin
 			length1 			= 50;
-			length2 			= $urandom_range(50, 500);
+			length2 			= $urandom_range(50,1000);
 		end
 		else begin 	//miss or lr
 			length1 			= 1;
 			length2 			= 1;
 		end
-		length3 			= $urandom_range(50, 500);
+		length3 			= $urandom_range(1,1000);
 
 		success 	= std::randomize(tag_idx_t,set_idx_t) with {
 			tag_idx_t inside {['h4_0000:'h7_ffff]};

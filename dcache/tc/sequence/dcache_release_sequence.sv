@@ -30,7 +30,7 @@ class dcache_release_sequence extends dcache_base_sequence;
 		cmd = vmm_opts::get_string("cmd", "replace", "cmd");
 		hazard_en = vmm_opts::get_int("hazard_en", 0, "hazard_en");
 		delay_cycles	= 12; 	//TODO: 1 cycle for hazard
-		length	= $urandom_range(50, 500);
+		length	= $urandom_range(50,1000);
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 		
 		success = std::randomize(tag_idx_t,set_idx_t) with {

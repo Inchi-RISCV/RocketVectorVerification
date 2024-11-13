@@ -32,7 +32,7 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 
 		size_t = $urandom_range(2,3);
 		if(resp_status == "hit") begin
-			length = $urandom_range(20, 500);
+			length = $urandom_range(50,1000);
 		end
 		else begin
 			length = 1;

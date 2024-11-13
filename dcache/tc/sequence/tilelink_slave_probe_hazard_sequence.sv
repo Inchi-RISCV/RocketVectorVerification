@@ -49,7 +49,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 			length1 == 1;
 		}
 		if(cmd2 != 2) {
-			length2 == 20;
+			length2 inside {[1:1000]};
 		} 
 		else {
 			length2 == 1;

@@ -22,7 +22,7 @@ class dcache_s1_kill_sequence extends dcache_base_sequence;
 	 	super.body(); 
     `uvm_info(get_type_name(), "dcache sequence starting", UVM_NONE)
 		
-		length 			= $urandom_range(1, 500);
+		length 			= $urandom_range(1,1000);
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 		
 		success 	= std::randomize(tag_idx_t,set_idx_t) with {
