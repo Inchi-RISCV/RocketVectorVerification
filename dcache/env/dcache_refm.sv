@@ -670,7 +670,12 @@ task dcache_refm::do_refill();
 
 	while(1)begin
 			@(posedge tb_top.clock);
-			req_addr_arry[d_source]   <= 	req_addr_arry_f[d_source];
+			foreach (req_addr_arry_f[i]) begin
+				if(!req_addr_arry_f[i])begin
+			    req_addr_arry[i]   <= 	req_addr_arry_f[i];
+			    //`uvm_info(get_type_name(),$sformatf("release same addr info , addr=%0h,i=%0h",req_addr_arry[i],i),UVM_NONE);
+		    end
+		  end
 	end
 
 
