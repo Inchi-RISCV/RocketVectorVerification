@@ -306,15 +306,18 @@ task dcache_scb::comp_lsu_rsp();
 			 end
 			 else begin
          `uvm_info(get_type_name(),$sformatf("rsp compare pass,dest=%0h,source=%0h,status=%0h,hasdata=%0h",rsp_act_tr.io_resp_bits_dest,rsp_act_tr.io_resp_bits_source,rsp_act_tr.io_resp_bits_status,rsp_act_tr.io_resp_bits_hasData),UVM_NONE)
-			 end			 
-	   end
-		 if(rsp_act_tr.io_resp_bits_hasData)begin
-			 if(rsp_act_tr.io_resp_bits_data != rsp_exp_tr.io_resp_bits_data)begin
-				 `uvm_error(get_type_name(),$sformatf("rsp compare fail!\nExpect dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h\nActual dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h",rsp_exp_tr.io_resp_bits_dest,rsp_exp_tr.io_resp_bits_source,rsp_exp_tr.io_resp_bits_status,rsp_exp_tr.io_resp_bits_hasData,rsp_exp_tr.io_resp_bits_data,rsp_act_tr.io_resp_bits_dest,rsp_act_tr.io_resp_bits_source,rsp_act_tr.io_resp_bits_status,rsp_act_tr.io_resp_bits_hasData,rsp_act_tr.io_resp_bits_data));
 			 end
+
+		   if(rsp_act_tr.io_resp_bits_hasData)begin
+			   if(rsp_act_tr.io_resp_bits_data != rsp_exp_tr.io_resp_bits_data)begin
+				   `uvm_error(get_type_name(),$sformatf("rsp compare fail!\nExpect dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h\nActual dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h",rsp_exp_tr.io_resp_bits_dest,rsp_exp_tr.io_resp_bits_source,rsp_exp_tr.io_resp_bits_status,rsp_exp_tr.io_resp_bits_hasData,rsp_exp_tr.io_resp_bits_data,rsp_act_tr.io_resp_bits_dest,rsp_act_tr.io_resp_bits_source,rsp_act_tr.io_resp_bits_status,rsp_act_tr.io_resp_bits_hasData,rsp_act_tr.io_resp_bits_data));
+			   end
 			 else begin
 				 `uvm_info(get_type_name(),$sformatf("rsp compare pass,dest=%0h,source=%0h,status=%0h,hasdata=%0h,data=%0h",rsp_act_tr.io_resp_bits_dest,rsp_act_tr.io_resp_bits_source,rsp_act_tr.io_resp_bits_status,rsp_act_tr.io_resp_bits_hasData,rsp_act_tr.io_resp_bits_data),UVM_NONE)
 			 end
+
+		end
+
 
 
 		 end
