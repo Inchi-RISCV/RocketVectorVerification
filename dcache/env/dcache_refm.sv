@@ -212,6 +212,13 @@ task dcache_refm::amoalu(input bit [4:0] cmd, input bit [2:0] size ,input bit [5
 			
 	end
 
+	if(size==2)begin
+    data_out = data_out[31:0];
+	end
+	else if(size==3)begin
+    data_out = data_out[63:0];
+	end
+
 
 	`uvm_info(get_type_name(),$sformatf("amo alu ,cmd=%0h,size=%0h,old_data=%0h,new_data=%0h,data_out=%0h",cmd,size,old_data,new_data,data_out),UVM_NONE);	
 
@@ -799,17 +806,22 @@ task dcache_refm::data_mask_merge(input bit [2:0] size, input bit [38:0] addr,in
     3'h6 : valid_bits  = {64{8'hff}};
   endcase
 
-  if(size == 6)begin
-		wdata_tmp  =  w_data;
-	end
-	else begin
-    wdata_tmp  =  w_data >> (addr[5:0]*8);
-	end
-  wdata_tmp = valid_bits & wdata_tmp;
+//if(size == 6)begin
+//	wdata_tmp  =  w_data;
+//end
+//else begin
+//  wdata_tmp  =  w_data >> (addr[5:0]*8);
+//end
+
+	//`uvm_info(get_type_name(),$sformatf("data merge debug1 ,addr=%0h,size=%0h,valid_bits=%0h,wdata_tmp=%0h,w_data=%0h",addr[5:0],size,valid_bits,wdata_tmp,w_data),UVM_NONE)
+	
+  wdata_tmp = valid_bits & w_data;
 
 
   valid_bits  =  valid_bits << (addr[5:0]*8);
 	data_tmp  =  wdata_tmp << (addr[5:0]*8);
+	//`uvm_info(get_type_name(),$sformatf("data merge debug2 ,addr=%0h,size=%0h,valid_bits=%0h,wdata_tmp=%0h,shift=%0h,data_tmp=%0h",addr[5:0],size,valid_bits,wdata_tmp,w_data >> (addr[5:0]*8),data_tmp),UVM_NONE)
+
 
 	if(mask !=0 )begin
 		for(int i=0;i<64;i++)begin
@@ -825,7 +837,7 @@ task dcache_refm::data_mask_merge(input bit [2:0] size, input bit [38:0] addr,in
     data = (~valid_bits & r_data) | data_tmp;
 	end
 
-  `uvm_info(get_type_name(),$sformatf("data merge ,addr=%0h,size=%0h,mask=%0h,valid_bits=%0h,wdata_tmp=%0h,data_tmp=%0h",addr,size,mask,valid_bits,wdata_tmp,data_tmp),UVM_NONE)
+  `uvm_info(get_type_name(),$sformatf("data merge ,addr=%0h,size=%0h,mask=%0h,valid_bits=%0h,source_data=%0h,data_tmp=%0h,data=%0h",addr,size,mask,~valid_bits,r_data,data_tmp,data),UVM_NONE)
 
 endtask
 
@@ -1371,7 +1383,7 @@ task dcache_refm::assemble_cmd();
 					update_cache(nset,tag,lsu_trans::DIRTY,way ,merge_data,coh_vic,data_vic,addr_vic);
 
 					sign_extension(req_signed,req_size,align_data,refill_data);
-					send_rsp(req_source ,req_dest , lsu_trans::HIT,1,align_data);
+					send_rsp(req_source ,req_dest , lsu_trans::HIT,1,refill_data);
           `uvm_info(get_type_name(),$sformatf("amo hit merge data,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,way=%0h,\nsource_data=%0h,\nreq_data=%0h,\namo_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,way,data,req_data,amo_data,merge_data),UVM_NONE);
 
 				end
