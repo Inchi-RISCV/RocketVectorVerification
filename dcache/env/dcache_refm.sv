@@ -484,7 +484,8 @@ task dcache_refm::do_refill();
 		        `uvm_info(get_type_name(),$sformatf("rm send iomsr refill resp,req_dest=%0h,req_source=%0h,req_addr=%0h,d_source=%0h,data=%0h",req_dest_arry[i],req_source_tmp,req_addr_arry[i],i,refill_data),UVM_NONE);
 		      end
 		    	
-		      req_addr_arry_f[i]   <= 1;
+		      //req_addr_arry_f[i]   <= 1;
+					req_addr_arry[i]   <= 0;
 		      req_source_arry[i] <= 0;
 		      req_dest_arry[i]   <= 0;	
 					iomshr_refill_valid[i] = 0;
@@ -1384,7 +1385,7 @@ task dcache_refm::assemble_cmd();
 
 					sign_extension(req_signed,req_size,align_data,refill_data);
 					send_rsp(req_source ,req_dest , lsu_trans::HIT,1,refill_data);
-          `uvm_info(get_type_name(),$sformatf("amo hit merge data,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,way=%0h,\nsource_data=%0h,\nreq_data=%0h,\namo_data=%0h,\nmerge_data=%0h",req_addr,req_dest,req_cmd,req_size,way,data,req_data,amo_data,merge_data),UVM_NONE);
+          `uvm_info(get_type_name(),$sformatf("amo hit merge data,req_addr=%0h,req_dest=%0h,req_cmd=%0h,req_size=%0h,way=%0h,\nsource_data=%0h,\nreq_data=%0h,\namo_data=%0h,\nmerge_data=%0h,\nold_data=%0h",req_addr,req_dest,req_cmd,req_size,way,data,req_data,amo_data,merge_data,align_data),UVM_NONE);
 
 				end
 
