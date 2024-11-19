@@ -156,56 +156,63 @@ endtask
 task dcache_refm::amoalu(input bit [4:0] cmd, input bit [2:0] size ,input bit [511:0] old_data, input bit [511:0] new_data,output bit [511:0] data_out);
   bit         is_signed_old,is_signed_new;
 	bit [511:0] sign_data_old,sign_data_new;
+	bit [63:0]  new_data_tmp,old_data_tmp;
 
 	if(size==2)begin
 		is_signed_old = old_data[31];
 		is_signed_new = new_data[31];
-		sign_data_old = old_data[31:31]   ? {{480{1'b1}},old_data[31:0]}  : old_data;
-		sign_data_new = new_data[31:31]   ? {{480{1'b1}},new_data[31:0]}  : new_data;
+		sign_data_old = old_data[31:31]   ? {{480{1'b1}},old_data[31:0]}  : old_data[31:0];
+		sign_data_new = new_data[31:31]   ? {{480{1'b1}},new_data[31:0]}  : new_data[31:0];
+		new_data_tmp = new_data[31:0];
+		old_data_tmp = old_data[31:0];
+   
 	end
 	else if(size==3)begin
 		is_signed_old = old_data[63];
 		is_signed_new = new_data[63];
-		sign_data_old = old_data[63:63]   ? {{448{1'b1}},old_data[63:0]}  : old_data;
-		sign_data_new = new_data[63:63]   ? {{448{1'b1}},new_data[63:0]}  : new_data;
+		sign_data_old = old_data[63:63]   ? {{448{1'b1}},old_data[63:0]}  : old_data[63:0];
+		sign_data_new = new_data[63:63]   ? {{448{1'b1}},new_data[63:0]}  : new_data[63:0];
+		new_data_tmp = new_data[63:0];
+		old_data_tmp = old_data[63:0];
+
 	end
 
 	if(cmd == lsu_trans::M_XA_SWAP)begin
-     data_out = new_data;
+     data_out = new_data_tmp;
 	end
 	else if(cmd == lsu_trans::M_XA_XOR)begin
-     data_out = old_data ^ new_data;
+     data_out = old_data_tmp ^ new_data_tmp;
 	end
 	else if(cmd == lsu_trans::M_XA_OR)begin
-     data_out = old_data | new_data;
+     data_out = old_data_tmp | new_data_tmp;
 	end
 	else if(cmd == lsu_trans::M_XA_AND)begin
-      data_out = old_data & new_data;
+      data_out = old_data_tmp & new_data_tmp;
 	end
 	else if(cmd == lsu_trans::M_XA_MINU)begin
-      data_out = (new_data<old_data) ? new_data : old_data ;
+      data_out = (new_data_tmp<old_data_tmp) ? new_data_tmp : old_data_tmp ;
 	end
 	else if(cmd == lsu_trans::M_XA_MAXU)begin
-      data_out = (new_data>old_data) ? new_data : old_data ;
+      data_out = (new_data_tmp>old_data_tmp) ? new_data_tmp : old_data_tmp ;
 	end
 	else if(cmd == lsu_trans::M_XA_ADD)begin
     data_out = sign_data_old + sign_data_new;
  	end
 	else if(cmd == lsu_trans::M_XA_MAX)begin
 		if(is_signed_old == is_signed_new)begin
-      data_out  = (new_data>old_data) ? new_data : old_data ;
+      data_out  = (new_data_tmp>old_data_tmp) ? new_data_tmp : old_data_tmp ;
 	  end
 		else begin
-      data_out = is_signed_new ? old_data : new_data;
+      data_out = is_signed_new ? old_data_tmp : new_data_tmp;
 		end
 
 	end
 	else if(cmd == lsu_trans::M_XA_MIN)begin
 		if(is_signed_old == is_signed_new)begin
-      data_out  = (new_data<old_data) ? new_data : old_data ;
+      data_out  = (new_data_tmp<old_data_tmp) ? new_data_tmp : old_data_tmp ;
 	  end
 		else begin
-      data_out = is_signed_new ? new_data : old_data;
+      data_out = is_signed_new ? new_data_tmp : old_data_tmp;
 		end
 			
 	end
@@ -218,7 +225,7 @@ task dcache_refm::amoalu(input bit [4:0] cmd, input bit [2:0] size ,input bit [5
 	end
 
 
-	`uvm_info(get_type_name(),$sformatf("amo alu ,cmd=%0h,size=%0h,old_data=%0h,new_data=%0h,data_out=%0h",cmd,size,old_data,new_data,data_out),UVM_NONE);	
+	`uvm_info(get_type_name(),$sformatf("amo alu ,cmd=%0h,size=%0h,old_data_tmp=%0h,new_data_tmp=%0h,data_out=%0h",cmd,size,old_data,new_data,data_out),UVM_NONE);	
 
 
 endtask
