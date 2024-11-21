@@ -47,8 +47,8 @@ class dcache_refm extends uvm_component;
 	bit [38:0] req_addr_arry_f[32];
 	bit [1:0]  req_noalloc_arry[32];
   //bit [38:0]  req_source_q[$]; //addr+dest
-  bit [634:0] same_addr_info_q[$];   //sign+cmd+addr+source+dest  512+64+1+5+39+8+6 = 635
-	bit [634:0] same_addr_info_tmp_q[$];
+  bit [1023:0] same_addr_info_q[$];   //size+data+mask+sign+cmd+addr+source+dest  3+512+64+1+5+39+8+6 = 635
+	bit [1023:0] same_addr_info_tmp_q[$];
 	bit [5:0]  req_dest_arry[32];     
 	bit [7:0]  req_source_arry[32];
 	bit [2:0]  req_size_arry[1024];
@@ -556,10 +556,10 @@ task dcache_refm::do_refill();
 		        	  req_cmd_same_addr = same_addr_info[57:53];
 		        	  req_signed = same_addr_info[58:58];
 		        	  req_addr  = same_addr_info[52:14];
-		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h, req_size=%0h,data=%0h,same_addr_refill_num=%0h,req_addr=%0h,a_addr=%0h",req_dest,req_source,req_size_arry[{req_source,req_dest}],refill_data,same_addr_refill_num,req_addr,a_addr),UVM_NONE);
+		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h, req_size=%0h,data=%0h,same_addr_refill_num=%0h,req_addr=%0h,a_addr=%0h",req_dest,req_source,same_addr_info[637:635],refill_data,same_addr_refill_num,req_addr,a_addr),UVM_NONE);
 		        	  if(req_addr[31:6] == a_addr[31:6])begin 
-  	        	  	addr_data_align(req_size_arry[{req_source,req_dest}],req_addr,d_data_arry[d_source],align_data);
-		        		  sign_extension(req_signed,req_size_arry[{req_source,req_dest}],align_data,refill_data);
+  	        	  	addr_data_align(same_addr_info[637:635],req_addr,d_data_arry[d_source],align_data);
+		        		  sign_extension(req_signed,same_addr_info[637:635],align_data,refill_data);
 
 		        		  if(req_cmd_same_addr == lsu_trans::M_XRD)begin
 		                send_rsp(req_source ,req_dest , lsu_trans::REFILL,1,refill_data);
@@ -612,17 +612,18 @@ task dcache_refm::do_refill();
 		        	  req_addr  = same_addr_info[52:14];
 								//data  634:123
 								//mask  122:59
-		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h, req_size=%0h,data=%0h,same_addr_refill_num=%0h,req_addr=%0h,a_addr=%0h",req_dest,req_source,req_size_arry[{req_source,req_dest}],refill_data,same_addr_refill_num,req_addr,a_addr),UVM_NONE);
+								//size  637:635
+		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h, req_size=%0h,data=%0h,same_addr_refill_num=%0h,req_addr=%0h,a_addr=%0h",req_dest,req_source,same_addr_info[637:635],refill_data,same_addr_refill_num,req_addr,a_addr),UVM_NONE);
 		        	  if(req_addr[31:6] == a_addr[31:6])begin 
 
                  	if(req_cmd_same_addr == lsu_trans::M_XWR || req_cmd_same_addr == lsu_trans::M_PWR)begin
-										data_mask_merge(req_size_arry[{req_source,req_dest}], req_addr,same_addr_info[122:59],update_data, same_addr_info[634:123],merge_data);
-					          `uvm_info(get_type_name(),$sformatf("store miss merge data,a_addr=%0h,req_cmd=%0h,req_size=%0h,same_addr_info_size=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_cmd_same_addr,req_size_arry[{req_source,req_dest}],same_addr_info_q.size(),req_mask,update_data,same_addr_info[634:123],merge_data),UVM_NONE);
+										data_mask_merge(same_addr_info[637:635], req_addr,same_addr_info[122:59],update_data, same_addr_info[634:123],merge_data);
+					          `uvm_info(get_type_name(),$sformatf("store miss merge data,a_addr=%0h,req_cmd=%0h,req_size=%0h,same_addr_info_size=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_cmd_same_addr,same_addr_info[637:635],same_addr_info_q.size(),req_mask,update_data,same_addr_info[634:123],merge_data),UVM_NONE);
 										update_data = merge_data;
 									end		        		 
 									if(req_cmd_same_addr == lsu_trans::M_XRD)begin
-										addr_data_align(req_size_arry[{req_source,req_dest}],req_addr,update_data,align_data);
-		        		    sign_extension(req_signed,req_size_arry[{req_source,req_dest}],align_data,refill_data);
+										addr_data_align(same_addr_info[637:635],req_addr,update_data,align_data);
+		        		    sign_extension(req_signed,same_addr_info[637:635],align_data,refill_data);
 		                send_rsp(req_source ,req_dest , lsu_trans::REFILL,1,refill_data);
 		        	      `uvm_info(get_type_name(),$sformatf("rm send same addr refill resp ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_refill_num),UVM_NONE);
 		        	    end
@@ -1034,7 +1035,7 @@ task dcache_refm::assemble_cmd();
 	bit [15:0]  a_source;
   bit [2:0]   a_param;
 	bit [2:0]   a_opcode;
-  bit [634:0] same_addr_info,same_addr_info_tmp;
+  bit [1023:0] same_addr_info,same_addr_info_tmp;
 	bit         same_addr_exist;
 	bit [511:0] align_data,refill_data,merge_data,amo_data;
 	bit         victim_way_valid;
@@ -1212,7 +1213,7 @@ task dcache_refm::assemble_cmd();
 		      	if(req_addr_arry[j][38:6] == req_addr[38:6] && !((req_addr[38:13]>='h3_0000) && (req_addr[38:13]<='h3_ffff)) && j<8)begin
 
 						if(req_cmd != lsu_trans::M_XLR)begin
-						  same_addr_info = {req_data,mask,req_signed,req_cmd,req_addr,req_source,req_dest};
+						  same_addr_info = {req_size,req_data,mask,req_signed,req_cmd,req_addr,req_source,req_dest};
               same_addr_info_q.push_back(same_addr_info);
 					    `uvm_info(get_type_name(),$sformatf("same addr store info,waiting for refill resp,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,rsp_num=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,same_addr_info_q.size(),j),UVM_NONE);	
 					  end
@@ -1330,7 +1331,7 @@ task dcache_refm::assemble_cmd();
           //check if same addr req exist, iomsr need replay,mshr need replay until mshr deallocate, B still need replay until release 
 		      foreach (req_addr_arry[j] )begin
 		      	if((req_addr_arry[j][38:6] == req_addr[38:6] && j<8)  ||  (req_addr_arry[j][38:2] == req_addr[38:2] && req_size==2 && j>=8) || (req_addr_arry[j][38:3] == req_addr[38:3] && req_size==3 && j>=8) )begin
-					  `uvm_info(get_type_name(),$sformatf("amo same addr,need replay,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,rsp_num=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,same_addr_info_q.size(),j),UVM_NONE);
+					  `uvm_info(get_type_name(),$sformatf("amo same addr,need replay,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,j),UVM_NONE);
 						same_addr_exist = 1;
 						break;
 		      	end	
