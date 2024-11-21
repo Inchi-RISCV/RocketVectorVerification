@@ -241,7 +241,7 @@ task dcache_refm::do_probe();
   bit [6:0]    nset ;
   bit [1:0]    coh,coh_vic,coh_tmp;
 	bit [1:0]    exist_way;
-	bit [511:0]  data,data_vic;
+	bit [511:0]  data,data_vic,data_tmp;
 	bit [38:0]   addr_vic;
 	bit [38:0]   probe_addr_arry[32];
 	bit [2:0]    c_param;
@@ -334,8 +334,10 @@ task dcache_refm::do_probe();
 		      endcase						
 		    end
 
-          if(c_param != 5)begin//NtoN donot update cache
-				    update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp,exist_way,0,coh_vic,data_vic,addr_vic);
+          if(c_param < 3)begin//NtoN  BtoB TtoT donot update cache
+
+				    data_tmp = c_param==0 ? data : 0;
+						update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp,exist_way,data_tmp,coh_vic,data_vic,addr_vic);
             `uvm_info(get_type_name(),$sformatf("probe update cacheline,addr=%0h,c_source=%0h,way=%0h,coh=%0h",probe_addr,i,exist_way,coh_tmp),UVM_NONE);
 			 	  end
 
