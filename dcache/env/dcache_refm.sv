@@ -1108,6 +1108,7 @@ task dcache_refm::assemble_cmd();
 				   	//load miss need refill resp
 					  //req_source_q.push_back(req_source);
             same_addr_info = {req_signed,req_cmd,req_addr,req_source,req_dest};
+						same_addr_info[637:635] = req_size;
             same_addr_info_q.push_back(same_addr_info);
 					  `uvm_info(get_type_name(),$sformatf("same addr load info,waiting for refill resp,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,rsp_num=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,same_addr_info_q.size(),j),UVM_NONE);
 						same_addr_exist = 1;
