@@ -130,6 +130,10 @@ task tilelink_slave_probe_hazard_sequence::body();
 				else if(cmd1 == 5) begin
 					wait(tb_top.tilelink_slave_if[0].a_valid == 'h1);
 				end
+			
+				if(resp_status == "miss") begin
+					wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
+				end
 				tilelink_chnlB_probeblock(addr_t,b_param);
 			end
 		end
