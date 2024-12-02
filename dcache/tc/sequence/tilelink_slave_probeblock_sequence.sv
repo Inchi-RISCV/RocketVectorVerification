@@ -47,41 +47,26 @@ task tilelink_slave_probeblock_sequence::body();
 		backdoor_put_data(addr_t+'h40*i,6,{16{'h76543210}}+i);
 	end
 
-	if(init_state == "N") begin
-		for(int i=0;i<length;i++)begin
-			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
+	for(int i=0;i<length;i++)begin
+		if(init_state != "N") begin
+			if(init_state == "B") begin
+				size_t = $urandom_range(6);
+				is_signed = $urandom_range(1);
+				dcache_load(addr_t+'h40*i,size_t,is_signed);
+			end
+			else if(init_state == "Trunk") begin
+				dcache_lr(addr_t+'h40*i,3);
+			end
+			else if(init_state == "Dirty") begin
+				success	= std::randomize(wdata) with {wdata <= (2**512-1);};
+				size_t = $urandom_range(6);
+				dcache_store(addr_t+'h40*i,wdata,size_t);
+			end
 		end
 	end
-	else if(init_state == "B") begin
-		for(int i=0;i<length;i++)begin
-			size_t = $urandom_range(6);
-			is_signed = $urandom_range(1);
-			dcache_load(addr_t+'h40*i,size_t,is_signed);
-		end
-		#50us;
-		for(int i=0;i<length;i++)begin
-			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
-		end
-	end
-	else if(init_state == "Trunk") begin
-		for(int i=0;i<length;i++)begin
-			dcache_lr(addr_t+'h40*i,3);
-		end
-		#50us;
-		for(int i=0;i<length;i++)begin
-			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
-		end
-	end
-	else if(init_state == "Dirty") begin
-		for(int i=0;i<length;i++)begin
-			success	= std::randomize(wdata) with {wdata <= (2**512-1);};
-			size_t = $urandom_range(6);
-			dcache_store(addr_t+'h40*i,wdata,size_t);
-		end
-		#50us;
-		for(int i=0;i<length;i++)begin
-			tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
-		end
+	#10us;
+	for(int i=0;i<length;i++)begin
+		tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
 	end
 
 	`uvm_info("body", "Exiting...", UVM_LOW)
