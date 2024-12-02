@@ -54,9 +54,9 @@ task tilelink_slave_probe_hazard_sequence::body();
 		else {
 			length2 == 1;
 		}
-		addr_t inside {['h8000_0000:'hffff_ffff]};
+		addr_t inside {['h8000_0000:'h7f_ffff_ffff]};
 		(addr_t%64) == 0;
-		(addr_t+64*(length1+length2)) inside {['h8000_0000:'hffff_ffff]};
+		(addr_t+64*(length1+length2)) inside {['h8000_0000:'h7f_ffff_ffff]};
 	};
 	`uvm_info("RANDOM_CFG",$sformatf("length1 = %0d; length2 = %0d; addr_t = %0h", length1, length2, addr_t),UVM_LOW);
 	

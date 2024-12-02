@@ -35,14 +35,13 @@ class dcache_small_size_sequence extends dcache_base_sequence;
 		end
 		else begin
 			success 	= std::randomize(tag_idx_t,set_idx_t) with {
-				tag_idx_t inside {['h4_0000:'h7_ffff]};
+				tag_idx_t inside {['h4_0000:'h3ff_ffff]};
 				set_idx_t inside {[0:127]};
-				((tag_idx_t<<13)+(set_idx_t<<6)+64*128) inside {['h8000_0000:'hffff_ffff]};
+				((tag_idx_t<<13)+(set_idx_t<<6)+64*128) inside {['h8000_0000:'h7f_ffff_ffff]};
 			};
 		end
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);
-
 		
 		backdoor_put_data(addr_t,6,{16{'h76543210}});
 		

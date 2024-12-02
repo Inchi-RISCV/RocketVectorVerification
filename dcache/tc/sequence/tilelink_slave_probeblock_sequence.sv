@@ -34,9 +34,9 @@ task tilelink_slave_probeblock_sequence::body();
 		solve length before addr_t;
 			
 		length inside {[1:1000]};
-		addr_t inside {['h8000_0000:'hffff_ffff]};
+		addr_t inside {['h8000_0000:'h7f_ffff_ffff]};
 		(addr_t%64) == 0;
-		(addr_t+64*length) inside {['h8000_0000:'hffff_ffff]};
+		(addr_t+64*length) inside {['h8000_0000:'h7f_ffff_ffff]};
 	};
 	`uvm_info("RANDOM_CFG",$sformatf("length = %0d; addr_t = %0h", length, addr_t),UVM_LOW);
 	

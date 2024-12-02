@@ -34,9 +34,9 @@ class dcache_release_sequence extends dcache_base_sequence;
 		`uvm_info("RANDOM_CFG",$sformatf("length = %0d", length),UVM_LOW);
 		
 		success = std::randomize(tag_idx_t,set_idx_t) with {
-			tag_idx_t inside {['h4_0000:'h7_ffff]};
+			tag_idx_t inside {['h4_0000:'h3ff_ffff]};
 			set_idx_t inside {[0:127]};
-			((tag_idx_t<<13)+(set_idx_t<<6)+'h2000*length) inside {['h8000_0000:'hffff_ffff]};
+			((tag_idx_t<<13)+(set_idx_t<<6)+'h2000*length) inside {['h8000_0000:'h7f_ffff_ffff]};
 		};
 
 		dcache_random_cfg(addr_t,tag_idx_t,set_idx_t);

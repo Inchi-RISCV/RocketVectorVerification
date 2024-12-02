@@ -44,7 +44,7 @@ class dcache_load_sequence extends dcache_base_sequence;
 			success 	= std::randomize(tag_idx_t,set_idx_t) with {
 				tag_idx_t inside {['h4_0000:'h7_ffff]};
 				set_idx_t inside {[0:127]};
-				((tag_idx_t<<13)+(set_idx_t<<6)+64*length) inside {['h8000_0000:'hffff_ffff]};
+				((tag_idx_t<<13)+(set_idx_t<<6)+64*length) inside {['h8000_0000:'h7f_ffff_ffff]};
 			};
 		end
 
