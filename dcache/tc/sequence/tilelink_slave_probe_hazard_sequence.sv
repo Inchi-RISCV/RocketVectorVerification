@@ -30,6 +30,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 	int refill_cnt;
 	bit success;
 	string resp_status;
+	string init_state;
 
 	super.body();
 	`uvm_info("body", "Entering...", UVM_LOW)
@@ -38,6 +39,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 	cmd2 = vmm_opts::get_int("cmd2", 0, "cmd2");
 	lr_valid = vmm_opts::get_int("lr_valid", 1, "lr_valid");
 	resp_status = vmm_opts::get_string("resp_status", "hit", "resp_status");
+	init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
 	success = std::randomize(addr_t, length1, length2) with {
 		solve length1, length2 before addr_t;
@@ -61,6 +63,14 @@ task tilelink_slave_probe_hazard_sequence::body();
 	`uvm_info("RANDOM_CFG",$sformatf("length1 = %0d; length2 = %0d; addr_t = %0h", length1, length2, addr_t),UVM_LOW);
 	
 	backdoor_put_data(addr_t,6,{16{'h76543210}});
+
+	for(int i=0;i<length1;i++)begin
+		if(init_state == "B") begin
+			size_t = $urandom_range(6);
+			is_signed = $urandom_range(1);
+			dcache_load(addr_t+'h40*i,size_t,is_signed);
+		end
+	end
 
 	if(cmd1 == 3||cmd2 == 3) begin
 		for(int i=0;i<4;i++)begin
@@ -131,10 +141,16 @@ task tilelink_slave_probe_hazard_sequence::body();
 					wait(tb_top.tilelink_slave_if[0].a_valid == 'h1);
 				end
 			
-				if(resp_status == "miss") begin
-					wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
+				if(init_state == "B") begin
+					wait(tb_top.tilelink_slave_if[0].a_param[2:0] == 2);
+					tilelink_chnlB_probeblock(addr_t,2);
 				end
-				tilelink_chnlB_probeblock(addr_t,b_param);
+				else begin	
+					if(resp_status == "miss") begin
+						wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
+					end
+					tilelink_chnlB_probeblock(addr_t,b_param);
+				end	
 			end
 		end
 	end

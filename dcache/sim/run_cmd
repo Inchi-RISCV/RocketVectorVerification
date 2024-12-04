@@ -142,6 +142,7 @@ make ncrun tc=tilelink_probe_hazard_test cfg=lr_valid_probe_hazard
 make ncrun tc=tilelink_probe_hazard_test cfg=lr_invalid_probe_hazard
 make ncrun tc=tilelink_probe_hazard_test cfg=probe_replace_hazard		
 make ncrun tc=tilelink_probe_hazard_test cfg=acquire_probe_hazard
+make ncrun tc=tilelink_probe_hazard_test cfg=B_store_miss_probe_hazard
 
 
 make ncrun tc=dcache_prefetch_read_test											
