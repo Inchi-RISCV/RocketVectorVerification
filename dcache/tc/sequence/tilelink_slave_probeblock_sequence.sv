@@ -20,7 +20,7 @@ endfunction
 task tilelink_slave_probeblock_sequence::body();	
 	bit [31:0] length;
 	bit [38:0] addr_t;
-	bit [1:0]  b_param;
+	bit [1:0]  b_param, b_param_new;
 	bit [511:0] wdata;
 	bit [2:0] size_t;
 	bit is_signed;
@@ -67,6 +67,11 @@ task tilelink_slave_probeblock_sequence::body();
 	#10us;
 	for(int i=0;i<length;i++)begin
 		tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
+	end
+	
+	for(int i=0;i<length;i++)begin 	//add for toggle cov
+		b_param_new = $urandom_range(2);
+		tilelink_chnlB_probeblock(addr_t+'h40*i,b_param_new);
 	end
 
 	`uvm_info("body", "Exiting...", UVM_LOW)
