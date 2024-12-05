@@ -59,8 +59,10 @@ class dcache_refm extends uvm_component;
 	bit [559:0] w_miss_release_data_q[$]; //addr+data 48+512
 	bit [7:0]   lrsc_count;
 	bit [38:0]  lrsc_addr;
-
+	
 	lsu_trans::req_cmd_enum 		req_cmd_arry[32];
+	svt_tilelink_master_transaction tl_send_q[$];
+  svt_tilelink_master_transaction tl_send_q_tmp[$];
 
   extern function new(string name, uvm_component parent);
   extern task main_phase(uvm_phase phase);
@@ -80,6 +82,8 @@ class dcache_refm extends uvm_component;
   extern task sign_extension(input bit is_signed,input bit [2:0] size,input bit [511:0] data,output bit [511:0] sign_data);
 	extern task amoalu(input bit [4:0] cmd, input bit [2:0] size ,input bit [511:0] old_data, input bit [511:0] new_data,output bit [511:0] data_out);
   extern task do_probe();
+	extern task do_tl_send_q();
+
 
 
   /**  write for tilelink monitor */
@@ -131,7 +135,8 @@ task dcache_refm::main_phase(uvm_phase phase);
 		assemble_cmd();
     do_refill();
 		do_probe();
-
+    do_tl_send_q();
+		
     //lrsc_count - 1
     while(1) begin
       @(posedge tb_top.clock);
@@ -560,13 +565,20 @@ task dcache_refm::do_refill();
 		        	  req_addr  = same_addr_info[52:14];
 		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h, req_size=%0h,data=%0h,same_addr_refill_num=%0h,req_addr=%0h,a_addr=%0h",req_dest,req_source,same_addr_info[637:635],refill_data,same_addr_refill_num,req_addr,a_addr),UVM_NONE);
 		        	  if(req_addr[31:6] == a_addr[31:6])begin 
-  	        	  	addr_data_align(same_addr_info[637:635],req_addr,d_data_arry[d_source],align_data);
-		        		  sign_extension(req_signed,same_addr_info[637:635],align_data,refill_data);
 
 		        		  if(req_cmd_same_addr == lsu_trans::M_XRD)begin
+										addr_data_align(same_addr_info[637:635],req_addr,d_data_arry[d_source],align_data);
+		        		    sign_extension(req_signed,same_addr_info[637:635],align_data,refill_data);
 		                send_rsp(req_source ,req_dest , lsu_trans::REFILL,1,refill_data);
 		        	      `uvm_info(get_type_name(),$sformatf("rm send same addr refill resp ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_refill_num),UVM_NONE);
 		        	    end
+                 	if(req_cmd_same_addr == lsu_trans::M_XWR || req_cmd_same_addr == lsu_trans::M_PWR)begin
+										data_mask_merge(same_addr_info[637:635], req_addr,same_addr_info[122:59],update_data, same_addr_info[634:123],merge_data);
+					          `uvm_info(get_type_name(),$sformatf("store miss merge data,a_addr=%0h,req_cmd=%0h,req_size=%0h,same_addr_info_size=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_cmd_same_addr,same_addr_info[637:635],same_addr_info_q.size(),req_mask,update_data,same_addr_info[634:123],merge_data),UVM_NONE);
+										update_data = merge_data;
+									end
+
+
 		            end
 		        	  else begin
                   same_addr_info_tmp_q.push_back(same_addr_info);
@@ -906,8 +918,11 @@ task dcache_refm::do_tlc_message(input bit [38:0] a_addr ,input bit [15:0] a_sou
   tr_a.ch_a_msg_type  = svt_tilelink_master_transaction::CH_A_ACQUIRE_BLOCK;
   tr_a.a_param   = a_param;
 
-	rm2sb_tltx_port.write(tr_a);
-	`uvm_info(get_type_name(),$sformatf("rm send acquire to sb , a_addr=%0h,a_source=%0h,a_param=%0h",tr_a.a_address,tr_a.a_source,tr_a.a_param),UVM_NONE);
+	
+	//rm2sb_tltx_port.write(tr_a);
+	tl_send_q.push_back(tr_a);
+
+	`uvm_info(get_type_name(),$sformatf("rm send acquire to send_q , a_addr=%0h,a_source=%0h,a_param=%0h,send_q_size=%0h",tr_a.a_address,tr_a.a_source,tr_a.a_param,tl_send_q.size()),UVM_NONE);
 
 endtask
 
@@ -935,11 +950,29 @@ task dcache_refm::do_tlu_message(input bit [38:0] a_addr ,input bit [2:0] a_opco
   tr_a.ch_a_msg_type  = a_opcode;
   tr_a.a_param   = a_param;
 
+	tl_send_q.push_back(tr_a);
 
+	//rm2sb_tltx_port.write(tr_a);
+	`uvm_info(get_type_name(),$sformatf("rm send tlu message to send_q , a_addr=%0h,a_source=%0h,a_mask=%0h,a_data=%0h,a_param=%0h,send_q_size=%0h",tr_a.a_address,tr_a.a_source,a_mask,a_data,a_param,tl_send_q.size()),UVM_NONE);
 
+endtask
 
-	rm2sb_tltx_port.write(tr_a);
-	`uvm_info(get_type_name(),$sformatf("rm send tlu message to sb , a_addr=%0h,a_source=%0h,a_mask=%0h,a_data=%0h,a_param=%0h",tr_a.a_address,tr_a.a_source,a_mask,a_data,a_param),UVM_NONE);
+task dcache_refm::do_tl_send_q();
+
+  svt_tilelink_master_transaction   tr_a;
+
+  while(1)begin
+		@(posedge tb_top.clock);
+		tr_a = new();
+		if(tb_top.tilelink_slave_if[0].a_valid & tb_top.tilelink_slave_if[0].a_ready)begin
+			#0.1;
+			tr_a = tl_send_q.pop_front();
+      rm2sb_tltx_port.write(tr_a);
+	    `uvm_info(get_type_name(),$sformatf("rm send_q , a_addr=%0h,a_source=%0h,a_opcode=%0h,a_param=%0h,send_q_size=%0h",tr_a.a_address,tr_a.a_source,tr_a.ch_a_msg_type,tr_a.a_param,tl_send_q.size()),UVM_NONE);
+
+		end
+  end
+
 
 endtask
 
@@ -1042,10 +1075,13 @@ task dcache_refm::assemble_cmd();
 	bit [511:0] align_data,refill_data,merge_data,amo_data;
 	bit         victim_way_valid;
   bit [5:0]   mask_addr;
-    
+  bit [31:0]  send_q_num;
+   
 	lsu_trans   req;
 	lsu_trans::req_cmd_enum 		req_cmd;
 	lsu_trans::resp_status_enum rsp_status;
+
+	svt_tilelink_master_transaction   tr_a;
 
 	req = new();
 
@@ -1226,6 +1262,28 @@ task dcache_refm::assemble_cmd();
 		      end
           
           if(same_addr_exist)begin
+						//if same addr is load and acquire donot send , secondary miss need Upgrade Perm 
+						tr_a = new();
+			      send_q_num = tl_send_q.size();
+						if(send_q_num)begin
+							for (int i =0;i<send_q_num;i++)begin
+								tr_a = tl_send_q.pop_front();
+								if(tr_a.a_address == req_addr & tr_a.a_param == 0)begin
+									tr_a.a_param = 1;
+								  `uvm_info(get_type_name(),$sformatf("store secondary miss upgrade perm,addr=%0h,req_cmd=%0h,req_dest=%0h,req_source=%0h,a_source=%0h",req_addr,req_cmd,req_dest,req_source,tr_a.a_source),UVM_NONE);
+								end
+                tl_send_q_tmp.push_back(tr_a);
+							end
+						end
+
+						send_q_num = tl_send_q_tmp.size();
+						if(send_q_num>0)begin
+							for (int i =0;i<send_q_num;i++)begin
+								tr_a = tl_send_q_tmp.pop_front();
+                tl_send_q.push_back(tr_a);
+							end
+						end
+
 						continue;
 					end
 					else begin
