@@ -274,25 +274,27 @@ task dcache_refm::do_probe();
 		@(posedge tb_top.clock);
 		foreach (probe_addr_arry[i]) begin
 			if(probe_addr_arry[i])begin
-				`uvm_info(get_type_name(),$sformatf("probe_addr_arry=%p,i=%0h", probe_addr_arry,i),UVM_NONE);
+				`uvm_info(get_type_name(),$sformatf("probe_addr_arry=%p,req_addr_arry=%p,i=%0h", probe_addr_arry,req_addr_arry,i),UVM_NONE);
 		    probe_addr = probe_addr_arry[i];
 
          
         //check if same addr req in MSHR,do MSHR refill first
 		    foreach (req_addr_arry[j])begin
-		      	if(req_addr_arry[j][38:6] == probe_addr && j<8 )begin
+		      	if(req_addr_arry[j][38:6] == probe_addr[38:6] && j<8 )begin
 					  `uvm_info(get_type_name(),$sformatf("probe has same addr in mshr ,addr=%0h,j=%0h",req_addr_arry[j],j),UVM_NONE);
-						mshr_refill_first[j] = 1;
+						mshr_refill_first[i] = 1;
 		      	end	
 		    end
         
        
 
-				if(mshr_refill_first[i])begin
-          wait ( !(tb_top.U_GPCDCache.s1_validRefill&tb_top.U_GPCDCache.s1_req_isRefill) && (tb_top.U_GPCDCache.s1_req_paddr[38:6] == probe_addr[38:6] && tb_top.U_GPCDCache.s1_req_isProbe));
-          `uvm_info(get_type_name(),$sformatf("same addr in mshr refill done,addr=%0h,i=%0h",probe_addr_arry[i],i),UVM_NONE);
-					mshr_refill_first[i] = 0;
-				end
+				foreach (mshr_refill_first[k]) begin
+				  if(mshr_refill_first[k])begin
+            wait ( !(tb_top.U_GPCDCache.s1_validRefill&tb_top.U_GPCDCache.s1_req_isRefill) && (tb_top.U_GPCDCache.s1_req_paddr[38:6] == probe_addr[38:6] && tb_top.U_GPCDCache.s1_req_isProbe));
+            `uvm_info(get_type_name(),$sformatf("probe same addr in mshr refill done,addr=%0h,i=%0h",probe_addr_arry[k],k),UVM_NONE);
+					  mshr_refill_first[k] = 0;
+				  end
+			  end
 
         nset = probe_addr[12:6];
 		    ntag = probe_addr[38:13];        
