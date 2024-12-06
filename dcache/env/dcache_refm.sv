@@ -567,7 +567,7 @@ task dcache_refm::do_refill();
 		        	  if(req_addr[31:6] == a_addr[31:6])begin 
 
 		        		  if(req_cmd_same_addr == lsu_trans::M_XRD)begin
-										addr_data_align(same_addr_info[637:635],req_addr,d_data_arry[d_source],align_data);
+										addr_data_align(same_addr_info[637:635],req_addr,update_data,align_data);
 		        		    sign_extension(req_signed,same_addr_info[637:635],align_data,refill_data);
 		                send_rsp(req_source ,req_dest , lsu_trans::REFILL,1,refill_data);
 		        	      `uvm_info(get_type_name(),$sformatf("rm send same addr refill resp ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_refill_num),UVM_NONE);
@@ -576,6 +576,7 @@ task dcache_refm::do_refill();
 										data_mask_merge(same_addr_info[637:635], req_addr,same_addr_info[122:59],update_data, same_addr_info[634:123],merge_data);
 					          `uvm_info(get_type_name(),$sformatf("store miss merge data,a_addr=%0h,req_cmd=%0h,req_size=%0h,same_addr_info_size=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",req_addr,req_cmd_same_addr,same_addr_info[637:635],same_addr_info_q.size(),req_mask,update_data,same_addr_info[634:123],merge_data),UVM_NONE);
 										update_data = merge_data;
+
 									end
 
 
