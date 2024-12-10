@@ -393,7 +393,7 @@ task dcache_refm::do_refill();
   bit          victim_way_valid;
   bit [63:0]   req_mask;
 	bit [511:0]  req_data,merge_data,wite_miss_data;
-  bit          refill_valid[8],iomshr_refill_valid[32];
+  bit          refill_valid[8],refill_resp_valid[32];
 	bit [559:0]  w_miss_release_data;
 	
 	fork
@@ -463,65 +463,48 @@ task dcache_refm::do_refill();
           `uvm_info(get_type_name(),$sformatf("rm wait dut refill done,a_addr=%0h,canDoRefill=%0h,isrefill=%0h",a_addr,tb_top.U_GPCDCache.s1_canDoRefill,tb_top.U_GPCDCache.s1_req_isRefill),UVM_NONE);
 					`uvm_info(get_type_name(),$sformatf(" req_addr_arry=%p,refill_valid=%p", req_addr_arry,refill_valid),UVM_NONE);
 	        //break;
-	      end
-        
-				//wait dut iomshr refill
-				if(tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_valid && tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_ready && (tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_bits_dest[4:0] == req_dest_1) && (tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_bits_source[1:0] == req_source_1))begin
-					iomshr_refill_valid[i]=1;
-          `uvm_info(get_type_name(),$sformatf("rm wait dut iomshr refill done,a_addr=%0h,req_dest=%0h,req_source=%0h,d_source=%0h,valid=%0h,ready=%0h,mshr_valid=%0h",a_addr,req_dest_1,req_source_1,i,tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_valid,tb_top.U_GPCDCache.mshrs.iomshrs.io_resp_ready,tb_top.U_GPCDCache.mainReqArb.io_out_valid),UVM_NONE);
-					`uvm_info(get_type_name(),$sformatf(" req_addr_arry=%p,iomshr_refill_valid=%p", req_addr_arry,iomshr_refill_valid),UVM_NONE);
-				end
+	      end        
+
+			  if(tb_top.U_GPCDCache.refillQueue.io_refillResp_ready & tb_top.U_GPCDCache.refillQueue.io_refillResp_valid & (tb_top.U_GPCDCache.refillQueue.io_refillResp_bits_entryId[4:0]== i))begin
+					refill_resp_valid[i]=1;
+          `uvm_info(get_type_name(),$sformatf("rm wait refill resp done,a_addr=%0h,req_dest=%0h,req_source=%0h,d_source=%0h",a_addr,req_dest_1,req_source_1,i),UVM_NONE);
+				  `uvm_info(get_type_name(),$sformatf(" req_addr_arry=%p,refill_resp_valid=%p", req_addr_arry,refill_resp_valid),UVM_NONE);
+			  end
 			end
 	  end
 	end
 
 
-  while(1)begin
-    @(posedge tb_top.clock);
-		foreach (iomshr_refill_valid[i]) begin
-      if(iomshr_refill_valid[i])begin
-		     //get put or atomic
-         // if isRefill && iomshr.resp.valid && ready , mshr need first
-				 if(tb_top.U_GPCDCache.mainReqArb.io_out_valid && tb_top.U_GPCDCache.mainReqArb.io_out_bits_isRefill)begin
-				   repeat(2)@(posedge tb_top.clock);
-			   end
-				 else if(tb_top.U_GPCDCache.s1_validRefill&&tb_top.U_GPCDCache.s1_req_isRefill)begin
-          @(posedge tb_top.clock);
-				 end				 
-				 `uvm_info(get_type_name(),$sformatf("iomshr_refill_valid=%0h,d_opcode_arry=%0h",i,d_opcode_arry[i]),UVM_NONE);
+	while(1)begin
+	  @(posedge tb_top.clock);
+	  foreach (refill_resp_valid[i]) begin
+			if(refill_resp_valid[i])begin
 
-          if(d_opcode_arry[i] == 1)begin //AccessAckData
-		    	  req_dest_tmp = req_dest_arry[i];
-						req_source_tmp = req_source_arry[i];
-		    	  sign_extension(req_signed_arry[{req_source_tmp,req_dest_tmp}],req_size_arry[{req_source_tmp,req_dest_tmp}],d_data_arry[i],refill_data);
+        d_source = i;
+				a_addr = req_addr_arry[d_source];	
+        nset = a_addr[12:6];
+		    ntag = a_addr[38:13];
+
+			  query_block(nset,ntag, coh ,exist_way,data);
+			  //replace_plru(nset,coh,exist_way ,victim_way,victim_way_valid);
+
+        if(i>=8)begin	// iomshr			
+			    if(d_opcode_arry[i] == 1)begin //AccessAckData
+		      	req_dest_tmp = req_dest_arry[i];
+			    	req_source_tmp = req_source_arry[i];
+		      	sign_extension(req_signed_arry[{req_source_tmp,req_dest_tmp}],req_size_arry[{req_source_tmp,req_dest_tmp}],d_data_arry[i],refill_data);
 		        send_rsp(req_source_tmp ,req_dest_tmp , lsu_trans::REFILL,1,refill_data);
 		        `uvm_info(get_type_name(),$sformatf("rm send iomsr refill resp,req_dest=%0h,req_source=%0h,req_addr=%0h,d_source=%0h,data=%0h",req_dest_arry[i],req_source_tmp,req_addr_arry[i],i,refill_data),UVM_NONE);
 		      end
-		    	
-		      //req_addr_arry_f[i]   <= 1;
-					req_addr_arry[i]   <= 0;
-		      req_source_arry[i] <= 0;
-		      req_dest_arry[i]   <= 0;	
-					iomshr_refill_valid[i] = 0;
-					req_noalloc_arry[i] <=0;
-		    //end
-			end
-		end
-  end
 
-	while(1)begin
-			@(posedge tb_top.clock);
-			foreach (refill_valid[i]) begin
-			  if(refill_valid[i])begin
-          d_source = i;
-				  a_addr = req_addr_arry[d_source];	
-          nset = a_addr[12:6];
-		    	ntag = a_addr[38:13];
-
-			    query_block(nset,ntag, coh ,exist_way,data);
-			    replace_plru(nset,coh,exist_way ,victim_way,victim_way_valid);
-
-		      
+				  //clear info for source index
+		      req_addr_arry_f[d_source]    <= 1;
+		      req_source_arry[d_source]    <= 0;
+		      req_dest_arry[d_source]      <= 0;	
+				  refill_resp_valid[d_source] = 0;
+				  req_noalloc_arry[d_source]   <= 0;
+			  end
+				else begin //mshr 
 
 					case (d_param[d_source])
             2'h0 : coh_tmp = lsu_trans::DIRTY  ;// toT,cacheline DIRTY
@@ -612,8 +595,6 @@ task dcache_refm::do_refill();
 				    data_mask_merge(req_size_store, a_addr,req_mask, d_data_arry[d_source],req_data,update_data);													
 					  `uvm_info(get_type_name(),$sformatf("store miss merge data,a_addr=%0h,req_cmd=%0h,req_size=%0h,way=%0h,same_addr_info_size=%0h,req_mask=%0h,\nsource_data=%0h,\nw_data=%0h,\nmerge_data=%0h",a_addr,req_cmd_arry[d_source],req_size_store,exist_way,same_addr_info_q.size(),req_mask,d_data_arry[d_source],req_data,update_data),UVM_NONE);
 
-			    end
-
 					//same addr check, load need refill,store need merge data
 		        same_addr_refill_num = same_addr_info_q.size();
 		        if(same_addr_refill_num>0)begin
@@ -664,41 +645,67 @@ task dcache_refm::do_refill();
 		        	  `uvm_info(get_type_name(),$sformatf("push back same addr info ,req_dest=%0h, req_source=%0h,data=%0h,same_addr_refill_num=%0h",req_dest,req_source,refill_data,same_addr_info_tmp_q.size()),UVM_NONE);  
                
 		          end
-		        end						
-
-          //refill&replace
-		      if(coh == lsu_trans::NOTHING)begin
-		  	  update_cache(nset,ntag,coh_tmp,victim_way,update_data,coh_vic,data_vic,addr_vic);
-		  	  `uvm_info(get_type_name(),$sformatf("replace cache , addr=%0h,set=%0h,tag=%0h,way=%0h,coh=%0h,coh_vic=%0h,addr_vic=%0h,data_vic=%0h",a_addr,nset,ntag,victim_way,coh_tmp,coh_vic,addr_vic,data_vic),UVM_NONE);
-		      end
-		      else begin
-		  	  update_cache(nset,ntag,coh_tmp,exist_way,update_data,coh_vic,data_vic,addr_vic);								
-		      `uvm_info(get_type_name(),$sformatf("refresh cache , addr=%0h,set=%0h,tag=%0h,way=%0h,coh=%0h",a_addr,nset,ntag,exist_way,coh_tmp),UVM_NONE);
-		      end
-
-          if(victim_way_valid & (coh_vic != lsu_trans::NOTHING))begin
-            if(coh_vic == lsu_trans::DIRTY)begin  //release_data  TtoN
-              do_release(addr_vic,7,8,1,data_vic,coh_vic);       
 		        end
-						else if(coh_vic == lsu_trans::TRUNK)begin////release TtoN 
-              do_release(addr_vic,6,8,1,0,coh_vic);   
-						end
-		        else begin//release BtoN
-		  	      do_release(addr_vic,6,8,2,0,coh_vic);       
-		        end
+
 					end
 
-          
-					//clear info for source index
-		      req_addr_arry_f[d_source]   <= 1;
-		      req_source_arry[d_source]  <= 0;
-		      req_dest_arry[d_source]   <= 0;	
-					refill_valid[d_source]    = 0;
-					req_noalloc_arry[d_source]<= 0;
+				  refill_resp_valid[d_source] = 0;
+
+					
+			  end//end if i
 
 
-        end//endif
-		  end//end forecah
+      end//endif
+		end//end forecah
+	end// end while
+
+  //refill&replace	
+  while(1)begin
+		@(posedge tb_top.clock);
+		foreach (refill_valid[i]) begin
+		  if(refill_valid[i])begin	
+
+        d_source = i;
+				a_addr = req_addr_arry[d_source];	
+        nset = a_addr[12:6];
+		    ntag = a_addr[38:13];
+
+			  query_block(nset,ntag, coh ,exist_way,data);
+			  replace_plru(nset,coh,exist_way ,victim_way,victim_way_valid);
+
+
+		    if(coh == lsu_trans::NOTHING)begin
+			  update_cache(nset,ntag,coh_tmp,victim_way,update_data,coh_vic,data_vic,addr_vic);
+			  `uvm_info(get_type_name(),$sformatf("replace cache , addr=%0h,set=%0h,tag=%0h,way=%0h,coh=%0h,coh_vic=%0h,addr_vic=%0h,data_vic=%0h",a_addr,nset,ntag,victim_way,coh_tmp,coh_vic,addr_vic,data_vic),UVM_NONE);
+		    end
+		    else begin
+			  update_cache(nset,ntag,coh_tmp,exist_way,update_data,coh_vic,data_vic,addr_vic);								
+		    `uvm_info(get_type_name(),$sformatf("refresh cache , addr=%0h,set=%0h,tag=%0h,way=%0h,coh=%0h",a_addr,nset,ntag,exist_way,coh_tmp),UVM_NONE);
+		    end
+
+        if(victim_way_valid & (coh_vic != lsu_trans::NOTHING))begin
+          if(coh_vic == lsu_trans::DIRTY)begin  //release_data  TtoN
+            do_release(addr_vic,7,8,1,data_vic,coh_vic);       
+		      end
+					else if(coh_vic == lsu_trans::TRUNK)begin////release TtoN 
+            do_release(addr_vic,6,8,1,0,coh_vic);   
+					end
+		      else begin//release BtoN
+			      do_release(addr_vic,6,8,2,0,coh_vic);       
+		      end
+				end
+
+        
+				//clear info for source index
+		    req_addr_arry_f[d_source]   <= 1;
+		    req_source_arry[d_source]  <= 0;
+		    req_dest_arry[d_source]   <= 0;	
+				refill_valid[d_source]    = 0;
+				req_noalloc_arry[d_source]<= 0;
+
+
+      end//endif
+		end//end forecah
   end
 
 	while(1)begin
