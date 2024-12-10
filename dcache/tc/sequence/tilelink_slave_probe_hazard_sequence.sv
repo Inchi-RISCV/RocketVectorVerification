@@ -45,7 +45,7 @@ task tilelink_slave_probe_hazard_sequence::body();
 		solve length1, length2 before addr_t;
 			
 		if(resp_status == "hit") {
-			length1 == 50;
+			length1 == 200;
 		}
 		else { 	//miss or lr
 			length1 == 1;
@@ -141,16 +141,15 @@ task tilelink_slave_probe_hazard_sequence::body();
 					wait(tb_top.tilelink_slave_if[0].a_valid == 'h1);
 				end
 			
-				if(init_state == "B") begin
-					wait(tb_top.tilelink_slave_if[0].a_param[2:0] == 2);
-					tilelink_chnlB_probeblock(addr_t,2);
-				end
-				else begin	
-					if(resp_status == "miss") begin
-						wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
+				if(resp_status == "miss") begin
+					if(init_state == "B") begin
+						wait((tb_top.tilelink_slave_if[0].a_param[2:0] == 1)||(tb_top.tilelink_slave_if[0].a_param[2:0] == 2));
 					end
-					tilelink_chnlB_probeblock(addr_t,b_param);
-				end	
+					
+					wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
+				end
+				
+				tilelink_chnlB_probeblock(addr_t,b_param);
 			end
 		end
 	end
