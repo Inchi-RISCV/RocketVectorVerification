@@ -68,15 +68,15 @@ task tilelink_slave_probeblock_sequence::body();
 	for(int i=0;i<length;i++)begin
 		tilelink_chnlB_probeblock(addr_t+'h40*i,b_param);
 	end
-	
-	for(int i=0;i<length;i++)begin 	//add for toggle cov
+		
+	//add for cov
+	for(int i=0;i<length;i++)begin
 		b_param_new = $urandom_range(2);
 		tilelink_chnlB_probeblock(addr_t+'h40*i,b_param_new);
 	end
-		
-	dcache_load('h8000_0000); 	//for cov
-	dcache_load('h6000_0000); 	//for cov
-	`uvm_info("body", "Exiting...", UVM_LOW)
+	tilelink_chnlB_probeblock('h8000_0000,b_param_new);
+	
+`uvm_info("body", "Exiting...", UVM_LOW)
 endtask
 
 `endif

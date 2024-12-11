@@ -78,8 +78,9 @@ class dcache_load_sequence extends dcache_base_sequence;
 			dcache_load(addr_t+'h40*i,size_t,is_signed,noAlloc);
 		end
 	
-	dcache_load('h8000_0000); 	//for cov
-	dcache_load('h6000_0000); 	//for cov
+	//add for cov
+	dcache_load('h8000_0000);
+	dcache_load('h6000_0000);
   endtask
 endclass : dcache_load_sequence
 
