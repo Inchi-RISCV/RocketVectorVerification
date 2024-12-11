@@ -272,7 +272,6 @@ task dcache_refm::do_probe();
 	    probe_addr_arry[b_source]  = b_addr;
 
 		end
-
 	end
 
 	while(1) begin
@@ -285,10 +284,10 @@ task dcache_refm::do_probe();
          
         //check if same addr req in MSHR,do MSHR refill first
 		    foreach (req_addr_arry[j])begin
-		      	if(req_addr_arry[j][38:6] == probe_addr[38:6] && j<8 )begin
+		      if(req_addr_arry[j][38:6] == probe_addr[38:6] && j<8 )begin
 					  `uvm_info(get_type_name(),$sformatf("probe has same addr in mshr ,addr=%0h,j=%0h",req_addr_arry[j],j),UVM_NONE);
 						mshr_refill_first[i] = 1;
-		      	end	
+		      end	
 		    end
         
        
@@ -341,18 +340,21 @@ task dcache_refm::do_probe();
 		      endcase						
 		    end
 
-          if(c_param < 3)begin//NtoN  BtoB TtoT donot update cache
+        if(c_param < 3)begin//NtoN  BtoB TtoT donot update cache
 
-				    data_tmp = c_param==0 ? data : 0;
-						update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp,exist_way,data_tmp,coh_vic,data_vic,addr_vic);
-            `uvm_info(get_type_name(),$sformatf("probe update cacheline,addr=%0h,c_source=%0h,way=%0h,coh=%0h",probe_addr,i,exist_way,coh_tmp),UVM_NONE);
-			 	  end
+				  data_tmp = c_param==0 ? data : 0;
+				  update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp,exist_way,data_tmp,coh_vic,data_vic,addr_vic);
+          `uvm_info(get_type_name(),$sformatf("probe update cacheline,addr=%0h,c_source=%0h,way=%0h,coh=%0h",probe_addr,i,exist_way,coh_tmp),UVM_NONE);
+			 	end
+				else if(c_param ==3 )begin // Dirty TtoT need update coh
+					update_cache(probe_addr[12:6],probe_addr[38:13],coh_tmp,exist_way,data,coh_vic,data_vic,addr_vic);
+				end
 
-  			  //cacheline DIRTY probeAckData
-			    c_opcode = (coh == lsu_trans::DIRTY) ? 5 : 4;
-          do_release(b_addr,c_opcode,i,c_param,data,coh);
-          `uvm_info(get_type_name(),$sformatf("do probeack ,addr=%0h,c_source=%0h,source_coh=%0h,b_param=%0h,c_param=%0h",b_addr,i,coh,b_param[i],c_param),UVM_NONE);
-			    probe_addr_arry[i] = 0;				
+  			//cacheline DIRTY probeAckData
+			  c_opcode = (coh == lsu_trans::DIRTY) ? 5 : 4;
+        do_release(b_addr,c_opcode,i,c_param,data,coh);
+        `uvm_info(get_type_name(),$sformatf("do probeack ,addr=%0h,c_source=%0h,source_coh=%0h,b_param=%0h,c_param=%0h",b_addr,i,coh,b_param[i],c_param),UVM_NONE);
+			  probe_addr_arry[i] = 0;				
 
 		  end
 		end
@@ -501,7 +503,7 @@ task dcache_refm::do_refill();
 		      req_addr_arry_f[d_source]    <= 1;
 		      req_source_arry[d_source]    <= 0;
 		      req_dest_arry[d_source]      <= 0;	
-				  refill_resp_valid[d_source] = 0;
+				  refill_resp_valid[d_source]   = 0;
 				  req_noalloc_arry[d_source]   <= 0;
 			  end
 				else begin //mshr 
@@ -697,11 +699,11 @@ task dcache_refm::do_refill();
 
         
 				//clear info for source index
-		    req_addr_arry_f[d_source]   <= 1;
+		    req_addr_arry_f[d_source]  <= 1;
 		    req_source_arry[d_source]  <= 0;
-		    req_dest_arry[d_source]   <= 0;	
-				refill_valid[d_source]    = 0;
-				req_noalloc_arry[d_source]<= 0;
+		    req_dest_arry[d_source]    <= 0;	
+				refill_valid[d_source]      = 0;
+				req_noalloc_arry[d_source] <= 0;
 
 
       end//endif
