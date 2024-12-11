@@ -109,6 +109,9 @@ class dcache_release_sequence extends dcache_base_sequence;
 				end
 			join
 		end
+			
+	dcache_load('h8000_0000); 	//for cov
+	dcache_load('h6000_0000); 	//for cov
   endtask
 endclass : dcache_release_sequence
 

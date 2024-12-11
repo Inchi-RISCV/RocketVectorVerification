@@ -103,6 +103,9 @@ class dcache_lr_sc_sequence extends dcache_base_sequence;
 		for(int i=0;i<length;i++)begin
 			dcache_load(addr_t+64*i,,1);
 		end
+	
+	dcache_load('h8000_0000); 	//for cov
+	dcache_load('h6000_0000); 	//for cov
 	endtask
 endclass : dcache_lr_sc_sequence
 
