@@ -154,6 +154,14 @@ task tilelink_slave_probe_hazard_sequence::body();
 		end
 	end
 	
+	//add for cov
+	if(cmd1 == 4 && cmd2 == 2) begin 	//LR + Probe
+		size_t = $urandom_range(2,3);
+		dcache_lr('h8000_0000,size_t);
+		wait(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 0);
+		wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
+		tilelink_chnlB_probeblock('h8000_0000,0);
+	end
 	`uvm_info("body", "Exiting...", UVM_LOW)
 endtask
 
