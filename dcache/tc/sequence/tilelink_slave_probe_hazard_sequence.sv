@@ -161,6 +161,12 @@ task tilelink_slave_probe_hazard_sequence::body();
 		wait(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 0);
 		wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
 		tilelink_chnlB_probeblock('h8000_0000,0);
+
+		size_t = $urandom_range(2,3);
+		dcache_lr('h7f_ffff_ff00,size_t);
+		wait(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 0);
+		wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
+		tilelink_chnlB_probeblock('h7f_ffff_ff00,0);
 	end
 	`uvm_info("body", "Exiting...", UVM_LOW)
 endtask
