@@ -19,7 +19,7 @@ endfunction
 
 task tilelink_slave_probeblock_sequence::body();	
 	bit [31:0] length;
-	bit [38:0] addr_t;
+	bit [38:0] addr_t, addr_t_new;
 	bit [1:0]  b_param, b_param_new;
 	bit [511:0] wdata;
 	bit [2:0] size_t;
@@ -30,15 +30,18 @@ task tilelink_slave_probeblock_sequence::body();
 	super.body();
 	`uvm_info("body", "Entering...", UVM_LOW)
 
-	success = std::randomize(addr_t,length) with {
-		solve length before addr_t;
+	success = std::randomize(addr_t,addr_t_new,length) with {
+		solve length before addr_t,addr_t_new;
 			
 		length inside {[1:1000]};
 		addr_t inside {['h8000_0000:'h7f_ffff_ffff]};
+		addr_t_new inside {['h8000_0000:'h7f_ffff_ffff]};
 		(addr_t%64) == 0;
+		(addr_t_new%64) == 0;
 		(addr_t+64*length) inside {['h8000_0000:'h7f_ffff_ffff]};
+		(addr_t_new+64*length) inside {['h8000_0000:'h7f_ffff_ffff]};
 	};
-	`uvm_info("RANDOM_CFG",$sformatf("length = %0d; addr_t = %0h", length, addr_t),UVM_LOW);
+	`uvm_info("RANDOM_CFG",$sformatf("length = %0d; addr_t = %0h; addr_t_new = %0h", length, addr_t, addr_t_new),UVM_LOW);
 	
 	b_param = vmm_opts::get_int("b_param", 0, "b_param");
 	init_state = vmm_opts::get_string("init_state", "N", "init_state");
@@ -74,7 +77,7 @@ task tilelink_slave_probeblock_sequence::body();
 		b_param_new = $urandom_range(2);
 		tilelink_chnlB_probeblock(addr_t+'h40*i,b_param_new);
 	end
-	tilelink_chnlB_probeblock('h8000_0000,b_param_new);
+	tilelink_chnlB_probeblock(addr_t_new,b_param_new);
 	
 `uvm_info("body", "Exiting...", UVM_LOW)
 endtask

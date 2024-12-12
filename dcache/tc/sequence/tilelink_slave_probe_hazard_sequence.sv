@@ -19,7 +19,7 @@ endfunction
 
 task tilelink_slave_probe_hazard_sequence::body();	
 	bit [31:0] length1, length2;
-	bit [38:0] addr_t;
+	bit [38:0] addr_t, addr_t_new;
 	bit [1:0]  b_param;
 	bit [511:0] wdata;
 	bit [2:0]	size_t;
@@ -41,8 +41,8 @@ task tilelink_slave_probe_hazard_sequence::body();
 	resp_status = vmm_opts::get_string("resp_status", "hit", "resp_status");
 	init_state = vmm_opts::get_string("init_state", "N", "init_state");
 
-	success = std::randomize(addr_t, length1, length2) with {
-		solve length1, length2 before addr_t;
+	success = std::randomize(addr_t,addr_t_new,length1,length2) with {
+		solve length1, length2 before addr_t,addr_t_new;
 			
 		if(resp_status == "hit") {
 			length1 == 200;
@@ -57,10 +57,13 @@ task tilelink_slave_probe_hazard_sequence::body();
 			length2 == 1;
 		}
 		addr_t inside {['h8000_0000:'h7f_ffff_ffff]};
+		addr_t_new inside {['h8000_0000:'h7f_ffff_ffff]};
 		(addr_t%64) == 0;
+		(addr_t_new%64) == 0;
 		(addr_t+64*(length1+length2)) inside {['h8000_0000:'h7f_ffff_ffff]};
+		(addr_t_new+64*(length1+length2)) inside {['h8000_0000:'h7f_ffff_ffff]};
 	};
-	`uvm_info("RANDOM_CFG",$sformatf("length1 = %0d; length2 = %0d; addr_t = %0h", length1, length2, addr_t),UVM_LOW);
+	`uvm_info("RANDOM_CFG",$sformatf("length1 = %0d; length2 = %0d; addr_t = %0h; addr_t_new = %0h", length1, length2, addr_t, addr_t_new),UVM_LOW);
 	
 	backdoor_put_data(addr_t,6,{16{'h76543210}});
 
@@ -157,17 +160,12 @@ task tilelink_slave_probe_hazard_sequence::body();
 	//add for cov
 	if(cmd1 == 4 && cmd2 == 2) begin 	//LR + Probe
 		size_t = $urandom_range(2,3);
-		dcache_lr('h8000_0000,size_t);
+		dcache_lr(addr_t_new,size_t);
 		wait(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 0);
 		wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
-		tilelink_chnlB_probeblock('h8000_0000,0);
-
-		size_t = $urandom_range(2,3);
-		dcache_lr('h7f_ffff_ff00,size_t);
-		wait(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 0);
-		wait((tb_top.tilelink_slave_if[0].d_opcode[2:0] == 4)||(tb_top.tilelink_slave_if[0].d_opcode[2:0] == 5)); 	//probe wait grant
-		tilelink_chnlB_probeblock('h7f_ffff_ff00,0);
+		tilelink_chnlB_probeblock(addr_t_new,0);
 	end
+	
 	`uvm_info("body", "Exiting...", UVM_LOW)
 endtask
 
