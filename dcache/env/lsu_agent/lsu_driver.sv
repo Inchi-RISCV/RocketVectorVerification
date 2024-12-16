@@ -136,14 +136,13 @@ task lsu_driver::do_drive();
         vif.io_req_bits_refillWay <= #`DELAY req.io_req_bits_refillWay;	
         vif.io_req_bits_refillCoh <= #`DELAY req.io_req_bits_refillCoh;	
         vif.io_s0_kill            <= #`DELAY req.io_s0_kill;
-        vif.io_s1_kill            <= #`DELAY req.io_s1_kill;
-        //vif.replay_req            <= #`DELAY req.replay_req;
+        vif.io_s1_kill            <= #`DELAY 0;
 				req_last = req;
-				@(posedge vif.clk);			
+				@(posedge vif.clk);	
+				vif.io_s1_kill            <= #`DELAY req.io_s1_kill;
       end
       while (!vif.io_req_ready);
       vif.io_req_valid          <= #`DELAY 1'b0;
-
 		end
 		else if((lsu_q.size > 0)) begin
       req = lsu_q.pop_front();
@@ -173,8 +172,7 @@ task lsu_driver::do_drive();
         vif.io_req_bits_refillWay <= #`DELAY req.io_req_bits_refillWay;	
         vif.io_req_bits_refillCoh <= #`DELAY req.io_req_bits_refillCoh;	
         vif.io_s0_kill            <= #`DELAY req.io_s0_kill;
-        vif.io_s1_kill            <= #`DELAY req.io_s1_kill;
-				//vif.replay_req            <= #`DELAY 0;
+        vif.io_s1_kill            <= #`DELAY 0;
 				req_last = req;
 
 			  //when has data, set destid_reuse 1
@@ -183,10 +181,11 @@ task lsu_driver::do_drive();
 				  `uvm_info(get_type_name(),$sformatf("set destid_reuse , destid = %0h,io_req_bits_source = %0h,realid=%0h",destid,req.io_req_bits_source,{req.io_req_bits_source,destid}),UVM_HIGH);	
 			  end
 				@(posedge vif.clk);
+				vif.io_s1_kill            <= #`DELAY req.io_s1_kill;
       end
       while (!vif.io_req_ready);
 			//if($urandom_range(1)) begin
-      vif.io_req_valid          <= #`DELAY 1'b0;							
+      vif.io_req_valid          <= #`DELAY 1'b0;	
 			//repeat($urandom_range(4))@(posedge vif.clk);
 		  //end
 	 	end
