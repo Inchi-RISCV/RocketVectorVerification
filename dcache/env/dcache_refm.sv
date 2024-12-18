@@ -1116,6 +1116,12 @@ task dcache_refm::assemble_cmd();
       nset = req_addr[12:6];
 
       //#0.4
+      if(tb_top.U_GPCDCache.io_s1_kill)begin
+			 `uvm_info(get_type_name(),$sformatf("rm s1 kill,addr=%0h,dest=%0h,cmd=%0h",req_addr,req_dest,req_cmd),UVM_NONE)
+       continue;
+
+			end
+			
 			if(tb_top.U_GPCDCache.io_resp_bits_status[1:0] == 2 && req_cmd!=lsu_trans::M_XLR && !(req_cmd == lsu_trans::M_XA_SWAP || req_cmd == lsu_trans::M_XA_ADD || req_cmd == lsu_trans::M_XA_XOR || req_cmd == lsu_trans::M_XA_OR  || req_cmd == lsu_trans::M_XA_AND  || req_cmd == lsu_trans::M_XA_MIN || req_cmd == lsu_trans::M_XA_MAX || req_cmd == lsu_trans::M_XA_MINU ||req_cmd == lsu_trans::M_XA_MAXU))begin
 			 `uvm_info(get_type_name(),$sformatf("replay cmd rm donot accept ,addr=%0h,dest=%0h,cmd=%0h",req_addr,req_dest,req_cmd),UVM_NONE)
        continue;
