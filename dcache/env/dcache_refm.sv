@@ -62,6 +62,7 @@ class dcache_refm extends uvm_component;
 	
 	lsu_trans::req_cmd_enum 		req_cmd_arry[32];
 	svt_tilelink_master_transaction tl_send_q[$];
+	svt_tilelink_master_transaction tl_send_q_iomshr[$];
   svt_tilelink_master_transaction tl_send_q_tmp[$];
 
   extern function new(string name, uvm_component parent);
@@ -960,10 +961,10 @@ task dcache_refm::do_tlu_message(input bit [38:0] a_addr ,input bit [2:0] a_opco
   tr_a.ch_a_msg_type  = a_opcode;
   tr_a.a_param   = a_param;
 
-	tl_send_q.push_back(tr_a);
+	tl_send_q_iomshr.push_back(tr_a);
 
 	//rm2sb_tltx_port.write(tr_a);
-	`uvm_info(get_type_name(),$sformatf("rm send tlu message to send_q , a_addr=%0h,a_source=%0h,a_mask=%0h,a_data=%0h,a_param=%0h,send_q_size=%0h",tr_a.a_address,tr_a.a_source,a_mask,a_data,a_param,tl_send_q.size()),UVM_NONE);
+	`uvm_info(get_type_name(),$sformatf("rm send tlu message to send_q , a_addr=%0h,a_source=%0h,a_mask=%0h,a_data=%0h,a_param=%0h,send_q_size=%0h",tr_a.a_address,tr_a.a_source,a_mask,a_data,a_param,tl_send_q_iomshr.size()),UVM_NONE);
 
 endtask
 
@@ -975,10 +976,14 @@ task dcache_refm::do_tl_send_q();
 		@(posedge tb_top.clock);
 		tr_a = new();
 		if(tb_top.tilelink_slave_if[0].a_valid & tb_top.tilelink_slave_if[0].a_ready)begin
-			#0.1;
-			tr_a = tl_send_q.pop_front();
+			if(tl_send_q_iomshr.size()>0)begin
+				tr_a = tl_send_q_iomshr.pop_front();
+			end
+			else begin
+        tr_a = tl_send_q.pop_front();
+			end
       rm2sb_tltx_port.write(tr_a);
-	    `uvm_info(get_type_name(),$sformatf("rm send_q , a_addr=%0h,a_source=%0h,a_opcode=%0h,a_param=%0h,send_q_size=%0h",tr_a.a_address,tr_a.a_source,tr_a.ch_a_msg_type,tr_a.a_param,tl_send_q.size()),UVM_NONE);
+	    `uvm_info(get_type_name(),$sformatf("rm send_q , a_addr=%0h,a_source=%0h,a_opcode=%0h,a_param=%0h,send_q_size=%0h,send_q_iomshr_size=%0h",tr_a.a_address,tr_a.a_source,tr_a.ch_a_msg_type,tr_a.a_param,tl_send_q.size(),tl_send_q_iomshr.size()),UVM_NONE);
 
 		end
   end
