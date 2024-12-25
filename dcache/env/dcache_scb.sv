@@ -120,6 +120,8 @@ endtask : main_phase
 task dcache_scb::end_sim_check();
 
 	int time_cnt;
+	int delay_time;
+	delay_time = vmm_opts::get_int("delay_time",3000,"delay_time");
   fork
 
 
@@ -136,10 +138,10 @@ task dcache_scb::end_sim_check();
 
     while(1) begin
     	@(posedge tb_top.clock);
-    	if(time_cnt>=1000)begin
-				`uvm_info(get_type_name(),$sformatf(" DUT  donot has data for 1000 cycle , finish!"),UVM_NONE);
-    	break;
-      end
+			if(time_cnt>=delay_time)begin
+				`uvm_info(get_type_name(),$sformatf("DUT donot has data for %0h cycle,finish!",delay_time),UVM_NONE);
+				break;
+		  end
     end
 
   join_any

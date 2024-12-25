@@ -60,40 +60,40 @@ function void cust_svt_tilelink_system_configuration::set_tilelink_cfg();
       this.slave_cfg[i].data_width = 512;   
 
 			if(slv_a_delay_en) begin
-      	this.slave_cfg[i].min_a_vld_a_rdy_assert_delay = 1000;
-      	this.slave_cfg[i].max_a_vld_a_rdy_assert_delay = 2000;
+      	this.slave_cfg[i].min_a_vld_a_rdy_assert_delay = 100;
+      	this.slave_cfg[i].max_a_vld_a_rdy_assert_delay = 200;
 			end 
 			else begin
 				this.slave_cfg[i].min_a_vld_a_rdy_assert_delay = 0;
       	this.slave_cfg[i].max_a_vld_a_rdy_assert_delay = 0;
 			end
 			if(slv_a_d_delay_en) begin
-				this.slave_cfg[i].min_a_vld_d_vld_cross_chnl_delay = 1000;
-      	this.slave_cfg[i].max_a_vld_d_vld_cross_chnl_delay = 2000;
+				this.slave_cfg[i].min_a_vld_d_vld_cross_chnl_delay = 100;
+      	this.slave_cfg[i].max_a_vld_d_vld_cross_chnl_delay = 200;
 			end
 			else begin
 				this.slave_cfg[i].min_a_vld_d_vld_cross_chnl_delay = 0;
       	this.slave_cfg[i].max_a_vld_d_vld_cross_chnl_delay = 0;
 			end
 			if(slv_b_delay_en) begin
-      	this.slave_cfg[i].min_b_vld_b_vld_assert_delay = 1000;
-      	this.slave_cfg[i].max_b_vld_b_vld_assert_delay = 2000;
+      	this.slave_cfg[i].min_b_vld_b_vld_assert_delay = 100;
+      	this.slave_cfg[i].max_b_vld_b_vld_assert_delay = 200;
 			end
 			else begin
 				this.slave_cfg[i].min_b_vld_b_vld_assert_delay = 0;
       	this.slave_cfg[i].max_b_vld_b_vld_assert_delay = 0;
 			end
 			if(slv_c_delay_en) begin
-      	this.slave_cfg[i].min_c_vld_c_rdy_assert_delay = 1000;
-      	this.slave_cfg[i].max_c_vld_c_rdy_assert_delay = 2000;
+      	this.slave_cfg[i].min_c_vld_c_rdy_assert_delay = 100;
+      	this.slave_cfg[i].max_c_vld_c_rdy_assert_delay = 200;
 			end
 			else begin
 				this.slave_cfg[i].min_c_vld_c_rdy_assert_delay = 0;
       	this.slave_cfg[i].max_c_vld_c_rdy_assert_delay = 0;
 			end
 			if(slv_d_delay_en) begin
-				this.slave_cfg[i].min_d_vld_d_vld_assert_delay = 1000;
-      	this.slave_cfg[i].max_d_vld_d_vld_assert_delay = 2000;
+				this.slave_cfg[i].min_d_vld_d_vld_assert_delay = 100;
+      	this.slave_cfg[i].max_d_vld_d_vld_assert_delay = 200;
 			end
 			else begin
 				this.slave_cfg[i].min_d_vld_d_vld_assert_delay = 0;
@@ -112,6 +112,8 @@ function void cust_svt_tilelink_system_configuration::set_tilelink_cfg();
 	    this.slave_cfg[i].same_cycle_resp_en= 0;
 	    this.slave_cfg[i].mem_address_range = 'h7f_ffff_ffff;
 			//this.slave_cfg[i].enable_reporting=1;
+
+
     end
 endfunction
 
