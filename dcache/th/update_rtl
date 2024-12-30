@@ -1,3 +1,3 @@
-cp /datahdd/riscv/huangxiaogang/riscv-vector/build/GPCDCache.sv ./
+cp /datahdd/riscv/huangxiaogang/riscv-vecto_cache/riscv-vector/build/GPCDCache.sv ./ 
 sed -i 's/exclude_file/file/g' GPCDCache.sv
 
