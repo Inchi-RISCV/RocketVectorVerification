@@ -536,20 +536,20 @@ task dcache_refm::do_refill();
 		        addr_data_align(req_size,a_addr,d_data_arry[d_source],align_data);
 				    update_data = d_data_arry[d_source];
 
-				    //sign_extension
-		        if(req_cmd_arry[d_source] == lsu_trans::M_XRD)begin
+				    //load & amo need refill rsp
+		        if(req_cmd_arry[d_source] != lsu_trans::M_XLR && req_cmd_arry[d_source] != lsu_trans::M_PFR)begin
 		          sign_extension(req_signed_arry[{req_source_tmp,req_dest_tmp}],req_size,align_data,refill_data);
 		          send_rsp(req_source_arry[d_source] ,req_dest_arry[d_source] , lsu_trans::REFILL,1,refill_data);
 		          `uvm_info(get_type_name(),$sformatf("rm send refill resp,req_dest=%0h,req_source=%0h,req_addr=%0h,req_source=%0h,data=%0h",req_dest_arry[d_source],req_source_tmp,a_addr,req_source_arry[d_source],refill_data),UVM_NONE);
 		        end
 
-						//amo 
+						//do amo alu and update cache
 						if(req_cmd_arry[d_source] == lsu_trans::M_XA_SWAP || req_cmd_arry[d_source] == lsu_trans::M_XA_ADD || 
 							 req_cmd_arry[d_source] == lsu_trans::M_XA_XOR || req_cmd_arry[d_source] == lsu_trans::M_XA_OR   || 
 							 req_cmd_arry[d_source] == lsu_trans::M_XA_AND  || req_cmd_arry[d_source] == lsu_trans::M_XA_MIN || 
 							 req_cmd_arry[d_source] == lsu_trans::M_XA_MAX || req_cmd_arry[d_source] == lsu_trans::M_XA_MINU || 
 							 req_cmd_arry[d_source] == lsu_trans::M_XA_MAXU)begin
-						  amoalu(req_cmd_arry[d_source], a_addr ,align_data,req_data_arry[d_source],amo_data);
+						  amoalu(req_cmd_arry[d_source], req_size ,align_data,req_data_arry[d_source],amo_data);
               data_mask_merge(req_size,a_addr,0, update_data,amo_data,merge_data);
               `uvm_info(get_type_name(),$sformatf("amo miss merge data,req_addr=%0h,req_cmd=%0h,req_size=%0h,\nsource_data=%0h,\nreq_data=%0h,\namo_data=%0h,\nmerge_data=%0h,\nold_data=%0h",a_addr,req_cmd_arry[d_source],req_size,update_data,req_data_arry[d_source],amo_data,merge_data,align_data),UVM_NONE);
 
@@ -568,7 +568,7 @@ task dcache_refm::do_refill();
 		        	  req_cmd_same_addr = same_addr_info[57:53];
 		        	  req_signed = same_addr_info[58:58];
 		        	  req_addr  = same_addr_info[52:14];
-		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h, req_size=%0h,data=%0h,same_addr_refill_num=%0h,req_addr=%0h,a_addr=%0h",req_dest,req_source,same_addr_info[637:635],refill_data,same_addr_refill_num,req_addr,a_addr),UVM_NONE);
+		        	  `uvm_info(get_type_name(),$sformatf("rm get same addr info ,req_dest=%0h, req_source=%0h, req_size=%0h,data=%0h,same_addr_refill_num=%0h,req_addr=%0h,a_addr=%0h",req_dest,req_source,same_addr_info[637:635],update_data,same_addr_refill_num,req_addr,a_addr),UVM_NONE);
 		        	  if(req_addr[31:6] == a_addr[31:6])begin 
 
 		        		  if(req_cmd_same_addr == lsu_trans::M_XRD)begin
@@ -1015,12 +1015,16 @@ task dcache_refm::do_tl_send_q();
 		if(tb_top.tilelink_slave_if[0].a_valid & tb_top.tilelink_slave_if[0].a_ready)begin
 			if(tl_send_q_iomshr.size()>0)begin
 				tr_a = tl_send_q_iomshr.pop_front();
+        rm2sb_tltx_port.write(tr_a);
+	      `uvm_info(get_type_name(),$sformatf("rm send_q , a_addr=%0h,a_source=%0h,a_opcode=%0h,a_param=%0h,send_q_size=%0h,send_q_iomshr_size=%0h",tr_a.a_address,tr_a.a_source,tr_a.ch_a_msg_type,tr_a.a_param,tl_send_q.size(),tl_send_q_iomshr.size()),UVM_NONE);
+
 			end
-			else begin
+			else if(tl_send_q.size()>0)begin
         tr_a = tl_send_q.pop_front();
+        rm2sb_tltx_port.write(tr_a);
+	      `uvm_info(get_type_name(),$sformatf("rm send_q , a_addr=%0h,a_source=%0h,a_opcode=%0h,a_param=%0h,send_q_size=%0h,send_q_iomshr_size=%0h",tr_a.a_address,tr_a.a_source,tr_a.ch_a_msg_type,tr_a.a_param,tl_send_q.size(),tl_send_q_iomshr.size()),UVM_NONE);
+				
 			end
-      rm2sb_tltx_port.write(tr_a);
-	    `uvm_info(get_type_name(),$sformatf("rm send_q , a_addr=%0h,a_source=%0h,a_opcode=%0h,a_param=%0h,send_q_size=%0h,send_q_iomshr_size=%0h",tr_a.a_address,tr_a.a_source,tr_a.ch_a_msg_type,tr_a.a_param,tl_send_q.size(),tl_send_q_iomshr.size()),UVM_NONE);
 
 		end
   end
