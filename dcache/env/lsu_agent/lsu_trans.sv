@@ -89,10 +89,12 @@ typedef enum bit[1:0] {
     `uvm_field_int(io_s1_kill,UVM_ALL_ON)	
     `uvm_field_int(io_resp_bits_source,UVM_ALL_ON)	
     `uvm_field_int(io_resp_bits_dest,UVM_ALL_ON)	
+    `uvm_field_int(io_resp_bits_size,UVM_ALL_ON)
     `uvm_field_enum(resp_status_enum,io_resp_bits_status,UVM_ALL_ON)	
     `uvm_field_int(io_resp_bits_hasData,UVM_ALL_ON)	
     `uvm_field_int(io_resp_bits_data,UVM_ALL_ON)	
     `uvm_field_int(io_nextCycleWb,UVM_ALL_ON)
+    `uvm_field_int(io_nextSource,UVM_ALL_ON)
 		//`uvm_field_int(replay_req,UVM_ALL_ON)
 
 	`uvm_object_utils_end
@@ -113,10 +115,12 @@ typedef enum bit[1:0] {
   rand bit         				io_s1_kill;	
   rand bit [7:0]   				io_resp_bits_source;	
   rand bit [4:0]   				io_resp_bits_dest;	
+  rand bit [2:0]   				io_resp_bits_size;
   rand resp_status_enum 	io_resp_bits_status;	
   rand bit         				io_resp_bits_hasData;	
   rand bit [511:0] 				io_resp_bits_data;	
   rand bit         				io_nextCycleWb;
+  rand bit [1:0]        	io_nextSource;
   //rand bit         				replay_req;
 
   extern function new(string name = "lsu_trans");
@@ -138,10 +142,12 @@ typedef enum bit[1:0] {
     this.io_s1_kill            = p.io_s1_kill;	
     this.io_resp_bits_source   = p.io_resp_bits_source;	
     this.io_resp_bits_dest     = p.io_resp_bits_dest;	
+    this.io_resp_bits_size     = p.io_resp_bits_size;
     this.io_resp_bits_status   = p.io_resp_bits_status;	
     this.io_resp_bits_hasData  = p.io_resp_bits_hasData;	
     this.io_resp_bits_data     = p.io_resp_bits_data;	
     this.io_nextCycleWb        = p.io_nextCycleWb;
+    this.io_nextSource         = p.io_nextSource;
     //this.replay_req            = p.replay_req;
   endfunction
 

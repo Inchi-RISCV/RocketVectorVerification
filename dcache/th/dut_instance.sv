@@ -62,9 +62,11 @@
   wire [7:0]   io_resp_bits_source;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
   wire [4:0]   io_resp_bits_dest;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
   wire [1:0]   io_resp_bits_status;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
+  wire [2:0]   io_resp_bits_size;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
   wire         io_resp_bits_hasData;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
   wire [511:0] io_resp_bits_data;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14]
   wire         io_nextCycleWb;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14];
+  wire [1:0]   io_nextSource;	// @[src/main/scala/coincreekDCache/BaseDCache.scala:44:14];
 
 //////////////////////////////////
 GPCDCache	U_GPCDCache(
@@ -132,7 +134,9 @@ GPCDCache	U_GPCDCache(
 	.io_resp_bits_source	    (m_lsu_if.io_resp_bits_source),
 	.io_resp_bits_dest	      (m_lsu_if.io_resp_bits_dest),
 	.io_resp_bits_status    	(m_lsu_if.io_resp_bits_status),
+	.io_resp_bits_size    		(m_lsu_if.io_resp_bits_size),
 	.io_resp_bits_hasData	    (m_lsu_if.io_resp_bits_hasData),
 	.io_resp_bits_data	      (m_lsu_if.io_resp_bits_data),
-	.io_nextCycleWb           (m_lsu_if.io_nextCycleWb)
+	.io_nextCycleWb           (m_lsu_if.io_nextCycleWb),
+	.io_nextSource            (m_lsu_if.io_nextSource)
 );
