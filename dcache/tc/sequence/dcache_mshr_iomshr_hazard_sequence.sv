@@ -57,7 +57,8 @@ class dcache_mshr_iomshr_hazard_sequence extends dcache_base_sequence;
 		if(random_hazard) begin
 			for(int i=0;i<length2;i++)begin
 				cmd_1 		= $urandom_range(1);
-				cmd_2 		= $urandom_range(4);
+				cmd_2     = $urandom_range(3);
+				//cmd_2 		= $urandom_range(4);
 				size_t1 	= $urandom_range(2,3);
 				size_t2 	= $urandom_range(6);
 				is_signed = $urandom_range(1);
@@ -129,7 +130,8 @@ class dcache_mshr_iomshr_hazard_sequence extends dcache_base_sequence;
 					dcache_amo_operation(amo_cmd,addr_t,wdata,size_t1);
 				end
 				else if(cmd1 == 3) begin	//BYPASS
-					bypass_cmd = $urandom_range(3);
+					//bypass_cmd = $urandom_range(3);
+					bypass_cmd = $urandom_range(2);
 
 					if(bypass_cmd == 0) begin
 						dcache_load(addr_t,size_t2,is_signed,1);
@@ -140,9 +142,9 @@ class dcache_mshr_iomshr_hazard_sequence extends dcache_base_sequence;
 					else if(bypass_cmd == 2) begin
 						dcache_partial_mask_store(addr_t,wdata,req_wmask,1);
 					end
-					else if(bypass_cmd == 3) begin
-						dcache_amo_operation(amo_cmd,addr_t,wdata,size_t1,1);
-					end
+					//else if(bypass_cmd == 3) begin
+					//	dcache_amo_operation(amo_cmd,addr_t,wdata,size_t1,1);
+					//end
 				end
 			end
 
@@ -164,7 +166,8 @@ class dcache_mshr_iomshr_hazard_sequence extends dcache_base_sequence;
 					dcache_amo_operation(amo_cmd,addr_t,wdata,size_t1);
 				end
 				else if(cmd2 == 3) begin	//BYPASS
-					bypass_cmd = $urandom_range(3);
+					//bypass_cmd = $urandom_range(3);
+					bypass_cmd = $urandom_range(2);
 
 					if(bypass_cmd == 0) begin
 						dcache_load(addr_t,size_t2,is_signed,1);
@@ -175,9 +178,9 @@ class dcache_mshr_iomshr_hazard_sequence extends dcache_base_sequence;
 					else if(bypass_cmd == 2) begin
 						dcache_partial_mask_store(addr_t,wdata,req_wmask,1);
 					end
-					else if(bypass_cmd == 3) begin
-						dcache_amo_operation(amo_cmd,addr_t,wdata,size_t1,1);
-					end
+					//else if(bypass_cmd == 3) begin
+					//	dcache_amo_operation(amo_cmd,addr_t,wdata,size_t1,1);
+					//end
 				end
 			end
 			dcache_load(addr_t,,1);

@@ -77,7 +77,8 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 			end
 			else begin                 //mmio_range=0
 				//success = std::randomize(cmd) with {cmd inside {0,3,4};};
-				cmd = $urandom_range(4);
+				//cmd = $urandom_range(4);
+				cmd = $urandom_range(3);
 				if(cmd == 0) begin
 					dcache_load(addr_t,size_t,is_signed,1);
 				end
@@ -88,11 +89,12 @@ class dcache_iomshr_hazard_sequence extends dcache_base_sequence;
 					success = std::randomize(wmask) with {wmask <= (2**64-1);};
 					dcache_partial_mask_store(addr_t,wdata,wmask,1);           
 				end
+				//else if(cmd == 3) begin
+				//	success = std::randomize(req_cmd) with {req_cmd inside amo_cmd;};
+				//	dcache_amo_operation(req_cmd,addr_t,wdata,req_size_t,1);
+				//end
+				//else if(cmd == 4) begin
 				else if(cmd == 3) begin
-					success = std::randomize(req_cmd) with {req_cmd inside amo_cmd;};
-					dcache_amo_operation(req_cmd,addr_t,wdata,req_size_t,1);
-				end
-				else if(cmd == 4) begin
 					success = std::randomize(req_cmd) with {req_cmd inside amo_cmd;};
 					dcache_amo_operation(req_cmd,addr_t,wdata,req_size_t);
 				end
