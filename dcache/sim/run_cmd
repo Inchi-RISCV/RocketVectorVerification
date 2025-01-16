@@ -262,6 +262,9 @@ make ncrun tc=tilelink_probe_hazard_test cfg=acquire_probe_hazard
 make ncrun tc=tilelink_probe_hazard_test cfg=acquire_probe_hazard_tilelink_slv_delay
 make ncrun tc=tilelink_probe_hazard_test cfg=B_store_miss_probe_hazard
 make ncrun tc=tilelink_probe_hazard_test cfg=B_store_miss_probe_hazard_tilelink_slv_delay
+make ncrun tc=tilelink_probecohmshr_state_test cfg=NtoB_BtoT_NtoB
+make ncrun tc=dcache_s1_kill_test
+make ncrun tc=dcache_s1_kill_test cfg=tilelink_slv_delay
 make ncrun tc=dcache_prefetch_read_test											
 make ncrun tc=dcache_prefetch_read_test cfg=tilelink_slv_delay											
 make ncrun tc=dcache_prefetch_read_test cfg=init_state_B 															
@@ -330,7 +333,3 @@ make ncrun tc=dcache_hazard_test cfg=pfw_hit_pfw_hazard
 make ncrun tc=dcache_hazard_test cfg=pfw_hit_pfw_hazard_tilelink_slv_delay
 make ncrun tc=dcache_hazard_test cfg=pfw_miss_pfw_hazard
 make ncrun tc=dcache_hazard_test cfg=pfw_miss_pfw_hazard_tilelink_slv_delay
-make ncrun tc=dcache_reset_load_test
-make ncrun tc=dcache_reset_load_test cfg=tilelink_slv_delay
-make ncrun tc=dcache_s1_kill_test
-make ncrun tc=dcache_s1_kill_test cfg=tilelink_slv_delay

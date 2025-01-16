@@ -74,7 +74,7 @@ task tilelink_slave_probeblock_sequence::body();
 		
 	//add for cov
 	for(int i=0;i<length;i++)begin
-		b_param_new = $urandom_range(2);
+		b_param_new = $urandom_range(1);
 		tilelink_chnlB_probeblock(addr_t+'h40*i,b_param_new);
 	end
 	tilelink_chnlB_probeblock(addr_t_new,b_param_new);

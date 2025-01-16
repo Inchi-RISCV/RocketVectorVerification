@@ -22,6 +22,7 @@
 
 ./sequence/tilelink_slave_probeblock_sequence.sv
 ./sequence/tilelink_slave_probe_hazard_sequence.sv
+./sequence/tilelink_slave_probecohmshr_state_sequence.sv
 
 
 ./dcache_base_test.sv
@@ -46,4 +47,5 @@
 
 ./tilelink_probeblock_test.sv
 ./tilelink_probe_hazard_test.sv
+./tilelink_probecohmshr_state_test.sv
 
